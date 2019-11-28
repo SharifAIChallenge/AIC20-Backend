@@ -7,7 +7,7 @@ from .models import Document
 from .serializers import DocumentSerializer, SectionSerializer, SubtitleSerializer
 
 
-class Document(APIView):
+class DocumentAPIView(APIView):
 
     def get(self, request):
         pass
@@ -19,7 +19,7 @@ class Document(APIView):
         pass
 
 
-class Section(APIView):
+class SectionAPIView(APIView):
 
     def get(self, request):
         pass
@@ -29,3 +29,4 @@ class Section(APIView):
 
     def put(self, request):
         pass
+
