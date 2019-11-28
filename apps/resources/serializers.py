@@ -4,7 +4,9 @@ from .models import Document, Section, Subtitle
 
 
 class DocumentSerializer(ModelSerializer):
-    pass
+    class Meta:
+        model = Document
+        fields = ['title']
 
 
 class SectionSerializer(ModelSerializer):
@@ -12,4 +14,6 @@ class SectionSerializer(ModelSerializer):
 
 
 class SubtitleSerializer(ModelSerializer):
-    pass
+    class Meta:
+        model = Subtitle
+        fields = ['subtitle']
