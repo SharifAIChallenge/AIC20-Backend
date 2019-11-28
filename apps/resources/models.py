@@ -8,6 +8,7 @@ class Document(models.Model):
 class Section(models.Model):
     document = models.ForeignKey(Document, related_name='sections', on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
+    md = models.FileField()
 
 
 class Subtitle(models.Model):
