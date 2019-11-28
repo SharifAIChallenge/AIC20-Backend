@@ -3,17 +3,22 @@ from rest_framework.serializers import ModelSerializer
 from .models import Document, Section, Subtitle
 
 
-class DocumentSerializer(ModelSerializer):
+class SubtitleSerializer(ModelSerializer):
     class Meta:
-        model = Document
-        fields = ['title']
+        model = Subtitle
+        fields = ['subtitle']
 
 
 class SectionSerializer(ModelSerializer):
     pass
 
 
-class SubtitleSerializer(ModelSerializer):
+class DocumentSerializer(ModelSerializer):
+    """
+    set init for section
+    """
+    sections = SectionSerializer(many=True, read_only=True)
+
     class Meta:
-        model = Subtitle
-        fields = ['subtitle']
+        model = Document
+        fields = ['title', 'sections']
