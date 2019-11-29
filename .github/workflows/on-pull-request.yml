@@ -1,0 +1,13 @@
+name: lint-and-test
+
+on: [pull_request]
+
+jobs:
+  lint:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run pep8
+      run: pycodestyle .
