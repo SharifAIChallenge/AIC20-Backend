@@ -1,9 +1,11 @@
 from django.urls import path
 
-from .views import DocumentAPIView, SectionAPIView
+from .views import DocumentListAPIView, DocumentInstanceAPIView, SectionAPIView
+
+app_name = 'resource'
 
 urlpatterns = [
-    path('documents/', ),
-    path('documents/<doc_name>/sections'),
+    path('documents/', DocumentListAPIView.as_view(), name='documents_list'),
+    path('documents/<doc_name>/sections', DocumentInstanceAPIView.as_view(), name='document_sections'),
     path('documents/<doc_name>/<section_uuid>'),
 ]
