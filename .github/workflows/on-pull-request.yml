@@ -9,9 +9,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Run pep8
+    - name: lint
       run: |
         python3 -m pip install pycodestyle
         echo "testing..."
         python3 -m pycodestyle .
         echo "done"
+    - name: test
+      run: |
+        python3 manage.py test
