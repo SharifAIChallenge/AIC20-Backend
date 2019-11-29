@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'apps.resources.apps.ResourcesConfig',
     'martor',
-    'markdownx',
 ]
 
 MIDDLEWARE = [
@@ -166,11 +165,3 @@ MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://github.githubassets.com/images/icons/e
 MARTOR_MARKDOWN_BASE_MENTION_URL = 'https://python.web.id/author/'  # please change this to your domain
 
 CSRF_COOKIE_HTTPONLY = False
-
-# MARKDOWNX_MARKDOWN_EXTENSIONS = []
-# MARKDOWNX_URLS_PATH = '/markdownx/markdownify/'  # Urls path that returns compiled markdown text. Change this path to your custom app url. That could i.e. enable do some additional work with compiled markdown text.
-# MARKDOWNX_MEDIA_PATH = 'markdownx/'  # subdirectory, where images will be stored in MEDIA_ROOT folder
-# MARKDOWNX_UPLOAD_MAX_SIZE = 52428800  # 50MB
-# MARKDOWNX_UPLOAD_CONTENT_TYPES = ['image/jpeg', 'image/png']
-# MARKDOWNX_IMAGE_MAX_SIZE = {'size': (500, 500), 'quality': 90, }
-# MARKDOWNX_EDITOR_RESIZABLE = True  # update editor's height to inner content height while typing

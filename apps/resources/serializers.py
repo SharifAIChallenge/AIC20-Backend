@@ -1,4 +1,5 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework import serializers
 
 from .models import Document, Section, Subtitle
 
@@ -10,15 +11,30 @@ class SubtitleSerializer(ModelSerializer):
 
 
 class SectionSerializer(ModelSerializer):
-    pass
+    """
+        Main Serializer fo Section Model
+    """
+    subtitles = SubtitleSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Section
+        fields = ['title', 'markdown', 'subtitles']
+
+
+class SectionSerializerForDocument(ModelSerializer):
+    """
+        This Serializer is only for getting Documents, serialized Data
+    """
+    subtitles = SubtitleSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Section
+        fields = ['title', 'subtitles']
 
 
 class DocumentSerializer(ModelSerializer):
-    """
-    set init for section
-    """
-    sections = SectionSerializer(many=True, read_only=True)
+    sections_with_subtitles = SectionSerializerForDocument(many=True, read_only=True)
 
     class Meta:
         model = Document
-        fields = ['title', 'sections']
+        fields = ['title', 'sections_with_subtitles']

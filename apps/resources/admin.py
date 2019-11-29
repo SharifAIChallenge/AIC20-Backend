@@ -11,18 +11,23 @@ from .models import Document, Section, Subtitle
 
 class SectionInline(admin.StackedInline):
     model = Section
+    formfield_overrides = {
+        models.TextField: {'widget': AdminMartorWidget},
+    }
 
 
 @admin.register(Document)
 class DocumentAdmin(ModelAdmin):
     list_display = ['title']
+
     inlines = [SectionInline]
     pass
 
 
 @admin.register(Section)
 class SectionAdmin(ModelAdmin):
-    list_display = ['title', 'md', 'get_document_title']
+    list_display = ['title', 'get_document_title']
+
     formfield_overrides = {
         models.TextField: {'widget': AdminMartorWidget},
     }
