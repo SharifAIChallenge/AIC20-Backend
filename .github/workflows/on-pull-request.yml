@@ -10,6 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: install pep8
-    - run: pip3 install pycodestyle
+      run: pip3 install pycodestyle
     - name: Run pep8
       run: pycodestyle .
