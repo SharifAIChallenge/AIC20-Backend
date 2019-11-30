@@ -4,6 +4,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from blog.models import *
 from blog.serializers import *
+from blog import paginations
 
 # Create your views here.
 
@@ -26,15 +27,20 @@ class post_list_view(GenericAPIView):
 
 class comment_list_view(GenericAPIView):
     serializer_class = CommentSerializer
-    queryset = [Comment.objects.all()],
+    queryset = [Comment.objects.all()]
+    permission_classes = ['IsAuthenticated|IsReadOnlyRequest']
+    pagination_class = paginations.CommentsPagination
 
     def get(self, request):
         data = CommentSerializer(self.get_queryset(), many=True).data
         return Response(data)
 
     def post(self, request):
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        return Response({"detail": ("کامنت شما ثبت شد.")})
+
 
 
