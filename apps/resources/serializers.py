@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework import serializers
 
 from .models import Document, Section, Subtitle
 
@@ -7,6 +8,15 @@ class SubtitleSerializer(ModelSerializer):
     class Meta:
         model = Subtitle
         fields = ['subtitle']
+
+    def validate(self, attrs):
+        if 'subtitle' not in attrs:
+            raise serializers.ValidationError('Subtitle Field Missing!')
+        if not attrs['subtitle']:
+            raise serializers.ValidationError('Subtitle Field is Empty')
+        if len(attrs) > 1:
+            raise serializers.ValidationError('Too Many Fields')
+        return attrs
 
 
 class SectionSerializer(ModelSerializer):
@@ -18,6 +28,20 @@ class SectionSerializer(ModelSerializer):
     class Meta:
         model = Section
         fields = ['title', 'markdown', 'subtitles']
+
+    def validate(self, attrs):
+        if 'title' not in attrs:
+            raise serializers.ValidationError('Title Field Missing!')
+        if 'markdown' not in attrs:
+            raise serializers.ValidationError('Markdown Field Missing!')
+        if not attrs['title']:
+            raise serializers.ValidationError('Title Field is Empty')
+        if not attrs['markdown']:
+            raise serializers.ValidationError('Markdown Field is Empty')
+
+        if len(attrs) > 2:
+            raise serializers.ValidationError('Too Many Fields')
+        return attrs
 
 
 class SectionSerializerForAPIVIewOfASpecificDocument(ModelSerializer):
@@ -45,3 +69,12 @@ class DocumentSerializer(ModelSerializer):
     class Meta:
         model = Document
         fields = ['title', 'sections']
+
+    def validate(self, attrs):
+        if 'title' not in attrs:
+            raise serializers.ValidationError('Title Field Missing!')
+        if not attrs['title']:
+            raise serializers.ValidationError('Title Field is Empty!')
+        if len(attrs) > 1:
+            raise serializers.ValidationError('Too Many Fields')
+        return attrs

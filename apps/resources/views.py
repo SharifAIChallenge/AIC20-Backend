@@ -5,7 +5,8 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 
 from .models import Document, Section
-from .serializers import DocumentSerializer, SectionSerializer, SectionSerializerForAPIVIewOfASpecificDocument
+from .serializers import DocumentSerializer, SectionSerializer, SectionSerializerForAPIVIewOfASpecificDocument, \
+    SubtitleSerializer
 
 
 class DocumentListAPIView(GenericAPIView):
@@ -18,15 +19,15 @@ class DocumentListAPIView(GenericAPIView):
 
     def post(self, request):
         document = DocumentSerializer(data=request.data)
-        document.is_valid()
-        document.save()
-        return Response(data=document.data, status=status.HTTP_201_CREATED)
+        if document.is_valid(True):
+            document.save()
+            return Response(data=document.data, status=status.HTTP_201_CREATED)
 
     def put(self, request):
         document = DocumentSerializer(data=request.data)
-        document.is_valid()
-        document.save()
-        return Response(data=document.data, status=status.HTTP_202_ACCEPTED)
+        if document.is_valid(True):
+            document.save()
+            return Response(data=document.data, status=status.HTTP_202_ACCEPTED)
 
 
 class DocumentInstanceAPIView(GenericAPIView):
@@ -39,13 +40,14 @@ class DocumentInstanceAPIView(GenericAPIView):
         return Response(data={'document_title': doc_name, 'sections': data}, status=status.HTTP_200_OK)
 
     def post(self, request, doc_name):
-        document = get_object_or_404(self.get_queryset(), title=doc_name)
+        document = get_object_or_404(Document, title=doc_name)
         section = self.get_serializer(data=request.data)
-        section.is_valid()
-        instance = section.save()
-        instance.document = document
-        instance.save()
-        return Response(data=section.data, status=status.HTTP_201_CREATED)
+        if section.is_valid(True):
+            instance = section.save()
+            instance.document = document
+            instance.save()
+            return Response(data=SectionSerializerForAPIVIewOfASpecificDocument(instance).data,
+                            status=status.HTTP_201_CREATED)
 
 
 class SectionAPIView(GenericAPIView):
@@ -57,9 +59,18 @@ class SectionAPIView(GenericAPIView):
         data = self.get_serializer(section).data
         return Response(data={'document_title': section.document.title, 'section': data}, status=status.HTTP_200_OK)
 
+    def post(self, request, section_uuid):
+        section = get_object_or_404(self.get_queryset(), uuid=section_uuid)
+        subtitle = SubtitleSerializer(data=request.data)
+        if subtitle.is_valid(True):
+            instance = subtitle.save()
+            instance.section = section
+            instance.save()
+            return Response(data=subtitle.data, status=status.HTTP_201_CREATED)
+
     def put(self, request, section_uuid):
         section = get_object_or_404(self.get_queryset(), uuid=section_uuid)
         section = self.get_serializer(instance=section, data=request.data)
-        section.is_valid()
-        section.save()
-        return Response(data=section.data, status=status.HTTP_202_ACCEPTED)
+        if section.is_valid(True):
+            section.save()
+            return Response(data=section.data, status=status.HTTP_202_ACCEPTED)
