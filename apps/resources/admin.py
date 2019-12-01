@@ -11,6 +11,7 @@ from .models import Document, Section, Subtitle
 
 class SectionInline(admin.StackedInline):
     model = Section
+    readonly_fields = ['uuid']
     formfield_overrides = {
         models.TextField: {'widget': AdminMartorWidget},
     }
@@ -30,6 +31,7 @@ class SubtitleInline(admin.StackedInline):
 @admin.register(Section)
 class SectionAdmin(ModelAdmin):
     list_display = ['title', 'get_document_title']
+    readonly_fields = ['uuid']
     inlines = [SubtitleInline]
     formfield_overrides = {
         models.TextField: {'widget': AdminMartorWidget},
@@ -38,8 +40,8 @@ class SectionAdmin(ModelAdmin):
     def get_document_title(self, section: Section):
         return section.document.title
 
-    get_document_title.short_description = 'Author'
-    get_document_title.admin_order_field = 'book__author'
+    get_document_title.short_description = 'Document Title'
+    get_document_title.admin_order_field = 'section_document_title'
 
     pass
 
