@@ -1,24 +1,24 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.admin import User
+
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
+from apps.user_profile.models import Profile
 from apps.user_profile.serializer import UserSerializer
 
 
 class SignUpView(GenericAPIView):
-    queryset = User.objects.all()
+    queryset = Profile.objects.all()
     serializer_class = UserSerializer
 
-    def get(self, request):
-        pass
-
     def post(self, request):
-        pass
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        return Response(serializer.data)
 
 
 class LoginView(GenericAPIView):
-    queryset = User.objects.all()
+    queryset = Profile.objects.all()
     serializer_class = UserSerializer
 
     def get(self, request):
@@ -29,7 +29,7 @@ class LoginView(GenericAPIView):
 
 
 class LogoutView(GenericAPIView):
-    queryset = User.objects.all()
+    queryset = Profile.objects.all()
     serializer_class = UserSerializer
 
     def get(self, request):
@@ -40,7 +40,7 @@ class LogoutView(GenericAPIView):
 
 
 class ForgotPasswordView(GenericAPIView):
-    queryset = User.objects.all()
+    queryset = Profile.objects.all()
     serializer_class = UserSerializer
 
     def get(self, request):
@@ -51,7 +51,7 @@ class ForgotPasswordView(GenericAPIView):
 
 
 class LoginWithGoogleView(GenericAPIView):
-    queryset = User.objects.all()
+    queryset = Profile.objects.all()
     serializer_class = UserSerializer
 
     def get(self, request):

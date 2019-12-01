@@ -1,10 +1,11 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
+
+from apps.user_profile.models import Profile
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Profile
         fields = ['username', 'password', 'email', 'first_name']
 
     def validate(self, attrs):
