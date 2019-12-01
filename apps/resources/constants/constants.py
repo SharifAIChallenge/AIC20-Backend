@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-api_token = 'if@1030!asjdf;cc0e$paipofjip00qu2'
+api_token = 'if@1030!asjdfcc0e$paipofjip00qu2'
 
 
 @dataclass

@@ -4,14 +4,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 
-from apps.resources.authentications.authentication import TokenAuthentication
 from .models import Document, Section
 from .serializers import DocumentSerializer, SectionSerializer, SectionSerializerForAPIVIewOfASpecificDocument
 
 
 class DocumentListAPIView(GenericAPIView):
-    authentication_classes = [TokenAuthentication, ]
-
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
 
@@ -33,8 +30,6 @@ class DocumentListAPIView(GenericAPIView):
 
 
 class DocumentInstanceAPIView(GenericAPIView):
-    authentication_classes = [TokenAuthentication, ]
-
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
 
@@ -54,8 +49,6 @@ class DocumentInstanceAPIView(GenericAPIView):
 
 
 class SectionAPIView(GenericAPIView):
-    authentication_classes = [TokenAuthentication, ]
-
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
 
