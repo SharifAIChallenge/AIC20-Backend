@@ -1,5 +1,7 @@
 import uuid
 
+from django.shortcuts import get_object_or_404
+
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -34,19 +36,12 @@ class DocumentInstanceAPIView(GenericAPIView):
     serializer_class = SectionSerializer
 
     def get(self, request, doc_name):
-        try:
-            sections = self.get_queryset().filter(document__title=doc_name)
-        except Section.DoesNotExist as e:
-            return Response(data={'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
+        sections = self.get_queryset().filter(document__title=doc_name)
         data = SectionSerializerForAPIVIewOfASpecificDocument(sections, many=True).data
-        return Response(data={'sections': data}, status=status.HTTP_200_OK)
+        return Response(data={'document_title': doc_name, 'sections': data}, status=status.HTTP_200_OK)
 
     def post(self, request, doc_name):
-        try:
-            document = Document.objects.get(title=doc_name)
-        except Document.DoesNotExist as e:
-            return Response(data={'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
-
+        document = get_object_or_404(self.get_queryset(), title=doc_name)
         section = self.get_serializer(data=request.data)
         section.is_valid()
         instance = section.save()
@@ -60,18 +55,12 @@ class SectionAPIView(GenericAPIView):
     serializer_class = SectionSerializer
 
     def get(self, request, section_uuid):
-        try:
-            section = self.get_queryset().get(uuid=section_uuid)
-        except (Section.DoesNotExist, Section.MultipleObjectsReturned) as e:
-            return Response(data={'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
+        section = get_object_or_404(self.get_queryset(), uuid=section_uuid)
         data = self.get_serializer(section).data
-        return Response(data={'section': data}, status=status.HTTP_200_OK)
+        return Response(data={'document_title': section.document.title, 'section': data}, status=status.HTTP_200_OK)
 
     def put(self, request, section_uuid):
-        try:
-            section = self.get_queryset().get(uuid=section_uuid)
-        except Section.DoesNotExist as e:
-            return Response(data={'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
+        section = get_object_or_404(self.get_queryset(), uuid=section_uuid)
         section = self.get_serializer(instance=section, data=request.data)
         section.is_valid()
         section.save()

@@ -20,5 +20,5 @@ from django.contrib import admin
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('martor/', include('martor.urls')),
-    path('resource/', include('apps.resources.urls')),
+    path('resources/', include('apps.resources.urls')),
 ]

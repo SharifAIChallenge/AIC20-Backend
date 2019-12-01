@@ -40,8 +40,8 @@ class SectionSerializerForDocument(ModelSerializer):
 
 
 class DocumentSerializer(ModelSerializer):
-    sections_with_subtitles = SectionSerializerForDocument(many=True, read_only=True)
+    sections = SectionSerializerForDocument(many=True, read_only=True)
 
     class Meta:
         model = Document
-        fields = ['title', 'sections_with_subtitles']
+        fields = ['title', 'sections']
