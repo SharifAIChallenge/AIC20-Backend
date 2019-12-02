@@ -1,3 +1,4 @@
+from rest_framework import status
 from django.http import HttpResponse
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -26,7 +27,7 @@ class LoginView(GenericAPIView):
         username = request.data['username']
         password = request.data['password']
         user = authenticate(request, username=username, password=password)
-        if user is not None:
+        if user:
             login(request, user)
         return Response(request.data)
 
@@ -35,11 +36,9 @@ class LogoutView(GenericAPIView):
     queryset = Profile.objects.all()
     serializer_class = UserSerializer
 
-    def get(self, request):
-        pass
-
     def post(self, request):
-        pass
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class ForgotPasswordView(GenericAPIView):
