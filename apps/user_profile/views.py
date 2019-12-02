@@ -1,4 +1,4 @@
-
+from django.http import HttpResponse
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login
