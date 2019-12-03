@@ -6,6 +6,7 @@ from blog.models import *
 from blog.serializers import *
 from blog import paginations
 
+
 # Create your views here.
 
 class blog_view(GenericAPIView):
@@ -28,7 +29,9 @@ class post_list_view(GenericAPIView):
 class comment_list_view(GenericAPIView):
     serializer_class = CommentSerializer
     queryset = [Comment.objects.all()]
-    permission_classes = ['IsAuthenticated|IsReadOnlyRequest']
+
+    #TODO IsAuthenticated
+    # permission_classes = ['IsAuthenticated|IsReadOnlyRequest']
     pagination_class = paginations.CommentsPagination
 
     def get(self, request):
