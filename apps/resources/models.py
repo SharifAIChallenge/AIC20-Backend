@@ -4,15 +4,17 @@ from django.db import models
 
 
 class Document(models.Model):
-    title = models.CharField(max_length=100, unique=True, primary_key=True)
+    title_en = models.CharField(max_length=100, unique=True, primary_key=True)
+    title_fa = models.CharField(max_length=100, unique=True, primary_key=True)
 
     def __str__(self):
-        return self.title
+        return self.title_en
 
 
 class Section(models.Model):
     document = models.ForeignKey(Document, related_name='sections', on_delete=models.CASCADE, null=True)
-    title = models.CharField(max_length=100)
+    title_en = models.CharField(max_length=100)
+    title_fa = models.CharField(max_length=100)
     markdown = models.TextField(blank=True)
     uuid = models.CharField(max_length=20, unique=True, blank=True, null=False)
 
@@ -28,12 +30,13 @@ class Section(models.Model):
         super(Section, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.title
+        return self.title_en
 
 
 class Subtitle(models.Model):
-    subtitle = models.CharField(max_length=50)
+    subtitle_en = models.CharField(max_length=50)
+    subtitle_fa = models.CharField(max_length=50)
     section = models.ForeignKey(Section, related_name='subtitles', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.subtitle
+        return self.subtitle_en
