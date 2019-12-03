@@ -19,11 +19,11 @@ class DocumentListAPIView(GenericAPIView):
 
 class DocumentInstanceAPIView(GenericAPIView):
     queryset = Section.objects.all()
-    serializer_class = SectionSerializer
+    serializer_class = SectionSerializerForAPIVIewOfASpecificDocument
 
     def get(self, request, doc_name):
         sections = self.get_queryset().filter(document__title=doc_name)
-        data = SectionSerializerForAPIVIewOfASpecificDocument(sections, many=True).data
+        data = self.get_serializer(sections, many=True).data
         return Response(data={'document_title': doc_name, 'sections': data}, status=status.HTTP_200_OK)
 
 
