@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.utils import json
 
 from homepage.models import *
 
@@ -46,13 +47,20 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
 
 class HomePageSerializer(serializers.ModelSerializer):
-    screens = ScreenSerializer(many=True, queryset=Screen.objects.all())
-    photos = PhotoSerializer(many=True, queryset=Photo.objects.all())
-    timeline_events = TimeLineEventSerializer(many=True, queryset=TimeLineEvent.objects.all())
-    prizes = PrizeSerializer(many=True, queryset=Prize.objects.all())
-    sponsors = SponsorSerializer(many=True, queryset=Sponsor.objects.all())
-    organizations = OrganizationSerializer(many=True, queryset=Organization.objects.all())
+    dictionary = serializers.SerializerMethodField('get_dict')
+
+    def get_dict(self, a):
+        serializer_dictionary = dict()
+        serializer_dictionary['screens'] = ScreenSerializer(Screen.objects.all(), many=True).data
+        serializer_dictionary['photos'] = PhotoSerializer(Photo.objects.all(), many=True).data
+        serializer_dictionary['timeline_events'] = TimeLineEventSerializer(TimeLineEvent.objects.all(), many=True).data
+        serializer_dictionary['prizes'] = PrizeSerializer(Prize.objects.all(), many=True).data
+        serializer_dictionary['sponsors'] = SponsorSerializer(Sponsor.objects.all(), many=True).data
+        serializer_dictionary['organizations'] = OrganizationSerializer(Organization.objects.all(), many=True).data
+
+        dictionary = json.dumps(serializer_dictionary)
+        return dictionary
 
     class Meta:
         model = Homepage
-        fields = ['title_en', 'title_fa', 'screens', 'photos', 'timeline_events', 'prizes', 'sponsors', 'organizations']
+        fields = ('title_en', 'title_fa', 'dictionary')
