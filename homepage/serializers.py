@@ -3,14 +3,6 @@ from rest_framework import serializers
 from homepage.models import *
 
 
-class HomePageSerializer(serializers.ModelSerializer):
-    Photos = serializers.PrimaryKeyRelatedField(many=True, source='job_set', queryset=Photo.objects.all())
-
-    class Meta:
-        model = Homepage
-        fields = ['title_en', 'title_fa']
-
-
 class ScreenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Screen
@@ -51,3 +43,16 @@ class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = '__all__'
+
+
+class HomePageSerializer(serializers.ModelSerializer):
+    screens = ScreenSerializer(many=True, queryset=Screen.objects.all())
+    photos = PhotoSerializer(many=True, queryset=Photo.objects.all())
+    timeline_events = TimeLineEventSerializer(many=True, queryset=TimeLineEvent.objects.all())
+    prizes = PrizeSerializer(many=True, queryset=Prize.objects.all())
+    sponsors = SponsorSerializer(many=True, queryset=Sponsor.objects.all())
+    organizations = OrganizationSerializer(many=True, queryset=Organization.objects.all())
+
+    class Meta:
+        model = Homepage
+        fields = ['title_en', 'title_fa', 'screens', 'photos', 'timeline_events', 'prizes', 'sponsors', 'organizations']

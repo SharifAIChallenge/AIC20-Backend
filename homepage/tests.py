@@ -4,8 +4,9 @@ from rest_framework.test import APITestCase
 
 
 class Tests(APITestCase):
-    def test_login_user(self):
+    def test_homepage(self):
         url = reverse('homepage:get_homepage')
         data = {}
         response = self.client.get(url, data, format='json')
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
