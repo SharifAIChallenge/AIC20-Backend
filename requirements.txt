@@ -1,4 +1,11 @@
+chardet==3.0.4
 Django==2.2.8
 djangorestframework==3.10.3
+idna==2.8
+Markdown==3.1.1
+martor==1.4.4
+Pillow==6.2.1
 pytz==2019.3
+requests==2.22.0
 sqlparse==0.3.0
+urllib3==1.25.7
