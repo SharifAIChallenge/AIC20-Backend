@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
 from apps.user_profile.models import Profile
@@ -12,3 +13,6 @@ class UserSerializer(serializers.ModelSerializer):
         if len(attrs['password']) < 4:
             raise serializers.ValidationError('password is too short')
         return attrs
+
+    def validate_password(self, value: str) -> str:
+        return make_password(value)

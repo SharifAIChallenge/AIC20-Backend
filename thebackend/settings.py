@@ -124,8 +124,7 @@ AUTH_USER_MODEL = 'user_profile.Profile'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_AUTHENTICATION_PERMISSIONS': [
         'rest_framework.permissions.IsAuthenticated',
@@ -134,3 +133,4 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ]
 }
+
