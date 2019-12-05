@@ -1,30 +1,32 @@
 from rest_framework import serializers
 from blog.models import *
 
-
-class BlogSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Blog
-        fields = ['image','posts' ]
-
-
-class PostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = ['date', 'image', 'title', 'text', 'comments', 'tags']
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = ['writer_name', 'text', 'date', 'email', 'shown']
-    def validate(self , attrs):
-        if not attrs['shown']:
-            raise serializers.ValidationError("این کامنت قابل نمایش نیست!")
-        return attrs
-
-
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ['name', 'color']
+        fields = ['name_en','name_fa', 'color']
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ['writer_name', 'text', 'date', 'email', 'shown']
+
+class PostSerializer(serializers.ModelSerializer):
+    comments = CommentSerializer(many=True)
+    tags = TagSerializer(many=True)
+    class Meta:
+        model = Post
+        fields = ['comments', 'tags','date', 'image', 'title_en','title_fa', 'text_en', 'text_fa']
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    posts = PostSerializer(many=True)
+    class Meta:
+        model = Blog
+        fields = ['posts','image' ]
+
+
+
+
+

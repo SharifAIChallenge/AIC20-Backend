@@ -10,8 +10,11 @@ class Post(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='posts')
     date = models.DateTimeField(auto_now_add=True)
     image = models.ImageField()
-    title = models.CharField(max_length=50)
-    text = models.CharField(max_length=10000)
+    title_en = models.CharField(max_length=50)
+    title_fa = models.CharField(max_length=50)
+    text_en = models.CharField(max_length=10000)
+    text_fa = models.CharField(max_length=10000)
+
 
 
 class Comment(models.Model):
@@ -24,7 +27,8 @@ class Comment(models.Model):
 
 class Tag(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='tags')
-    name = models.CharField(max_length=50)
-    # color = models
+    name_en = models.CharField(max_length=50)
+    name_fa = models.CharField(max_length=50)
+    color = models.CharField(max_length=20)
 
 
