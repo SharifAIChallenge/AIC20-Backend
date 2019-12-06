@@ -4,7 +4,7 @@ from rest_framework import serializers
 from apps.user_profile.models import Profile
 
 
-class UserSerializer(serializers.ModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['username', 'password', 'email', 'first_name']

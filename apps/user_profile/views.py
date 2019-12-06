@@ -6,12 +6,12 @@ from django.contrib.auth import authenticate, logout
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK, HTTP_400_BAD_REQUEST
 
 from apps.user_profile.models import Profile
-from apps.user_profile.serializer import UserSerializer
+from apps.user_profile.serializer import ProfileSerializer
 
 
 class SignUpView(GenericAPIView):
     queryset = Profile.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = ProfileSerializer
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -22,7 +22,7 @@ class SignUpView(GenericAPIView):
 
 class LogoutView(GenericAPIView):
     queryset = Profile.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
@@ -32,7 +32,7 @@ class LogoutView(GenericAPIView):
 
 class ForgotPasswordView(GenericAPIView):
     queryset = Profile.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = ProfileSerializer
 
     def post(self, request):
         pass
@@ -40,7 +40,7 @@ class ForgotPasswordView(GenericAPIView):
 
 class LoginWithGoogleView(GenericAPIView):
     queryset = Profile.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = ProfileSerializer
 
     def post(self, request):
         pass
