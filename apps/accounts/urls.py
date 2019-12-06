@@ -1,6 +1,6 @@
 from django.urls import path
 
-from apps.user_profile.views import *
+from apps.accounts.views import *
 from rest_framework_simplejwt import views as jwt_views
 
 urlpatterns = [

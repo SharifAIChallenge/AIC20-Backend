@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate, logout
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK, HTTP_400_BAD_REQUEST
 
-from apps.user_profile.models import Profile
-from apps.user_profile.serializer import ProfileSerializer
+from apps.accounts.models import Profile
+from apps.accounts.serializer import ProfileSerializer
 
 
 class SignUpView(GenericAPIView):

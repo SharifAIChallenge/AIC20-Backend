@@ -1,4 +1,4 @@
-from apps.user_profile.models import Profile
+from apps.accounts.models import Profile
 from django.contrib import admin
 
 # Register your models here
