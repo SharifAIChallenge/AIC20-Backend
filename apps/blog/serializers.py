@@ -14,8 +14,8 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ['writer_name', 'text', 'date', 'email']
 
     def create(self, validated_data):
-        validated_data.pop('writer_name', None)
-        return Comment.objects.create(**validated_data, writer_name=self.request.user.username)
+        validated_data['writer_name'] = self.request.user.username
+        return Comment.objects.create(**validated_data)
 
 
 class PostSerializer(serializers.ModelSerializer):

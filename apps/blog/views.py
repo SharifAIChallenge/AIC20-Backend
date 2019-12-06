@@ -42,11 +42,11 @@ class CommentListView(GenericAPIView):
         try:
             all_comments = self.get_queryset().filter(post__id=post_id)
             user_comments = all_comments.filter(writer_name=request.user.username)
-            user_comments.order_by('-data')
+            user_comments.order_by('-date')
             other_users_comments = all_comments.exclude(writer_name=request.user.username)
             other_users_comments.order_by('-date')
             comments = list(user_comments) + list(other_users_comments)
-            data = CommentSerializer(comments).data
+            data = CommentSerializer(comments, many=True).data
             return Response(data)
         except Exception:
             raise Http404

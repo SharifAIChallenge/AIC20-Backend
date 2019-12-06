@@ -19,7 +19,7 @@ class Comment(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
     shown = models.BooleanField(default=True)
-    reply_to = models.ForeignKey('Comment', on_delete=models.CASCADE)
+    reply_to = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Tag(models.Model):
