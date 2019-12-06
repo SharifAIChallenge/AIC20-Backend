@@ -10,7 +10,11 @@ class TranslatedText(models.Model):
 
 
 def translatedTextField(related_name):
-    return models.ForeignKey(TranslatedText, models.CASCADE, related_name=related_name)
+    return models.ForeignKey(
+        TranslatedText,
+        models.CASCADE,
+        related_name=related_name
+    )
 
 
 class DocumentTest(models.Model):
