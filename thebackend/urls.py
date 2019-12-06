@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('martor/', include('martor.urls')),
     path('resources/', include('apps.resources.urls')),
+    path('translation/', include('apps.translation.urls')),
 ]
