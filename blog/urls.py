@@ -4,9 +4,8 @@ from blog.views import *
 
 urlpatterns = [
 
-    url(r'^$', blog_view.as_view()),
-    path('posts/', post_list_view.as_view()),
-    path('posts/<int:id>', post_by_id_view.as_view()),
-    url(r'^comments/$', comment_list_view.as_view()),
+    url(r'^$', BlogView.as_view()),
+    path('<int:post_id>', PostView.as_view()),
+    path('<int:post_id>/comments', CommentListView.as_view()),
 
 ]

@@ -1,20 +1,15 @@
 from django.db import models
 
-# Create your models here.
-
-class Blog(models.Model):
-    image = models.ImageField()
-
 
 class Post(models.Model):
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='posts')
     date = models.DateTimeField(auto_now_add=True)
     image = models.ImageField()
     title_en = models.CharField(max_length=50)
     title_fa = models.CharField(max_length=50)
     text_en = models.CharField(max_length=10000)
     text_fa = models.CharField(max_length=10000)
-
+    description_fa = models.CharField(max_length=300)
+    description_en = models.CharField(max_length=300)
 
 
 class Comment(models.Model):
@@ -25,10 +20,9 @@ class Comment(models.Model):
     email = models.EmailField()
     shown = models.BooleanField(default=True)
 
+
 class Tag(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='tags')
     name_en = models.CharField(max_length=50)
     name_fa = models.CharField(max_length=50)
     color = models.CharField(max_length=20)
-
-
