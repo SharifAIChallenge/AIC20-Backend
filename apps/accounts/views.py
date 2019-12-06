@@ -1,19 +1,21 @@
 from rest_framework import status, permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView
+from rest_framework.request import Request
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, logout
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK, HTTP_400_BAD_REQUEST
 
 from apps.accounts.models import Profile
-from apps.accounts.serializer import ProfileSerializer
+from apps.accounts.serializer import *
 
 
 class SignUpView(GenericAPIView):
     queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = UserSerializer
 
     def post(self, request):
+
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
