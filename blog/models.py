@@ -6,10 +6,10 @@ class Post(models.Model):
     image = models.ImageField()
     title_en = models.CharField(max_length=50)
     title_fa = models.CharField(max_length=50)
-    text_en = models.CharField(max_length=10000)
-    text_fa = models.CharField(max_length=10000)
-    description_fa = models.CharField(max_length=300)
-    description_en = models.CharField(max_length=300)
+    text_en = models.TextField(max_length=10000)
+    text_fa = models.TextField(max_length=10000)
+    description_fa = models.TextField(max_length=300)
+    description_en = models.TextField(max_length=300)
 
 
 class Comment(models.Model):
@@ -19,6 +19,7 @@ class Comment(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
     shown = models.BooleanField(default=True)
+    reply_to = models.ForeignKey('Comment', on_delete=models.CASCADE)
 
 
 class Tag(models.Model):

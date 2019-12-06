@@ -11,7 +11,11 @@ class TagSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['writer_name', 'text', 'date', 'email', 'shown']
+        fields = ['writer_name', 'text', 'date', 'email']
+
+    def create(self, validated_data):
+        validated_data.pop('writer_name', None)
+        return Comment.objects.create(**validated_data, writer_name=self.request.user.username)
 
 
 class PostSerializer(serializers.ModelSerializer):

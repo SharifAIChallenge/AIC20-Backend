@@ -13,7 +13,7 @@ from blog import paginations
 
 class BlogView(GenericAPIView):
     serializer_class = PostDescriptionSerializer
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by('-data')
 
     def get(self, request):
         data = PostDescriptionSerializer(self.get_queryset(), many=True).data
@@ -34,7 +34,7 @@ class PostView(GenericAPIView):
 
 class CommentListView(GenericAPIView):
     serializer_class = CommentSerializer
-    queryset = Comment.objects.all()
+    queryset = Comment.objects.all().order_by('-date')
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = paginations.CommentsPagination
 
@@ -43,10 +43,15 @@ class CommentListView(GenericAPIView):
 
     def get(self, request, post_id):
         try:
-            comments = self.get_queryset().filter(post__id=post_id)
+            all_comments = self.get_queryset().filter(post__id=post_id)
+            user_comments = all_comments.filter(writer_name=request.user.username)
+            user_comments.order_by('-data')
+            other_users_comments = all_comments.exclude(writer_name=request.user.username)
+            other_users_comments.order_by('-date')
+            comments = list(user_comments) + list(other_users_comments)
             data = CommentSerializer(comments).data
             return Response(data)
-        except comments.DoesNotExist:
+        except Exception:
             raise Http404
 
     def post(self, request):
