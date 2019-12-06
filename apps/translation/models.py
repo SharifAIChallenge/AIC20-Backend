@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+class TranslatedText(models.Model):
+    content_en = models.TextField(blank=True, null=False)
+    content_fa = models.TextField(blank=True, null=False)
+
+    def __str__(self):
+        return self.content_en

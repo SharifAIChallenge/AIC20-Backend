@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'apps.resources.apps.ResourcesConfig',
+    'apps.translation',
     'martor',
 ]
 
