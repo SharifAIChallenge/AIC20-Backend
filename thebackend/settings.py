@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'apps.blog',
     'apps.resources.apps.ResourcesConfig',
     'martor',
+    # 'rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -87,19 +89,19 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation'
-        + '.UserAttributeSimilarityValidator',
+                + '.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-        + '.MinimumLengthValidator',
+                + '.MinimumLengthValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-        + '.CommonPasswordValidator',
+                + '.CommonPasswordValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-        + '.NumericPasswordValidator',
+                + '.NumericPasswordValidator',
     },
 ]
 
@@ -120,6 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
 STATIC_ROOT = './statics'
 
 MARTOR_ENABLE_CONFIGS = {
@@ -170,3 +173,14 @@ MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://github.githubassets.com/images/icons/e
 MARTOR_MARKDOWN_BASE_MENTION_URL = 'https://python.web.id/author/'  # please change this to your domain
 
 CSRF_COOKIE_HTTPONLY = False
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+
+    # 'DEFAULT_PERMISSION_CLASSES': [ 'rest_framework.permissions.IsAuthenticated', ],
+
+}
