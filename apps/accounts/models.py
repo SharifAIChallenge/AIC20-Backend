@@ -3,7 +3,9 @@ from django.db import models
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE,
+                                related_name='profile')
 
     EDUCATION_CHOICES = (
         ('high_school', 'دبیرستان'),
