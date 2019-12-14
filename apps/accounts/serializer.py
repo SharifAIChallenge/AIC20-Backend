@@ -22,10 +22,3 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create(**validated_data)
         Profile.objects.create(user=user, **profile_data)
         return user
-
-
-
-
-
-
-
