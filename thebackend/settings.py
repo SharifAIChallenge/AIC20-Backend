@@ -37,9 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'apps.accounts',
+    'apps.blog',
     'apps.resources.apps.ResourcesConfig',
     'apps.translation',
     'martor',
+    # 'rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -88,19 +91,19 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation'
-        + '.UserAttributeSimilarityValidator',
+                + '.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-        + '.MinimumLengthValidator',
+                + '.MinimumLengthValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-        + '.CommonPasswordValidator',
+                + '.CommonPasswordValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-        + '.NumericPasswordValidator',
+                + '.NumericPasswordValidator',
     },
 ]
 
@@ -121,13 +124,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_AUTHENTICATION_PERMISSIONS': [
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ]
+}
+
 STATIC_ROOT = './statics'
 
 MARTOR_ENABLE_CONFIGS = {
     'imgur': 'true',  # to enable/disable imgur/custom uploader.
     'mention': 'false',  # to enable/disable mention
-    # to include/revoke jquery (require for admin default django)
-    'jquery': 'true',
+    'jquery': 'true', 
     'living': 'false',  # to enable/disable live updates in preview
     'spellcheck': 'true',
 }
@@ -173,3 +188,14 @@ MARTOR_MARKDOWN_BASE_EMOJI_URL = \
 MARTOR_MARKDOWN_BASE_MENTION_URL = 'https://python.web.id/author/'
 
 CSRF_COOKIE_HTTPONLY = False
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+
+    # 'DEFAULT_PERMISSION_CLASSES': [ 'rest_framework.permissions.IsAuthenticated', ],
+
+}
