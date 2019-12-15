@@ -24,7 +24,8 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['comments', 'tags', 'date', 'image', 'title_en', 'title_fa', 'text_en', 'text_fa']
+        fields = ['comments', 'tags', 'date', 'image',
+                  'title_en', 'title_fa', 'text_en', 'text_fa']
 
 
 class PostDescriptionSerializer(serializers.ModelSerializer):
@@ -33,4 +34,5 @@ class PostDescriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['comments', 'tags', 'date', 'image', 'title_en', 'title_fa', 'description_en', 'description_fa']
+        fields = ['comments', 'tags', 'date', 'image', 'title_en',
+                  'title_fa', 'description_en', 'description_fa']

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.blog',
     'apps.resources.apps.ResourcesConfig',
+    'apps.translation',
     'martor',
     # 'rest_auth',
 ]
@@ -182,10 +183,13 @@ MARTOR_UPLOAD_URL = '/martor/uploader/'  # default
 MARTOR_SEARCH_USERS_URL = '/martor/search-user/'  # default
 
 # Markdown Extensions
-MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://github.githubassets.com/images/icons/emoji/'
+MARTOR_MARKDOWN_BASE_EMOJI_URL = \
+    'https://github.githubassets.com/images/icons/emoji/'
 # default from github
-MARTOR_MARKDOWN_BASE_MENTION_URL = 'https://python.web.id/author/'
+MARTOR_MARKDOWN_BASE_EMOJI_URL = \
+    'https://github.githubassets.com/images/icons/emoji/'
 # please change this to your domain
+MARTOR_MARKDOWN_BASE_MENTION_URL = 'https://python.web.id/author/'
 
 CSRF_COOKIE_HTTPONLY = False
 
@@ -193,9 +197,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS':
+    'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
-
-    # 'DEFAULT_PERMISSION_CLASSES': [ 'rest_framework.permissions.IsAuthenticated', ],
 
 }
