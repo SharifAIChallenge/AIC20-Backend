@@ -142,7 +142,7 @@ STATIC_ROOT = './statics'
 MARTOR_ENABLE_CONFIGS = {
     'imgur': 'true',  # to enable/disable imgur/custom uploader.
     'mention': 'false',  # to enable/disable mention
-    'jquery': 'true', 
+    'jquery': 'true',
     'living': 'false',  # to enable/disable live updates in preview
     'spellcheck': 'true',
 }
@@ -183,7 +183,7 @@ MARTOR_SEARCH_USERS_URL = '/martor/search-user/'  # default
 
 # default from github
 MARTOR_MARKDOWN_BASE_EMOJI_URL = \
-'https://github.githubassets.com/images/icons/emoji/'
+    'https://github.githubassets.com/images/icons/emoji/'
 # please change this to your domain
 MARTOR_MARKDOWN_BASE_MENTION_URL = 'https://python.web.id/author/'
 
@@ -193,9 +193,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS':
+    'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
-
-    # 'DEFAULT_PERMISSION_CLASSES': [ 'rest_framework.permissions.IsAuthenticated', ],
 
 }

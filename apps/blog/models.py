@@ -13,17 +13,20 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name='comments')
     writer_name = models.CharField(max_length=50)
     text = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
     shown = models.BooleanField(default=True)
-    reply_to = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, blank=True)
+    reply_to = models.ForeignKey(
+        'Comment', on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Tag(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='tags')
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name='tags')
     name_en = models.CharField(max_length=50)
     name_fa = models.CharField(max_length=50)
     color = models.CharField(max_length=20)
