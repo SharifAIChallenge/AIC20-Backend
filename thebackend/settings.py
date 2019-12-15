@@ -183,7 +183,8 @@ MARTOR_UPLOAD_URL = '/martor/uploader/'  # default
 MARTOR_SEARCH_USERS_URL = '/martor/search-user/'  # default
 
 # Markdown Extensions
-MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://github.githubassets.com/images/icons/emoji/'
+MARTOR_MARKDOWN_BASE_EMOJI_URL = \
+    'https://github.githubassets.com/images/icons/emoji/'
 # default from github
 MARTOR_MARKDOWN_BASE_EMOJI_URL = \
     'https://github.githubassets.com/images/icons/emoji/'
