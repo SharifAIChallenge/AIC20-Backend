@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'apps.accounts',
     'apps.blog',
     'apps.resources.apps.ResourcesConfig',
     'martor',
@@ -123,12 +124,25 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_AUTHENTICATION_PERMISSIONS': [
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ]
+}
+
 STATIC_ROOT = './statics'
 
 MARTOR_ENABLE_CONFIGS = {
     'imgur': 'true',  # to enable/disable imgur/custom uploader.
     'mention': 'false',  # to enable/disable mention
-    'jquery': 'true',  # to include/revoke jquery (require for admin default django)
+    'jquery': 'true',  
+    # to include/revoke jquery (require for admin default django)
     'living': 'false',  # to enable/disable live updates in preview
     'spellcheck': 'true',
 }
@@ -168,9 +182,10 @@ MARTOR_UPLOAD_URL = '/martor/uploader/'  # default
 MARTOR_SEARCH_USERS_URL = '/martor/search-user/'  # default
 
 # Markdown Extensions
-# MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://www.webfx.com/tools/emoji-cheat-sheet/graphics/emojis/'     # from webfx
-MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://github.githubassets.com/images/icons/emoji/'  # default from github
-MARTOR_MARKDOWN_BASE_MENTION_URL = 'https://python.web.id/author/'  # please change this to your domain
+MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://github.githubassets.com/images/icons/emoji/'  
+# default from github
+MARTOR_MARKDOWN_BASE_MENTION_URL = 'https://python.web.id/author/'
+# please change this to your domain
 
 CSRF_COOKIE_HTTPONLY = False
 
