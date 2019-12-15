@@ -11,6 +11,12 @@ class TranslatedTextInlineSmall(ReverseInlineModelAdmin):
         models.TextField: {'widget': widgets.AdminTextInputWidget},
     }
 
+class TranslatedTextInlineLarge(ReverseInlineModelAdmin):
+    model = TranslatedText
+    formfield_overrides = {
+        models.TextField: {'widget': AdminMartorWidget},
+    }
+
 @admin.register(TranslatedText)
 class TranslatedTextAdmin(admin.ModelAdmin):
     formfield_overrides = {
@@ -20,11 +26,16 @@ class TranslatedTextAdmin(admin.ModelAdmin):
 
 @admin.register(DocumentTest)
 class DocumentTestAdmin(ReverseModelAdmin):
-    inline_type = 'tabular'
+    inline_type = 'stacked'
     inline_reverse = [
         {
             'field_name': 'title', 
             'kwargs': {},
+            'admin_class': TranslatedTextInlineSmall
+        },
+        {
+            'field_name': 'description', 
+            'kwargs': {},
             'admin_class': TranslatedTextInlineLarge
-        }
+        },
     ]
