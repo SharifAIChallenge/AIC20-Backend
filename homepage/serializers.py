@@ -42,7 +42,7 @@ class SponsorSerializer(serializers.ModelSerializer):
 
 class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Organization
+        model = Organizer
         fields = '__all__'
 
 
@@ -56,7 +56,7 @@ class HomePageSerializer(serializers.ModelSerializer):
         serializer_dictionary['timeline_events'] = TimeLineEventSerializer(TimeLineEvent.objects.all(), many=True).data
         serializer_dictionary['prizes'] = PrizeSerializer(Prize.objects.all(), many=True).data
         serializer_dictionary['sponsors'] = SponsorSerializer(Sponsor.objects.all(), many=True).data
-        serializer_dictionary['organizations'] = OrganizationSerializer(Organization.objects.all(), many=True).data
+        serializer_dictionary['organizations'] = OrganizationSerializer(Organizer.objects.all(), many=True).data
 
         dictionary = json.dumps(serializer_dictionary)
         return dictionary

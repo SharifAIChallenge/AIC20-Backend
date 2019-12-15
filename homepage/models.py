@@ -77,5 +77,5 @@ class Sponsor(models.Model):
     link = models.ForeignKey(Link, on_delete=models.CASCADE, related_name='link')
 
 
-class Organization(Sponsor):
+class Organizer(Sponsor):
     homepage = models.ForeignKey(Homepage, on_delete=models.CASCADE)
