@@ -24,7 +24,7 @@ SECRET_KEY = 'b7=wz(h_fhvh%s8j)e*%zbd$4*fi-!e3g0kh&(3gbng%r8w8jq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -142,7 +142,8 @@ STATIC_ROOT = './statics'
 MARTOR_ENABLE_CONFIGS = {
     'imgur': 'true',  # to enable/disable imgur/custom uploader.
     'mention': 'false',  # to enable/disable mention
-    'jquery': 'true', 
+    'jquery': 'true',
+    # to include/revoke jquery (require for admin default django)
     'living': 'false',  # to enable/disable live updates in preview
     'spellcheck': 'true',
 }
@@ -181,6 +182,8 @@ MARTOR_MARKDOWN_EXTENSION_CONFIGS = {}
 MARTOR_UPLOAD_URL = '/martor/uploader/'  # default
 MARTOR_SEARCH_USERS_URL = '/martor/search-user/'  # default
 
+# Markdown Extensions
+MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://github.githubassets.com/images/icons/emoji/'
 # default from github
 MARTOR_MARKDOWN_BASE_EMOJI_URL = \
 'https://github.githubassets.com/images/icons/emoji/'
