@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from homepage.models import Homepage
-from homepage.serializers import HomePageSerializer
+from apps.homepage.models import Homepage
+from apps.homepage.serializers import HomePageSerializer
 
 
 @api_view(['GET'])

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.utils import json
 
-from homepage.models import *
+from apps.homepage.models import *
 
 
 class ScreenSerializer(serializers.ModelSerializer):
