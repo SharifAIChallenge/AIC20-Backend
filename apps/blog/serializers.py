@@ -19,7 +19,6 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
     tags = TagSerializer(many=True)
 
     class Meta:
@@ -29,10 +28,10 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class PostDescriptionSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
     tags = TagSerializer(many=True)
 
     class Meta:
         model = Post
         fields = ['comments', 'tags', 'date', 'image', 'title_en',
                   'title_fa', 'description_en', 'description_fa']
+

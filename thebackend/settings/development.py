@@ -127,6 +127,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR + '/static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR + '/media/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -141,5 +145,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
     'PAGE_SIZE': 100,
 }
+
+
 
 from .martor import *

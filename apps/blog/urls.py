@@ -6,7 +6,7 @@ from apps.blog.views import BlogView, PostView, CommentListView
 urlpatterns = [
 
     url(r'^$', BlogView.as_view()),
-    path('<int:post_id>', PostView.as_view()),
-    path('<int:post_id>/comments', CommentListView.as_view()),
+    path('<int:post_id>/', PostView.as_view()),
+    path('<int:post_id>/comments/', CommentListView.as_view()),
 
 ]
