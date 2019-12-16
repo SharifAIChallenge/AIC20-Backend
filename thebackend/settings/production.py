@@ -14,11 +14,11 @@ WSGI_APPLICATION = 'thebackend.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenviron('DB_NAME'),
-        "USER": os.getenviron('DB_USER'),
-        "PASSWORD": os.getenviron('DB_PASSWORD'),
-        "HOST": os.getenviron('DB_HOST'),
-        "PORT": os.getenviron('DB_PORT'),
+        "NAME": os.getenv('DB_NAME'),
+        "USER": os.getenv('DB_USER'),
+        "PASSWORD": os.getenv('DB_PASSWORD'),
+        "HOST": os.getenv('DB_HOST'),
+        "PORT": os.getenv('DB_PORT'),
     }
 }
 
