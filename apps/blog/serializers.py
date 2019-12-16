@@ -36,3 +36,4 @@ class PostDescriptionSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['comments', 'tags', 'date', 'image', 'title_en',
                   'title_fa', 'description_en', 'description_fa']
+
