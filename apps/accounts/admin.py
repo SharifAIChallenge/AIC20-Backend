@@ -6,4 +6,4 @@ from django.contrib import admin
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['email']
+    list_display = ['user', 'email', 'first_name_en', 'last_name_en', 'birth_date', 'residence', 'education']

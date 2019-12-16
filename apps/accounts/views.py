@@ -1,11 +1,9 @@
 from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from django.contrib.auth import authenticate, logout
-from rest_framework.status import HTTP_200_OK
 
-from apps.accounts.models import Profile
 from apps.accounts.serializer import *
+from apps.translation.util import translateQuerySet
 
 
 class SignUpView(GenericAPIView):
@@ -13,11 +11,15 @@ class SignUpView(GenericAPIView):
     serializer_class = UserSerializer
 
     def post(self, request):
-
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response(serializer.data)
+
+    def get(self, request, username):
+        filtered_queryset = translateQuerySet(self.get_queryset(), request).get(username=username)
+        data = self.get_serializer(filtered_queryset)
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 class LogoutView(GenericAPIView):
