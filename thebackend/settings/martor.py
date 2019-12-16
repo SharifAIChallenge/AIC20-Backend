@@ -52,3 +52,5 @@ MARTOR_MARKDOWN_BASE_EMOJI_URL = \
 # please change this to your domain
 MARTOR_MARKDOWN_BASE_MENTION_URL = 'https://python.web.id/author/'
 
+CSRF_COOKIE_HTTPONLY = False
+
