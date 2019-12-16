@@ -7,7 +7,7 @@ from apps.accounts.models import Profile
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = '__all__'
+        exclude = ['user']
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,10 +22,3 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create(**validated_data)
         Profile.objects.create(user=user, **profile_data)
         return user
-
-
-
-
-
-
-

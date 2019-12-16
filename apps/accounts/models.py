@@ -3,7 +3,9 @@ from django.db import models
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE,
+                                related_name='profile')
 
     EDUCATION_CHOICES = (
         ('high_school', 'دبیرستان'),
@@ -16,7 +18,7 @@ class Profile(models.Model):
     first_name_en = models.TextField(max_length=100)
     last_name_fa = models.TextField(max_length=100)
     last_name_en = models.TextField(max_length=100)
-    birth_date = models.DateTimeField()
+    birth_date = models.DateField()
     residence = models.CharField(max_length=100)
     education = models.CharField(
         max_length=15,
