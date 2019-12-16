@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from homepage.models import Homepage, Screen, Photo, TimeLineEvent, PrizeText_En, PrizeText_Fa, Prize, Sponsor, Link, \
+from apps.homepage.models import Homepage, Screen, Photo, TimeLineEvent, PrizeText_En, PrizeText_Fa, Prize, Sponsor, Link, \
     Organizer
+
 
 admin.site.register(Homepage)
 admin.site.register(Screen)

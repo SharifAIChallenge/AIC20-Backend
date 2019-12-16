@@ -13,8 +13,11 @@ class BlogView(GenericAPIView):
     queryset = Post.objects.all().order_by('-data')
 
     def get(self, request):
-        data = PostDescriptionSerializer(self.get_queryset(), many=True).data
-        return Response(data)
+        descriptions = PostDescriptionSerializer(data=self.get_queryset(), many=True)
+        if descriptions.is_valid():
+            return Response(data)
+        else:
+            raise Http404
 
 
 class PostView(GenericAPIView):
