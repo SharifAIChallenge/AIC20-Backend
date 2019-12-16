@@ -6,8 +6,8 @@ from apps.translation.models import translatedTextField
 
 
 class Document(models.Model):
-    title = translatedTextField(related_name='title')
-    description = translatedTextField(related_name='description')
+    title = translatedTextField(related_name='document_title')
+    description = translatedTextField(related_name='document_description')
 
     def __str__(self):
         return self.title.content_en
@@ -16,7 +16,7 @@ class Document(models.Model):
 class Section(models.Model):
     document = models.ForeignKey(
         Document, related_name='sections', on_delete=models.CASCADE, null=True)
-    title = translatedTextField(related_name='title')
+    title = translatedTextField(related_name='section_title')
     markdown = models.TextField(blank=True)
     uuid = models.CharField(max_length=20, unique=True, blank=True, null=False)
 
@@ -36,7 +36,7 @@ class Section(models.Model):
 
 
 class Subsection(models.Model):
-    subtitle = translatedTextField(related_name='subtitle')
+    subtitle = translatedTextField(related_name='subsection_subtitle')
     section = models.ForeignKey(
         Section, related_name='subtitles', on_delete=models.CASCADE, null=True)
 

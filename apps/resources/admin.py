@@ -56,7 +56,7 @@ class SectionAdmin(ReverseModelAdmin):
     list_display = ['id', 'uuid', '__str__', 'get_document_title']
     list_display_links = ['id', 'uuid', '__str__']
     readonly_fields = ['uuid']
-    search_fields = ['__str__', 'uuid']
+    search_fields = ['__str__', 'uuid', 'get_document_title']
     sortable_by = ['__str__']
     formfield_overrides = {
         models.TextField: {'widget': AdminMartorWidget},
@@ -88,7 +88,7 @@ class SectionAdmin(ReverseModelAdmin):
 class SubtitleAdmin(ReverseModelAdmin):
     list_display = ['id', '__str__']
     list_display_links = ['id', '__str__']
-    search_fields = ['__str__']
+    search_fields = ['__str__', 'get_section_title']
     inline_type = 'stacked'
     inline_reverse = [
         {
@@ -97,4 +97,11 @@ class SubtitleAdmin(ReverseModelAdmin):
             'admin_class': TranslatedTextInlineSmall
         },
     ]
+
+    def get_section_title(self, section: Section):
+        return section.document.title.content_en
+
+    get_section_title.short_description = 'Section Title'
+    get_section_title.admin_order_field = 'subsection_section_title'
+
     pass
