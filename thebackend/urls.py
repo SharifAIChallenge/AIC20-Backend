@@ -19,7 +19,7 @@ from django.conf.urls import url
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^profile/', include('apps.accounts.urls')),
+    url(r'^accounts/', include('apps.accounts.urls')),
     path('martor/', include('martor.urls')),
     path('resources/', include('apps.resources.urls')),
     path('translation/', include('apps.translation.urls')),
