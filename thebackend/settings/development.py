@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'apps.blog',
     'apps.resources.apps.ResourcesConfig',
     'apps.translation',
-    'apps.homepage',
 ]
 
 MIDDLEWARE = [
