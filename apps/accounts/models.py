@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from apps.translation.models import translatedTextField
 
 
 class Profile(models.Model):
@@ -14,10 +15,8 @@ class Profile(models.Model):
         ('phd', 'دکنری')
     )
     email = models.EmailField()
-    first_name_fa = models.TextField(max_length=100)
-    first_name_en = models.TextField(max_length=100)
-    last_name_fa = models.TextField(max_length=100)
-    last_name_en = models.TextField(max_length=100)
+    first_name = translatedTextField(related_name='first_name')
+    last_name = translatedTextField(related_name='last_name')
     birth_date = models.DateField()
     residence = models.CharField(max_length=100)
     education = models.CharField(

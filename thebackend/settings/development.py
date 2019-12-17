@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'martor',
+    'django_rest_passwordreset',
     'django_extensions',
 
     'apps.accounts',
@@ -142,6 +143,20 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
 }
 
+TEMPLATE_DIRS = (
+    os.path.join(os.path.dirname(__file__), '../templates'),
+)
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME = 1
+
+DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
+    "CLASS": "django_rest_passwordreset.tokens.RandomStringTokenGenerator",
+    "OPTIONS": {
+        "min_length": 15,
+        "max_length": 30
+    }
+}
 
 from .martor import *
