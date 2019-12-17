@@ -2,23 +2,21 @@ import uuid
 
 from django.db import models
 
+from apps.translation.models import translatedTextField
+
 
 class Document(models.Model):
-    title_en = models.CharField(max_length=100, unique=True)
-    title_fa = models.CharField(
-        max_length=100, unique=True, blank=True, null=False)
-    description_en = models.TextField(blank=True, null=False)
-    description_fa = models.TextField(blank=True, null=False)
+    title = translatedTextField(related_name='document_title')
+    description = translatedTextField(related_name='document_description')
 
     def __str__(self):
-        return self.title_en
+        return self.title.content_en
 
 
 class Section(models.Model):
     document = models.ForeignKey(
         Document, related_name='sections', on_delete=models.CASCADE, null=True)
-    title_en = models.CharField(max_length=100)
-    title_fa = models.CharField(max_length=100, blank=True, null=False)
+    title = translatedTextField(related_name='section_title')
     markdown = models.TextField(blank=True)
     uuid = models.CharField(max_length=20, unique=True, blank=True, null=False)
 
@@ -34,14 +32,13 @@ class Section(models.Model):
         super(Section, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.title_en
+        return self.title.content_en
 
 
 class Subsection(models.Model):
-    subtitle_en = models.CharField(max_length=50)
-    subtitle_fa = models.CharField(max_length=50, blank=True, null=False)
+    subtitle = translatedTextField(related_name='subsection_subtitle')
     section = models.ForeignKey(
         Section, related_name='subtitles', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.subtitle_en
+        return self.subtitle.content_en
