@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
-from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 import re
 
 
@@ -18,8 +19,13 @@ class TranslationMiddleware:
         print(lang)
 
         if hasattr(response, 'data'):
-            response.data = self.translate(response.data, lang)
-            return JsonResponse(response.data)
+            data = self.translate(response.data, lang)
+            r = Response(data)
+            r.accepted_renderer = JSONRenderer()
+            r.accepted_media_type = "*/*"
+            r.renderer_context = {}
+            r.render()
+            return r
         return response
 
     def translate(self, data, lang):
