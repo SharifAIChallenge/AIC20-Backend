@@ -12,7 +12,7 @@ class HomepageView(GenericAPIView):
     def get(self, request):
         data = {
                 'intro': IntroSerializer(Intro.objects.last()).data,
-                'timeline': TimelineEventSerializer(TimelineEvent.objects.all().last()).data,
+                'timeline': TimelineEventSerializer(TimelineEvent.objects.all(), many=True).data,
                 'prizes': PrizeSerializer(Prize.objects.all(), many=True).data,
                 'stats': StatSerializer(Stat.objects.all(), many=True).data,
                 }
