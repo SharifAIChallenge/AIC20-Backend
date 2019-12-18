@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import status
-
+from django.http import JsonResponse
 import re
 
 
@@ -15,11 +15,11 @@ class TranslationMiddleware:
         if lang not in ['en', 'fa']:
             lang = 'fa'
 
-        if hasattr(response, 'data'):
-            print('AAAAAAAAA')
-            print(response.data)
-            response.data = self.translate(response.data, lang)
+        print(lang)
 
+        if hasattr(response, 'data'):
+            response.data = self.translate(response.data, lang)
+            return JsonResponse(response.data)
         return response
 
     def translate(self, data, lang):
@@ -31,9 +31,7 @@ class TranslationMiddleware:
                     if name + '_fa' in data:
                         new_data[name] = data[name + '_' + lang]
                 elif not re.match('^(.*)_fa', field):
-                    new_data[field] = data[field]
-            for key in data:
-                new_data[key] = self.translate(data[key], lang)
+                    new_data[field] = self.translate(data[field], lang)
             return new_data
         elif isinstance(data, list):
             new_data = []
