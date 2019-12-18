@@ -29,3 +29,4 @@ class TagAdmin(ModelAdmin):
         models.TextField: {'widget': AdminMartorWidget},
     }
     pass
+
