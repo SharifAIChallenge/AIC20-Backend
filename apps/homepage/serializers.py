@@ -1,6 +1,8 @@
 from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework import serializers
 
+from apps.translation.serializer import TTextSerializer
+
 from .models import Intro, TimelineEvent, Prize, Stat
 
 

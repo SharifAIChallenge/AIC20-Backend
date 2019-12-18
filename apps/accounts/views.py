@@ -19,7 +19,9 @@ class SignUpView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-        return Response(serializer.data)
+            return Response({'detail': 'User created successfully'})
+        else:
+            return Response({'detail': 'Error occurred during User creation'})
 
 
 class LogoutView(GenericAPIView):

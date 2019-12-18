@@ -1,7 +1,8 @@
 from rest_framework.response import Response
 from rest_framework import status
 
-import ast
+import re
+
 
 class TranslationMiddleware:
     def __init__(self, get_response):
@@ -14,20 +15,31 @@ class TranslationMiddleware:
         if lang not in ['en', 'fa']:
             lang = 'fa'
 
-        if hasaatr(response, 'data'):
-            data = ast.literal_eval(response.data)
-            response.data = self.translate(data, lang)
+        if hasattr(response, 'data'):
+            print('AAAAAAAAA')
+            print(response.data)
+            response.data = self.translate(response.data, lang)
 
         return response
 
     def translate(self, data, lang):
         if isinstance(data, dict):
-            if len(data.keys()) == 2 and 'en' in data.keys() and 'fa' in data.keys():
-                return data[lang]
+            new_data = {}
+            for field in data:
+                if re.match('^(.*)_en', field):
+                    name = field[:-3]
+                    if name + '_fa' in data:
+                        new_data[name] = data[name + '_' + lang]
+                elif not re.match('^(.*)_fa', field):
+                    new_data[field] = data[field]
             for key in data:
-                data[key] = self.translate(data[key], lang)
+                new_data[key] = self.translate(data[key], lang)
+            return new_data
         elif isinstance(data, list):
+            new_data = []
             for i in range(len(data)):
-                data[i] = self.translate(data[i], lang)
-        return data
+                new_data[i] = self.translate(data[i], lang)
+            return new_data
+        else:
+            return data
 

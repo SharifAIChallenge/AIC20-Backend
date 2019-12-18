@@ -3,9 +3,6 @@ from django.db import models
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User,
-                                on_delete=models.CASCADE,
-                                related_name='profile')
 
     EDUCATION_CHOICES = (
         ('high_school', 'دبیرستان'),
@@ -13,14 +10,18 @@ class Profile(models.Model):
         ('master', 'کارشناسی ارشد'),
         ('phd', 'دکنری')
     )
-    email = models.EmailField()
-    first_name_fa = models.TextField(max_length=100)
-    first_name_en = models.TextField(max_length=100)
-    last_name_fa = models.TextField(max_length=100)
-    last_name_en = models.TextField(max_length=100)
-    birth_date = models.DateTimeField()
-    residence = models.CharField(max_length=100)
+
+    user = models.OneToOneField(User,
+        on_delete=models.CASCADE,
+        related_name='profile')
+    firstname_fa = models.TextField(max_length=30)
+    firstname_en = models.TextField(max_length=30)
+    lastname_fa = models.TextField(max_length=30)
+    lastname_en = models.TextField(max_length=30)
+    birth_date = models.DateField()
+    university = models.CharField(max_length=50)
     education = models.CharField(
         max_length=15,
         choices=EDUCATION_CHOICES,
     )
+
