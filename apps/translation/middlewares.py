@@ -18,28 +18,23 @@ class TranslationMiddleware:
         if hasattr(response, 'data'):
             print('AAAAAAAAA')
             print(response.data)
-            response.data = self.translate(response.data, lang)
+            self.translate(response.data, lang)
+            response.data['x'] = 'y'
 
         return response
 
     def translate(self, data, lang):
+        print(data)
         if isinstance(data, dict):
             new_data = {}
             for field in data:
-                if re.match('^(.*)_en', field):
-                    name = field[:-3]
-                    if name + '_fa' in data:
-                        new_data[name] = data[name + '_' + lang]
-                elif not re.match('^(.*)_fa', field):
-                    new_data[field] = data[field]
-            for key in data:
-                new_data[key] = self.translate(data[key], lang)
-            return new_data
+                if isinstance(data[field], str):
+                    if re.match('(.*)_en', field) or re.match('(.*)_fa', field):
+                        name = field[:-3]
+                        data[name + '_en'] = data[name + '_fa'] = data[name + '_' + lang]
+                else:
+                    self.translate(data[field], lang)
         elif isinstance(data, list):
-            new_data = []
             for i in range(len(data)):
-                new_data[i] = self.translate(data[i], lang)
-            return new_data
-        else:
-            return data
+                self.translate(data[i], lang)
 
