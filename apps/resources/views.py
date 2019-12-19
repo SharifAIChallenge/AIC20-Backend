@@ -14,7 +14,7 @@ class DocumentListAPIView(GenericAPIView):
 
     def get(self, request):
         data = self.get_serializer(self.get_queryset(), many=True).data
-        return Response(data={'notifications': data}, status=status.HTTP_200_OK)
+        return Response(data={'documents': data}, status=status.HTTP_200_OK)
 
 
 class DocumentInstanceAPIView(GenericAPIView):

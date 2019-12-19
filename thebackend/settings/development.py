@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.resources.apps.ResourcesConfig',
     'apps.translation',
     'apps.homepage',
+    'apps.notification'
 ]
 
 MIDDLEWARE = [
