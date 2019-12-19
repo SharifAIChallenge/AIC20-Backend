@@ -53,11 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-<<<<<<< HEAD
     'apps.translation.middlewares.TranslationMiddleware',
-=======
 #    'apps.translation.middlewares.TranslationMiddleware',
->>>>>>> resource_translation_refactor
 ]
 
 ROOT_URLCONF = 'thebackend.urls'
