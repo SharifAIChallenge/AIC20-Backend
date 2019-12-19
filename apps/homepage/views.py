@@ -13,7 +13,7 @@ class HomepageView(GenericAPIView):
         data = {
                 'intro': IntroSerializer(Intro.objects.last()).data,
                 'timeline': TimelineEventSerializer(TimelineEvent.objects.all().order_by('id'), many=True).data,
-                'prizes': PrizeSerializer(Prize.objects.all(), many=True).data,
+                'prizes': PrizeSerializer(Prize.objects.all().order_by('id'), many=True).data,
                 'stats': StatSerializer(Stat.objects.all(), many=True).data,
                 }
         return Response(data)
