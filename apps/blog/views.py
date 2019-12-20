@@ -10,14 +10,11 @@ from apps.blog import paginations
 
 class BlogView(GenericAPIView):
     serializer_class = PostDescriptionSerializer
-    queryset = Post.objects.all().order_by('-data')
+    queryset = Post.objects.all().order_by('-date')
 
     def get(self, request):
-        descriptions = PostDescriptionSerializer(data=self.get_queryset(), many=True)
-        if descriptions.is_valid():
-            return Response(data)
-        else:
-            raise Http404
+        descriptions = PostDescriptionSerializer(self.get_queryset(), many=True)
+        return Response(descriptions)
 
 
 class PostView(GenericAPIView):
