@@ -27,7 +27,6 @@ class TranslationMiddleware:
         return response
 
     def translate(self, data, lang):
-        print(data)
         if isinstance(data, dict):
             new_data = {}
             for field in data:
@@ -41,3 +40,4 @@ class TranslationMiddleware:
         elif isinstance(data, list):
             for i in range(len(data)):
                 self.translate(data[i], lang)
+

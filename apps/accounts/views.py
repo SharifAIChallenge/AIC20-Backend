@@ -52,6 +52,9 @@ class LoginWithGoogleView(GenericAPIView):
     def post(self, request):
         pass
 
+
+
+"""
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
@@ -79,3 +82,5 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     )
     msg.attach_alternative(email_html_message, "text/html")
     msg.send()
+"""
+
