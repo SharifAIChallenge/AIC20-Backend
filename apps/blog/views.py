@@ -14,7 +14,7 @@ class BlogView(GenericAPIView):
 
     def get(self, request):
         descriptions = PostDescriptionSerializer(self.get_queryset(), many=True)
-        return Response(descriptions)
+        return Response(descriptions.data)
 
 
 class PostView(GenericAPIView):
