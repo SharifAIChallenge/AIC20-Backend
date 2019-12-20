@@ -21,9 +21,9 @@ class TranslationMiddleware:
         if hasattr(response, 'data'):
             data = self.translate(response.data, lang)
             r = Response(data)
-            r.accepted_renderer = JSONRenderer()
-            r.accepted_media_type = "*/*"
-            r.renderer_context = {}
+            r.accepted_renderer = response.accepted_renderer
+            r.accepted_media_type = response.accepted_media_type
+            r.renderer_context = response.renderer_context
             r.render()
             return r
         return response
