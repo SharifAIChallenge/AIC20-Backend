@@ -54,7 +54,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'apps.translation.middlewares.TranslationMiddleware',
 #    'apps.translation.middlewares.TranslationMiddleware',
 ]
 
