@@ -16,8 +16,6 @@ class TranslationMiddleware:
         if lang not in ['en', 'fa']:
             lang = 'fa'
 
-        print(lang)
-
         if hasattr(response, 'data'):
             data = self.translate(response.data, lang)
             r = Response(data)
@@ -29,6 +27,7 @@ class TranslationMiddleware:
         return response
 
     def translate(self, data, lang):
+        print(data)
         if isinstance(data, dict):
             new_data = {}
             for field in data:
@@ -40,10 +39,5 @@ class TranslationMiddleware:
                     new_data[field] = self.translate(data[field], lang)
             return new_data
         elif isinstance(data, list):
-            new_data = []
             for i in range(len(data)):
-                new_data[i] = self.translate(data[i], lang)
-            return new_data
-        else:
-            return data
-
+                self.translate(data[i], lang)

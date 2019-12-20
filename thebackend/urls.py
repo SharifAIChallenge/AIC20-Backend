@@ -21,13 +21,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^', include('apps.homepage.urls')),
-    url(r'^accounts/', include('apps.accounts.urls')),
-    path('martor/', include('martor.urls')),
-    path('resources/', include('apps.resources.urls')),
-    path('translation/', include('apps.translation.urls')),
-    path('blog/', include('apps.blog.urls')),
+    path('api/admin/', admin.site.urls),
+    path('api/', include('apps.homepage.urls')),
+    path('api/accounts/', include('apps.accounts.urls')),
+    path('api/martor/', include('martor.urls')),
+    path('api/resources/', include('apps.resources.urls')),
+    path('api/translation/', include('apps.translation.urls')),
+    path('api/blog/', include('apps.blog.urls')),
+    path('api/notification/', include('apps.notification.urls')),
 ]
 
 
