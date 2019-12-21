@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'martor',
     'django_extensions',
+    'djcelery',
 
     'apps.accounts',
     'apps.blog',
@@ -55,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'apps.translation.middlewares.TranslationMiddleware',
-#    'apps.translation.middlewares.TranslationMiddleware',
+    #    'apps.translation.middlewares.TranslationMiddleware',
 ]
 
 ROOT_URLCONF = 'thebackend.urls'
@@ -145,7 +146,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
     'PAGE_SIZE': 100,
 }
-
-
 
 from .martor import *
