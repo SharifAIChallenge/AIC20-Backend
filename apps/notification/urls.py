@@ -1,8 +1,9 @@
 from django.urls import path
 
-from apps.notification.views import NotificationView
+from apps.notification.views import NotificationView, SubscriberView
 
 urlpatterns = [
-    path('notifications/', NotificationView.as_view(), name='notifications_list'),
+    path('', NotificationView.as_view(), name='notifications_list'),
+    path('email', SubscriberView.as_view(), name='subscribe'),
 
 ]
