@@ -11,6 +11,8 @@ class NotificationSerializer(ModelSerializer):
 
 
 class SubscriberSerializer(ModelSerializer):
+    email = serializers.EmailField()
+
     class Meta:
         model = Subscriber
         fields = "__all__"
