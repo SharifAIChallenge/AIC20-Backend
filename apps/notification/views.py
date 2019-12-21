@@ -28,6 +28,7 @@ class SubscriberView(GenericAPIView):
 
     def post(self, request):
         subscriber = self.get_serializer(data=request.data)
-        if subscriber.is_valid(raise_exception=True):
+        if subscriber.is_valid():
             subscriber.save()
-        return Response(subscriber.data)
+            return Response(subscriber.data)
+        return Response({'detail': 'Someone has already subscribed whit this email'})

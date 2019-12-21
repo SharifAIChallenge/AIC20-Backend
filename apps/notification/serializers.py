@@ -16,6 +16,6 @@ class SubscriberSerializer(ModelSerializer):
         fields = "__all__"
 
     def validate(self, attrs):
-        if Subscriber.objects.all().filter(email=attrs['email']):
+        if Subscriber.objects.all().filter(email=attrs['email']).count() > 0:
             raise serializers.ValidationError('This email is already a subscriber')
         return attrs
