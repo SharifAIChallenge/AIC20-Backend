@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.db import models
 from martor.widgets import AdminMartorWidget
 
-from apps.notification.models import Notification, Subscriber
+from apps.notification.models import Notification, EmailText
 
 
 @admin.register(Notification)
@@ -12,8 +12,8 @@ class NotificationAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Subscriber)
-class SubscriberAdmin(admin.ModelAdmin):
+@admin.register(EmailText)
+class EmailAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': AdminMartorWidget},
     }
