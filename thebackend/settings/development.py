@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_auth',
     'rest_framework.authtoken',
     'martor',
     'django_extensions',
@@ -147,3 +148,5 @@ REST_FRAMEWORK = {
 }
 
 from .martor import *
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
