@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'martor',
     'django_extensions',
+    'djcelery',
 
     'apps.accounts',
     'apps.blog',
@@ -144,7 +145,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
     'PAGE_SIZE': 100,
 }
-
-
 
 from .martor import *
