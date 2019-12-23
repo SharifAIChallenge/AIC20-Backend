@@ -31,4 +31,4 @@ class SubscriberView(GenericAPIView):
         if subscriber.is_valid():
             subscriber.save()
             return Response(subscriber.data)
-        return Response({'detail': 'Someone has already subscribed whit this email'})
+        return Response({'detail': 'something is wrong'})

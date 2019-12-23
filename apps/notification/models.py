@@ -5,6 +5,8 @@ from django.db import models
 
 
 # Create your models here.
+from rest_framework.validators import UniqueValidator
+
 
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -14,7 +16,7 @@ class Notification(models.Model):
 
 
 class Subscriber(models.Model):
-    email = models.EmailField(null=False)
+    email = models.EmailField(null=False, unique=True)
 
 
 class EmailText(models.Model):

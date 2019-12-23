@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
+from rest_framework.validators import UniqueValidator
 
 from apps.notification.models import Notification, Subscriber
 
@@ -11,13 +12,8 @@ class NotificationSerializer(ModelSerializer):
 
 
 class SubscriberSerializer(ModelSerializer):
-    email = serializers.EmailField()
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=Subscriber.objects.all())])
 
     class Meta:
         model = Subscriber
         fields = "__all__"
-
-    def validate(self, attrs):
-        if Subscriber.objects.all().filter(email=attrs['email']).count() > 0:
-            raise serializers.ValidationError('This email is already a subscriber')
-        return attrs
