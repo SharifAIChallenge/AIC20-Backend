@@ -41,7 +41,7 @@ class TranslationMiddleware:
         elif isinstance(data, list):
             for i in range(len(data)):
                 self.translate(data[i], lang)
-        else:
+        elif isinstance(data, str):
             return data
 
 
@@ -51,16 +51,16 @@ class Always200Middleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        data = {}
         if hasattr(response, 'data'):
             data = response.data
-        data['status_code'] = response.status_code
-        r = Response(data=data, status=200)
-        try:
-            r.accepted_renderer = response.accepted_renderer
-            r.accepted_media_type = response.accepted_media_type
-            r.renderer_context = response.renderer_context
-        finally:
-            r.render()
-        return r
+            data['status_code'] = response.status_code
+            try:
+                r = Response(data=data, status=200)
+                r.accepted_renderer = response.accepted_renderer
+                r.accepted_media_type = response.accepted_media_type
+                r.renderer_context = response.renderer_context
+            finally:
+                r.render()
+            return r
+        return response
 
