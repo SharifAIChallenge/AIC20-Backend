@@ -52,7 +52,7 @@ class Always200Middleware:
     def __call__(self, request):
         response = self.get_response(request)
         if hasattr(response, 'data'):
-            if isinstance(data, dict):
+            if isinstance(response.data, dict):
                 data = response.data
                 data['status_code'] = response.status_code
             try:
