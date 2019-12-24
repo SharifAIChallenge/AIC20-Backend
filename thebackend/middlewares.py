@@ -60,8 +60,9 @@ class Always200Middleware:
                 r.accepted_renderer = response.accepted_renderer
                 r.accepted_media_type = response.accepted_media_type
                 r.renderer_context = response.renderer_context
-            finally:
                 r.render()
-            return r
+                return r
+            except Exception:
+                pass
         return response
 
