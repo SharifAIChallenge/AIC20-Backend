@@ -1,13 +1,9 @@
-from django.core.mail import EmailMultiAlternatives
-from django.dispatch import receiver
-from django.template.loader import render_to_string
-from django.urls import reverse
 from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from django_rest_passwordreset.signals import reset_password_token_created
+from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
+
 from apps.accounts.serializer import *
-from apps.translation.util import translateQuerySet
 
 
 class SignUpView(GenericAPIView):
@@ -18,12 +14,9 @@ class SignUpView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-        return Response(serializer.data)
-
-    # def get(self, request, username):
-    #     filtered_queryset = translateQuerySet(self.get_queryset(), request).get(username=username)
-    #     data = self.get_serializer(filtered_queryset)
-    #     return Response(data=data, status=status.HTTP_200_OK)
+            return Response({'detail': 'User created successfully'})
+        else:
+            return Response({'detail': 'Error occurred during User creation'})
 
 
 class LogoutView(GenericAPIView):
@@ -52,30 +45,22 @@ class LoginWithGoogleView(GenericAPIView):
         pass
 
 
-@receiver(reset_password_token_created)
-def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+class ProfileView(GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserViewSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    context = {
-        'current_user': reset_password_token.user,
-        'username': reset_password_token.user.username,
-        'email': reset_password_token.user.email,
-        'reset_password_url': "{}?token={}".format(reverse('password_reset:reset-password-request'),
-                                                   reset_password_token.key)
-    }
+    def get(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({'detail': 'user is not authenticated'})
+        data = self.get_serializer(user).data['profile']
+        return Response(data=data, status=HTTP_200_OK)
 
-    # render email text
-    email_html_message = render_to_string('email/user_reset_password.html', context)
-    email_plaintext_message = render_to_string('email/user_reset_password.txt', context)
-
-    msg = EmailMultiAlternatives(
-        # title:
-        "Password Reset for {title}".format(title="Some website title"),
-        # message:
-        email_plaintext_message,
-        # from:
-        "noreply@somehost.local",
-        # to:
-        [reset_password_token.user.email]
-    )
-    msg.attach_alternative(email_html_message, "text/html")
-    msg.send()
+    def put(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({'detail': 'user is not authenticated'})
+        user_serializer = UserViewSerializer(user)
+        user_serializer.update(user, request.data)
+        return Response(user_serializer.data)

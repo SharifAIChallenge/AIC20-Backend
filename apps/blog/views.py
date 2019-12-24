@@ -39,22 +39,23 @@ class CommentListView(GenericAPIView):
         return Comment.objects.all().exclude(shown=False)
 
     def get(self, request, post_id):
-        try:
-            all_comments = self.get_queryset().filter(post__id=post_id)
-            user_comments = all_comments.filter(
-                writer_name=request.user.username)
+        all_comments = self.get_queryset().filter(post__id=post_id)
+
+        if request.user.is_authenticated:
+            user_comments = all_comments.filter(user=request.user)
             user_comments.order_by('-date')
-            other_users_comments = all_comments.exclude(
-                writer_name=request.user.username)
+            other_users_comments = all_comments.exclude(user=request.user)
             other_users_comments.order_by('-date')
             comments = list(user_comments) + list(other_users_comments)
-            data = CommentSerializer(comments, many=True).data
-            return Response(data)
-        except Exception:
-            raise Http404
+        else:
+            comments = all_comments
+        data = CommentSerializer(comments, many=True).data
+        return Response(data)
+
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"detail": "کامنت شما ثبت شد."})
+

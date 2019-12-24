@@ -2,11 +2,27 @@ from django.db import models
 
 
 class TranslatedText(models.Model):
-    content_en = models.TextField(blank=True, null=False)
-    content_fa = models.TextField(blank=True, null=False)
+    content_en = models.TextField(blank=True, default="")
+    content_fa = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.content_en
+
+
+class TText(models.Model):
+    en = models.TextField(blank=True, default="")
+    fa = models.TextField(blank=True, default="")
+
+    def __str__(self):
+        return self.en
+
+
+def getTText(related_name):
+    return models.ForeignKey(
+        TranslatedText,
+        models.CASCADE,
+        related_name=related_name
+    )
 
 
 def translatedTextField(related_name):
@@ -15,7 +31,6 @@ def translatedTextField(related_name):
         models.CASCADE,
         related_name=related_name
     )
-
 
 class DocumentTest(models.Model):
     title = translatedTextField(related_name='title')

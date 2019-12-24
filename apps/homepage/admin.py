@@ -1,14 +1,36 @@
 from django.contrib import admin
+from django.contrib.admin import ModelAdmin
+from django.db import models
 
-from apps.homepage.models import Homepage, Screen, Photo, TimeLineEvent, PrizeText_En, PrizeText_Fa, Prize, Sponsor, Link, \
-    Organizer
+from martor.widgets import AdminMartorWidget
+
+from .models import Intro, TimelineEvent, Prize, Stat
 
 
-admin.site.register(Homepage)
-admin.site.register(Screen)
-admin.site.register(Photo)
-admin.site.register(TimeLineEvent)
-admin.site.register(Prize)
-admin.site.register(Link)
-admin.site.register(Sponsor)
-admin.site.register(Organizer)
+@admin.register(Intro)
+class IntroAdmin(ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {'widget': AdminMartorWidget},
+    }
+
+
+@admin.register(TimelineEvent)
+class TimelineEventAdmin(ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {'widget': AdminMartorWidget},
+    }
+
+
+@admin.register(Prize)
+class PrizeAdmin(ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {'widget': AdminMartorWidget},
+    }
+
+
+@admin.register(Stat)
+class StatAdmin(ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {'widget': AdminMartorWidget},
+    }
+

@@ -1,13 +1,20 @@
-from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.generics import GenericAPIView
 
-from apps.homepage.models import Homepage
-from apps.homepage.serializers import HomePageSerializer
+from .models import Intro, TimelineEvent, Prize, Stat
+from .serializers import *
+from apps.translation.util import translateQuerySet
 
 
-@api_view(['GET'])
-def get_homepage(request):
-    homepage = Homepage.objects.get(id=1)
-    serializer = HomePageSerializer(homepage)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+class HomepageView(GenericAPIView):
+
+    def get(self, request):
+        data = {
+                'intro': IntroSerializer(Intro.objects.last()).data,
+                'timeline': TimelineEventSerializer(TimelineEvent.objects.all().order_by('id'), many=True).data,
+                'prizes': PrizeSerializer(Prize.objects.all().order_by('id'), many=True).data,
+                'stats': StatSerializer(Stat.objects.all(), many=True).data,
+                }
+        return Response(data)
+
