@@ -5,6 +5,9 @@ from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 
 from apps.accounts.serializer import *
 
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
+
 
 class SignUpView(GenericAPIView):
     queryset = Profile.objects.all()
