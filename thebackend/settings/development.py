@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.blog',
     'apps.resources.apps.ResourcesConfig',
-    'apps.translation',
     'apps.homepage',
     'apps.notification'
 ]
@@ -57,7 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-#    'apps.translation.middlewares.TranslationMiddleware',
+    'thebackend.middlewares.TranslationMiddleware',
+    'thebackend.middlewares.Always200Middleware',
 ]
 
 ROOT_URLCONF = 'thebackend.urls'
