@@ -4,7 +4,6 @@ from rest_framework.generics import GenericAPIView
 
 from .models import Intro, TimelineEvent, Prize, Stat
 from .serializers import *
-from apps.translation.util import translateQuerySet
 
 
 class HomepageView(GenericAPIView):

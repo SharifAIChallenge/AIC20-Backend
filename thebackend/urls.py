@@ -26,7 +26,6 @@ urlpatterns = [
     path('api/accounts/', include('apps.accounts.urls')),
     path('api/martor/', include('martor.urls')),
     path('api/resources/', include('apps.resources.urls')),
-    path('api/translation/', include('apps.translation.urls')),
     path('api/blog/', include('apps.blog.urls')),
     path('api/subscribe/', include('apps.notification.urls')),
     path('api/go/', include('apps.go.urls')),
