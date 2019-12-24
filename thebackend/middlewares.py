@@ -33,7 +33,7 @@ class TranslationMiddleware:
                     name = field[:-3]
                     if name + '_fa' in data:
                         new_data[name] = \
-                        nem_data[name + '_fa'] = \
+                        new_data[name + '_fa'] = \
                         new_data[name + '_en'] = data[name + '_' + lang]
                 elif not re.match('^(.*)_fa', field):
                     new_data[field] = self.translate(data[field], lang)
