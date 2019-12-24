@@ -52,8 +52,9 @@ class Always200Middleware:
     def __call__(self, request):
         response = self.get_response(request)
         if hasattr(response, 'data'):
-            data = response.data
-            data['status_code'] = response.status_code
+            if isinstance(data, dict):
+                data = response.data
+                data['status_code'] = response.status_code
             try:
                 r = Response(data=data, status=200)
                 r.accepted_renderer = response.accepted_renderer
