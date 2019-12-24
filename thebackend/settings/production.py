@@ -30,4 +30,5 @@ STATIC_ROOT = '/static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/media'
 
-CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_HTTPONLY = True
+
