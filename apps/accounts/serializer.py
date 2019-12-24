@@ -40,7 +40,7 @@ class UserViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['profile', 'username', 'email']
 
     def update(self, instance, validated_data):
         instance.save()
