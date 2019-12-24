@@ -9,7 +9,7 @@ from rest_framework.status import HTTP_200_OK
 from apps.accounts.models import Profile
 from apps.accounts.serializer import *
 
-from django_rest_passwordreset.signals import reset_password_token_created
+# from django_rest_passwordreset.signals import reset_password_token_created
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 
