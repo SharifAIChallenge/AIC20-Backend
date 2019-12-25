@@ -21,7 +21,6 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
     tags = TagSerializer(many=True)
 
     num_comments = serializers.SerializerMethodField()
@@ -37,7 +36,6 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class PostDescriptionSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
     tags = TagSerializer(many=True)
 
     class Meta:

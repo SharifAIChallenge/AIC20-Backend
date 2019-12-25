@@ -1,24 +1,19 @@
 from rest_framework import status, permissions
-from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView
-from rest_framework.request import Request
 from rest_framework.response import Response
-from django.contrib.auth import authenticate, logout
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 
-from apps.accounts.models import Profile
 from apps.accounts.serializer import *
 
-# from django_rest_passwordreset.signals import reset_password_token_created
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
+
 
 class SignUpView(GenericAPIView):
     queryset = Profile.objects.all()
     serializer_class = UserSerializer
 
     def post(self, request):
-
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
@@ -52,3 +47,23 @@ class LoginWithGoogleView(GenericAPIView):
     def post(self, request):
         pass
 
+
+class ProfileView(GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserViewSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({'detail': 'user is not authenticated'})
+        data = self.get_serializer(user).data['profile']
+        return Response(data=data, status=HTTP_200_OK)
+
+    def put(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({'detail': 'user is not authenticated'})
+        user_serializer = UserViewSerializer(user)
+        user_serializer.update(user, request.data)
+        return Response(user_serializer.data)
