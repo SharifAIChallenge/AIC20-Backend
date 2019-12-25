@@ -12,6 +12,11 @@ class Post(models.Model):
     description_en = models.TextField(max_length=300)
     description_fa = models.TextField(max_length=300)
 
+    def __str__(self):
+        return '%s %s' % (self.title_en, self.title_fa)
+
+
+
 
 class Comment(models.Model):
     post = models.ForeignKey(
@@ -23,6 +28,9 @@ class Comment(models.Model):
     reply_to = models.ForeignKey(
         'Comment', on_delete=models.CASCADE, null=True, blank=True)
 
+    def __str__(self):
+        return '%s' % (self.user)
+
 
 class Tag(models.Model):
     post = models.ForeignKey(
@@ -30,3 +38,6 @@ class Tag(models.Model):
     name_en = models.CharField(max_length=50)
     name_fa = models.CharField(max_length=50)
     color = models.CharField(max_length=20)
+
+    def __str__(self):
+        return '%s %s' % (self.name_en, self.name_fa)
