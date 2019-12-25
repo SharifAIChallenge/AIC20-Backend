@@ -13,3 +13,8 @@ class Profile(models.Model):
     lastname_en = models.TextField(max_length=30)
     birth_date = models.DateField()
     university = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'username: {self.user.username},' \
+            f'name: {self.firstname_en} {self.lastname_en},' \
+            f'email: {self.user.email}'
