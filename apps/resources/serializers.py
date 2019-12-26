@@ -1,6 +1,8 @@
 from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework import serializers
 
+from django.conf import settings
+
 from .models import Document, Section, Subsection
 
 
@@ -53,7 +55,7 @@ class DocumentSerializer(ModelSerializer):
         fields = ['id', 'title_en', 'title_fa', 'description_en', 'description_fa', 'thumbnail', 'file']
 
     def get_file(self, obj):
-        return obj.file.name
+        return settings.MEDIA_URL + obj.file.name
 
     def validate(self, attrs):
         if 'title_en' not in attrs:
