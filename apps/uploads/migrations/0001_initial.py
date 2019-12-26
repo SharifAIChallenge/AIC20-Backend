@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='FileUpload',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.FileField(max_length=52428800, upload_to='admin_file_uploads')),
+                ('file', models.FileField(max_length=100, upload_to='admin_file_uploads')),
                 ('name', models.CharField(max_length=100)),
             ],
         ),
