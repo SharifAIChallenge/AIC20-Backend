@@ -13,6 +13,8 @@ class Document(models.Model):
     thumbnail = models.ImageField(upload_to='document/thumbnails/', null=True)
     file = models.FileField(upload_to='document/files/', null=True)
 
+    order = models.PositiveSmallIntegerField(default=0)
+
     def __str__(self):
         return self.title_en
 

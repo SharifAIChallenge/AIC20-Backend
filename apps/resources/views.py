@@ -13,7 +13,7 @@ class DocumentListAPIView(GenericAPIView):
     serializer_class = DocumentSerializer
 
     def get(self, request):
-        data = self.get_serializer(self.get_queryset(), many=True).data
+        data = self.get_serializer(self.get_queryset().order('order'), many=True).data
         return Response(data={'documents': data}, status=status.HTTP_200_OK)
 
 
