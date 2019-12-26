@@ -11,7 +11,7 @@ class HomepageView(GenericAPIView):
     def get(self, request):
         data = {
                 'intro': IntroSerializer(Intro.objects.last()).data,
-                'timeline': TimelineEventSerializer(TimelineEvent.objects.all().order_by('id'), many=True).data,
+                'timeline': TimelineEventSerializer(TimelineEvent.objects.all().order_by('id').order_by('order'), many=True).data,
                 'prizes': PrizeSerializer(Prize.objects.all().order_by('id'), many=True).data,
                 'stats': StatSerializer(Stat.objects.all(), many=True).data,
                 }

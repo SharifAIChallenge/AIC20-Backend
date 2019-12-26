@@ -7,12 +7,15 @@ class Intro(models.Model):
     text_en = models.TextField()
     text_fa = models.TextField()
 
+
 class TimelineEvent(models.Model):
     date = models.DateTimeField()
     title_en = models.CharField(max_length=100)
     title_fa = models.CharField(max_length=100)
     text_en = models.TextField()
     text_fa = models.TextField()
+
+    order = models.PositiveSmallIntegerField(unique=True, default=1)
 
 
 class Prize(models.Model):
