@@ -6,4 +6,4 @@ class FileUpload(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name + ':                 ' + settings.MEDIA_URL + self.file.name
+        return settings.MEDIA_URL + self.file.name
