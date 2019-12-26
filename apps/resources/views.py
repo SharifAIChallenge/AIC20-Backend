@@ -18,7 +18,7 @@ class DocumentListAPIView(GenericAPIView):
 
 
 class DocumentInstanceAPIView(GenericAPIView):
-    queryset = Section.objects.all()
+    queryset = Document.objects.all()
     serializer_class = DocumentSerializer
 
     def get(self, request, doc_id):
