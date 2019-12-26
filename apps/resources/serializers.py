@@ -46,9 +46,14 @@ class SectionSerializer(ModelSerializer):
 
 class DocumentSerializer(ModelSerializer):
 
+    file = serializers.SerializerMethodField()
+
     class Meta:
         model = Document
         fields = ['id', 'title_en', 'title_fa', 'description_en', 'description_fa', 'thumbnail', 'file']
+
+    def get_file(self, obj):
+        return obj.file.name
 
     def validate(self, attrs):
         if 'title_en' not in attrs:
