@@ -45,11 +45,10 @@ class SectionSerializer(ModelSerializer):
 
 
 class DocumentSerializer(ModelSerializer):
-    sections = SectionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Document
-        fields = ['id', 'title_en', 'title_fa', 'description_en', 'description_fa', 'thumbnail', 'sections']
+        fields = ['id', 'title_en', 'title_fa', 'description_en', 'description_fa', 'thumbnail', 'file']
 
     def validate(self, attrs):
         if 'title_en' not in attrs:

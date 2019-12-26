@@ -11,6 +11,7 @@ class Document(models.Model):
     description_fa = models.TextField(blank=True, null=False)
 
     thumbnail = models.ImageField(upload_to='document/thumbnails/', null=True)
+    file = models.FileField(upload_to='document/files/', null=True)
 
     def __str__(self):
         return self.title_en
@@ -23,6 +24,8 @@ class Section(models.Model):
     title_fa = models.CharField(max_length=100, blank=True, null=False)
     markdown = models.TextField(blank=True)
     uuid = models.CharField(max_length=20, unique=True, blank=True, null=False)
+
+    order = models.PositiveSmallIntegerField(default=0)
 
     @staticmethod
     def generate_uuid():
