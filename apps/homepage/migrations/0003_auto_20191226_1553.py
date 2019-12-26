@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='timelineevent',
             name='order',
-            field=models.PositiveSmallIntegerField(default=1, unique=True),
+            field=models.PositiveSmallIntegerField(default=1, unique=False),
         ),
     ]
