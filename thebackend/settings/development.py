@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.homepage',
     'apps.notification',
     'apps.go',
+    'apps.uploads',
 ]
 
 MIDDLEWARE = [
