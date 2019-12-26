@@ -19,15 +19,12 @@ class DocumentListAPIView(GenericAPIView):
 
 class DocumentInstanceAPIView(GenericAPIView):
     queryset = Section.objects.all()
-    serializer_class = SectionSerializer
+    serializer_class = DocumentSerializer
 
     def get(self, request, doc_id):
-        sections = self.get_queryset().filter(document__id=doc_id)
-        data = self.get_serializer(sections, many=True).data
-        return Response(data={
-            'document_title': doc_name,
-            'sections': data
-        }, status=status.HTTP_200_OK)
+        doc = get_object_or_404(self.get_queryset(), pk=doc_id)
+        data = self.get_serializer(doc).data
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class SectionAPIView(GenericAPIView):
