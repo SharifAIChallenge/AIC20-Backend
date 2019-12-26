@@ -21,8 +21,8 @@ class DocumentInstanceAPIView(GenericAPIView):
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
 
-    def get(self, request, doc_name):
-        sections = self.get_queryset().filter(document__title_en=doc_name)
+    def get(self, request, doc_id):
+        sections = self.get_queryset().filter(document__id=doc_id)
         data = self.get_serializer(sections, many=True).data
         return Response(data={
             'document_title': doc_name,
