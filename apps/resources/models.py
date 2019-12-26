@@ -10,6 +10,8 @@ class Document(models.Model):
     description_en = models.TextField(blank=True, null=False)
     description_fa = models.TextField(blank=True, null=False)
 
+    thumbnail = models.ImageField(upload_to='document/thumbnails/', null=True)
+
     def __str__(self):
         return self.title_en
 

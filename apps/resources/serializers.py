@@ -49,7 +49,7 @@ class DocumentSerializer(ModelSerializer):
 
     class Meta:
         model = Document
-        fields = ['id', 'title_en', 'title_fa', 'sections']
+        fields = ['id', 'title_en', 'title_fa', 'thumbnail', 'sections']
 
     def validate(self, attrs):
         if 'title_en' not in attrs:
