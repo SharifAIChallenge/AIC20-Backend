@@ -48,11 +48,15 @@ class SectionSerializer(ModelSerializer):
 
 class DocumentSerializer(ModelSerializer):
 
+    thumbnail = serializers.SerializerMethodField()
     file = serializers.SerializerMethodField()
 
     class Meta:
         model = Document
         fields = ['id', 'title_en', 'title_fa', 'description_en', 'description_fa', 'thumbnail', 'file']
+
+    def get_thumbnail(self, obj):
+        return settings.MEDIA_URL + obj.thumbnail.name
 
     def get_file(self, obj):
         return settings.MEDIA_URL + obj.file.name
