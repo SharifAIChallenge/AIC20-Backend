@@ -15,7 +15,7 @@ class TimelineEvent(models.Model):
     text_en = models.TextField()
     text_fa = models.TextField()
 
-    order = models.PositiveSmallIntegerField(unique=True, default=1)
+    order = models.PositiveSmallIntegerField(default=1)
 
 
 class Prize(models.Model):
