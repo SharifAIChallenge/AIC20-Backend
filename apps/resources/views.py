@@ -22,7 +22,7 @@ class DocumentInstanceAPIView(GenericAPIView):
     def get(self, request, doc_id):
         doc = get_object_or_404(Document.objects.all(), pk=doc_id)
         data = DocumentSerializer(doc).data
-        data['sections'] = SectionSerializer(Section.objects.filter(document=doc), many=True).data
+        data['sections'] = SectionSerializer(Section.objects.filter(document=doc).order_by('order'), many=True).data
         return Response(data, status=status.HTTP_200_OK)
 
 
