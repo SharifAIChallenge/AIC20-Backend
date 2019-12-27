@@ -16,7 +16,7 @@ class SignUpView(GenericAPIView):
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
-        if User.objects.filter(email=serializer.data['email']).count() > 0:
+        if User.objects.filter(email=serializer.initial_data['email']).count() > 0:
             return Response({'error': 'A user with this email currently exists'}, status=400)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
