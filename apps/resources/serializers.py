@@ -29,7 +29,7 @@ class SectionSerializer(ModelSerializer):
 
     class Meta:
         model = Section
-        fields = ['uuid', 'title_en', 'title_fa', 'markdown', 'subtitles']
+        fields = ['uuid', 'title_en', 'title_fa', 'markdown', 'subtitles', 'link_to_colab']
 
     def validate(self, attrs):
         if 'title_en' not in attrs:

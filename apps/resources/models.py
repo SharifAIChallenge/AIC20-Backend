@@ -11,7 +11,7 @@ class Document(models.Model):
     description_fa = models.TextField(blank=True, null=False)
 
     thumbnail = models.ImageField(upload_to='document/thumbnails/', null=True)
-    file = models.FileField(upload_to='document/files/', null=True)
+    file = models.FileField(upload_to='document/files/', null=True, blank=True)
 
     order = models.PositiveSmallIntegerField(default=0)
 
@@ -30,6 +30,8 @@ class Section(models.Model):
     uuid = models.CharField(max_length=20, unique=True, blank=True, null=False)
 
     order = models.PositiveSmallIntegerField(default=0)
+
+    link_to_colab = models.CharField(max_length=500, null=True, blank=True)
 
     @staticmethod
     def generate_uuid():
