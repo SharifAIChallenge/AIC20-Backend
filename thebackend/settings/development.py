@@ -152,5 +152,3 @@ REST_FRAMEWORK = {
 }
 
 from .martor import *
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

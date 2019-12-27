@@ -15,11 +15,13 @@ class SignUpView(GenericAPIView):
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
+        if User.objects.filter(email=serializer.email).count() > 0:
+            return Response({'error': 'A user with this email currently exists'}, status=400)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response({'detail': 'User created successfully'})
+            return Response({'detail': 'User created successfully'}, status=200)
         else:
-            return Response({'detail': 'Error occurred during User creation'})
+            return Response({'error': 'Error occurred during User creation'}, status=500)
 
 
 class LogoutView(GenericAPIView):
