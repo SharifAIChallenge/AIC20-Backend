@@ -7,6 +7,7 @@ from apps.accounts.serializer import *
 
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
+from django.shortcuts import redirect
 
 
 class SignUpView(GenericAPIView):
@@ -34,20 +35,10 @@ class LogoutView(GenericAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class ForgotPasswordView(GenericAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+class ResetPasswordView(GenericAPIView):
 
-    def post(self, request):
-        pass
-
-
-class LoginWithGoogleView(GenericAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
-
-    def post(self, request):
-        pass
+    def get(self, request, uid, token):
+        return redirect(f'http://datadays.sharif.edu/forgot/reset?uid={uid}&token={token}')
 
 
 class ProfileView(GenericAPIView):
@@ -69,3 +60,4 @@ class ProfileView(GenericAPIView):
         user_serializer = UserViewSerializer(user)
         user_serializer.update(user, request.data)
         return Response(user_serializer.data)
+

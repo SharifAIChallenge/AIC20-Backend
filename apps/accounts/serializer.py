@@ -53,3 +53,4 @@ class UserViewSerializer(serializers.ModelSerializer):
         profile.university = validated_data.get('university', profile.university)
         profile.save()
         return instance
+

@@ -17,3 +17,12 @@ class HomepageView(GenericAPIView):
                 }
         return Response(data)
 
+
+class TermsOfUseView(GenericAPIView):
+
+    def get(self, request):
+        data = {
+                'term': Intro.objects.first().term_of_use
+                }
+        return Response(data)
+

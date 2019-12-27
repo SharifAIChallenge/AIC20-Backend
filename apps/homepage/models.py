@@ -7,6 +7,8 @@ class Intro(models.Model):
     text_en = models.TextField()
     text_fa = models.TextField()
 
+    term_of_use = models.TextField(null=True)
+
     def __str__(self):
         return self.header_en
 
