@@ -53,7 +53,7 @@ class DocumentSerializer(ModelSerializer):
 
     class Meta:
         model = Document
-        fields = ['id', 'title_en', 'title_fa', 'description_en', 'description_fa', 'thumbnail', 'file']
+        fields = ['id', 'title_en', 'title_fa', 'description_en', 'description_fa', 'thumbnail', 'file', 'time_to_read']
 
     def get_thumbnail(self, obj):
         return settings.MEDIA_URL + obj.thumbnail.name

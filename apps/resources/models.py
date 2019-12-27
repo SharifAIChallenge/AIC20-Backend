@@ -15,6 +15,8 @@ class Document(models.Model):
 
     order = models.PositiveSmallIntegerField(default=0)
 
+    time_to_read = models.PositiveSmallIntegerField(default=10)
+
     def __str__(self):
         return self.title_en
 

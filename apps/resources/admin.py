@@ -41,9 +41,9 @@ class SectionAdmin(ModelAdmin):
     search_fields = ['title_en', 'title_fa']
     sortable_by = ['title_en', 'title_fa']
     inlines = [SubtitleInline]
-#    formfield_overrides = {
-#        models.TextField: {'widget': AdminMartorWidget},
-#    }
+    formfield_overrides = {
+        models.TextField: {'widget': AdminMartorWidget},
+    }
 
     def get_document_title(self, section: Section):
         return section.document.title_en
