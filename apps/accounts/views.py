@@ -54,7 +54,7 @@ class SignUpView(GenericAPIView):
                     # from:
                     "datadays.sharif@gmail.com",
                     # to:
-                    [serializer.data['email']]
+                    [serializer.validated_data['email']]
                 )
             msg.attach_alternative(email_html_message, "text/html")
             msg.send()
