@@ -13,6 +13,8 @@ from django.utils import timezone
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from apps.accounts.serializer import *
 from apps.accounts.models import ResetPasswordToken
@@ -51,7 +53,7 @@ class ResetPasswordView(GenericAPIView):
 
         user = get_object_or_404(User, email=data['email'])
 
-        uid = base64.b64encode(str(user.id).encode('ascii')).decode('ascii')
+        uid = urlsafe_base64_encode(force_bytes(user.id))
         ResetPasswordToken.objects.filter(uid=uid).delete()
         reset_password_token = ResetPasswordToken(
                 uid=uid,
@@ -94,7 +96,7 @@ class ResetPasswordConfirmView(GenericAPIView):
         if (timezone.now() - rs_token.expiration_date).total_seconds() > 24 * 60 * 60:
             return Response({'error': 'Token Expired'}, status=400)
 
-        user = get_object_or_404(User, id=base64.b64decode(data['uid'].encode('ascii')).decode('ascii'))
+        user = get_object_or_404(User, id=urlsafe_base64_decode(data['uid'])).decode('ascii'))
         user.password = make_password(data['new_password1'])
         user.save()
         return Response({'detail': 'Successfully Changed Password'}, status=200)
