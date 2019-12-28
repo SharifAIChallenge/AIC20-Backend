@@ -12,6 +12,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
 
 from apps.accounts.serializer import *
 from apps.accounts.models import ResetPasswordToken
@@ -43,12 +44,17 @@ class LogoutView(GenericAPIView):
 
 
 class ResetPasswordView(GenericAPIView):
+    serializer_class = ResetPasswordSerializer
 
-    def get(self, request, email):
-        user = get_object_or_404(User, email=email)
+    def post(self, request):
+        data = self.get_serializer(request.data).data
 
+        user = get_object_or_404(User, email=data['email'])
+
+        uid = base64.b64encode(str(user.id).encode('ascii')).decode('ascii')
+        ResetPasswordToken.objects.filter(uid=uid).delete()
         reset_password_token = ResetPasswordToken(
-                uid=base64.b64encode(user.id).decode('ascii'),
+                uid=uid,
                 token=secrets.token_urlsafe(32),
                 expiration_date=timezone.now() + timezone.timedelta(hours=24),
             )
@@ -77,23 +83,19 @@ class ResetPasswordView(GenericAPIView):
         msg.attach_alternative(email_html_message, "text/html")
         msg.send()
 
-    def post(self, request):
-        try:
-            new_password1 = request.data['new_password1']
-            new_password2 = request.data['new_password2']
-            uid = request.data['uid']
-            token = request.data['token']
-        except:
-            return Response({'error': 'Bad Request'}, status=400)
-        if new_password1 != new_password2:
-            return Response({'error': 'Passwords missmatch'}, status=400)
 
-        rs_token = get_object_or_404(ResetPasswordToken, uid=uid, token=token)
+class ResetPasswordConfirmView(GenericAPIView):
+    serializer_class = ResetPasswordConfirmSerializer
+
+    def post(self, request):
+        data = self.get_serializer(request.data).data
+
+        rs_token = get_object_or_404(ResetPasswordToken, uid=data['uid'], token=data['token'])
         if (timezone.now() - rs_token.expiration_date).total_seconds() > 24 * 60 * 60:
             return Response({'error': 'Token Expired'}, status=400)
 
-        user = get_object_or_404(User, id=base64.b64decode(uid).decode('ascii'))
-        user.password = make_password(new_password1)
+        user = get_object_or_404(User, id=base64.b64decode(data['uid'].encode('ascii')).decode('ascii'))
+        user.password = make_password(data['new_password1'])
         user.save()
         return Response({'detail': 'Successfully Changed Password'}, status=200)
 
