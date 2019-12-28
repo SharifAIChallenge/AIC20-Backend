@@ -18,3 +18,9 @@ class Profile(models.Model):
         return f'username: {self.user.username},' \
             f'name: {self.firstname_en} {self.lastname_en},' \
             f'email: {self.user.email}'
+
+
+class ResetPasswordToken(models.Model):
+    uid = models.CharField(max_length=100)
+    token = models.CharField(max_length=100)
+    expiration_date = models.DateTimeField()

@@ -1,7 +1,9 @@
 from django.urls import path, include
 
-from apps.accounts.views import *
 from rest_framework_simplejwt import views as jwt_views
+
+from apps.accounts.views import *
+
 
 urlpatterns = [
     path('login', jwt_views.TokenObtainPairView.as_view(),
@@ -11,6 +13,6 @@ urlpatterns = [
     path('signup', SignUpView.as_view()),
     path('logout', LogoutView.as_view()),
     path('profile', ProfileView.as_view()),
-    path('rest-auth/',  include('rest_auth.urls')),
-    path('', include('django.contrib.auth.urls')),
+    path('password-reset', ResetPasswordView.as_view()),
 ]
+
