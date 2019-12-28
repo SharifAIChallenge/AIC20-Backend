@@ -8,8 +8,9 @@ from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
+from django.core import mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
@@ -17,7 +18,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from apps.accounts.serializer import *
-from apps.accounts.models import ResetPasswordToken
+from apps.accounts.models import ResetPasswordToken, ActivateUserToken
 
 
 class SignUpView(GenericAPIView):
@@ -29,10 +30,56 @@ class SignUpView(GenericAPIView):
         if User.objects.filter(email=serializer.initial_data['email']).count() > 0:
             return Response({'error': 'A user with this email currently exists'}, status=400)
         if serializer.is_valid(raise_exception=True):
+
+            activate_user_token = ActivateUserToken(
+                    token=secrets.token_urlsafe(32),
+                    eid=urlsafe_base64_encode(force_bytes(serializer.data['email'])),
+                    )
+            activate_user_token.save()
+
+            context = {
+                'domain': 'datadays.sharif.edu',
+                'eid': activate_user_token.eid,
+                'token': activate_user_token.token,
+            }
+
+            email_html_message = render_to_string('accounts/email/user_activate_email.html', context)
+            email_plaintext_message = render_to_string('accounts/email/user_activate_email.txt', context)
+
+            msg = EmailMultiAlternatives(
+                    # title:
+                    _("Activate Account for {title}".format(title="DataDays")),
+                    # message:
+                    email_plaintext_message,
+                    # from:
+                    "datadays.sharif@gmail.com",
+                    # to:
+                    [serializer.data['email']]
+                )
+            msg.attach_alternative(email_html_message, "text/html")
+            msg.send()
+
             serializer.save()
-            return Response({'detail': 'User created successfully'}, status=200)
+            serializer.instance.is_active = False
+            serializer.instance.save()
+
+            return Response({'detail': 'User created successfully. Check your email for confirmation link'}, status=200)
         else:
             return Response({'error': 'Error occurred during User creation'}, status=500)
+
+
+class ActivateView(GenericAPIView):
+
+    def get(self, request, eid, token):
+        activate_user_token = get_object_or_404(ActivateUserToken,
+                eid=eid, token=token)
+
+        email = urlsafe_base64_decode(activate_user_token.eid)
+        user = get_object_or_404(User, email=email)
+        user.is_active = True
+        user.save()
+
+        return redirect('http://datadays.sharif.edu/login')
 
 
 class LogoutView(GenericAPIView):
@@ -84,6 +131,7 @@ class ResetPasswordView(GenericAPIView):
             )
         msg.attach_alternative(email_html_message, "text/html")
         msg.send()
+
         return Response({'detail': 'Successfully Sent Reset Password Email'}, status=200)
 
 

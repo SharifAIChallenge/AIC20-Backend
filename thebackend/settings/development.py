@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'djcelery',
     'corsheaders',
+    'djcelery_email',
 
     'apps.accounts',
     'apps.blog',

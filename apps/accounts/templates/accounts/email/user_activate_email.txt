@@ -1,0 +1,12 @@
+{% load static i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+
+Activate Account
+
+{% autoescape off %}
+{% trans 'Hello' %}!
+{% trans 'Click on the link below to activate your account:' %}
+http://{{ domain }}/api/accounts/activate/{{ token }}
+{% endautoescape %}
+
