@@ -12,7 +12,7 @@
 {% autoescape off %}
     <p>{% trans 'Hello' %}!</p>
     <p>{% trans 'Click on the link below to activate your account:' %} </p>
-    <a href="http://{{ domain }}/api/accounts/activate/{{ token }}">Activate Account Link</a>
+    <a href="http://{{ domain }}/api/accounts/activate/{{ eid }}/{{ token }}">Activate Account Link</a>
 {% endautoescape %}
 </body>
 </html> 
