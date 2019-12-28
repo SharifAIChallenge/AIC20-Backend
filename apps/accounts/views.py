@@ -84,6 +84,7 @@ class ResetPasswordView(GenericAPIView):
             )
         msg.attach_alternative(email_html_message, "text/html")
         msg.send()
+        return Response({'detail': 'Successfully Sent Reset Password Email'}, status=200)
 
 
 class ResetPasswordConfirmView(GenericAPIView):
