@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Document, Section
 from .serializers import DocumentSerializer, SectionSerializer
@@ -11,6 +12,7 @@ from .serializers import DocumentSerializer, SectionSerializer
 class DocumentListAPIView(GenericAPIView):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         data = self.get_serializer(self.get_queryset().order_by('order'), many=True).data
@@ -18,6 +20,7 @@ class DocumentListAPIView(GenericAPIView):
 
 
 class DocumentInstanceAPIView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, doc_id):
         doc = get_object_or_404(Document.objects.all(), pk=doc_id)
@@ -29,6 +32,7 @@ class DocumentInstanceAPIView(GenericAPIView):
 class SectionAPIView(GenericAPIView):
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, section_uuid):
         section = get_object_or_404(self.get_queryset(), uuid=section_uuid)
