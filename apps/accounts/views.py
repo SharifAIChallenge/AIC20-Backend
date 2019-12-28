@@ -74,7 +74,7 @@ class ActivateView(GenericAPIView):
         activate_user_token = get_object_or_404(ActivateUserToken,
                 eid=eid, token=token)
 
-        email = urlsafe_base64_decode(activate_user_token.eid)
+        email = urlsafe_base64_decode(activate_user_token.eid).decode('utf-8')
         user = get_object_or_404(User, email=email)
         user.is_active = True
         user.save()
