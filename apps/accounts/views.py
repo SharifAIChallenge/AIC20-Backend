@@ -33,7 +33,7 @@ class SignUpView(GenericAPIView):
 
             activate_user_token = ActivateUserToken(
                     token=secrets.token_urlsafe(32),
-                    eid=urlsafe_base64_encode(force_bytes(serializer.data['email'])),
+                    eid=urlsafe_base64_encode(force_bytes(serializer.validated_data['email'])),
                     )
             activate_user_token.save()
 
