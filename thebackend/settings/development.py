@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 #    'thebackend.middlewares.TranslationMiddleware',
     'thebackend.middlewares.Always200Middleware',
+    'thebackend.middlewares.WrapSerializerErrorsMiddleware',
 ]
 
 ROOT_URLCONF = 'thebackend.urls'

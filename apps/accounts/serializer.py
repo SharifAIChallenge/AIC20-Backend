@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
+
 
 from apps.accounts.models import Profile, ResetPasswordToken
 
@@ -13,6 +15,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
+
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
 
     password_1 = serializers.CharField(style={'input_type': 'password'})
     password_2 = serializers.CharField(style={'input_type': 'password'})

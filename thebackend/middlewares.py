@@ -66,3 +66,26 @@ class Always200Middleware:
                 pass
         return response
 
+
+class WrapSerializerErrorsMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if response.status_code == 400:
+            if hasattr(response, 'data'):
+                data = {'detail': response.data}
+                try:
+                    r = Response(data=data, status=400)
+                    r.accepted_renderer = response.accepted_renderer
+                    r.accepted_media_type = response.accepted_media_type
+                    r.renderer_context = response.renderer_context
+                    r.render()
+                    return r
+                except Exception:
+                    pass
+            return response
+        else:
+            return response
+
