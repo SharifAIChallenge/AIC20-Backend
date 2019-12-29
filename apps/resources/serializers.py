@@ -56,10 +56,10 @@ class DocumentSerializer(ModelSerializer):
         fields = ['id', 'title_en', 'title_fa', 'description_en', 'description_fa', 'thumbnail', 'file', 'time_to_read']
 
     def get_thumbnail(self, obj):
-        return settings.MEDIA_URL + obj.thumbnail.name
+        return settings.MEDIA_URL + str(obj.thumbnail.name)
 
     def get_file(self, obj):
-        return settings.MEDIA_URL + obj.file.name
+        return settings.MEDIA_URL + str(obj.file.name)
 
     def validate(self, attrs):
         if 'title_en' not in attrs:
