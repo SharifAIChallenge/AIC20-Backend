@@ -17,7 +17,7 @@ MARTOR_MARKDOWN_SAFE_MODE = True  # default
 
 # Markdownify
 MARTOR_MARKDOWNIFY_FUNCTION = 'martor.utils.markdownify'  # default
-MARTOR_MARKDOWNIFY_URL = '/martor/markdownify/'  # default
+MARTOR_MARKDOWNIFY_URL = '/api/martor/markdownify/'  # default
 
 # Markdown extensions (default)
 MARTOR_MARKDOWN_EXTENSIONS = [
