@@ -6,5 +6,12 @@ from django.contrib import admin
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    pass
+    search_fields = [
+        'firstname_fa',
+        'firstname_en',
+        'lastname_fa',
+        'lastname_en',
+        'birth_date',
+        'university',
+    ]
 
