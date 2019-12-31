@@ -131,7 +131,7 @@ class ResetPasswordConfirmView(GenericAPIView):
         if (timezone.now() - rs_token.expiration_date).total_seconds() > 24 * 60 * 60:
             return Response({'error': 'Token Expired'}, status=400)
 
-        user = get_object_or_404(User, id=urlsafe_base64_decode(data['uid']))
+        user = get_object_or_404(User, id=urlsafe_base64_decode(data['uid']).decode('utf-8'))
         user.password = make_password(data['new_password1'])
         user.save()
         return Response({'detail': 'Successfully Changed Password'}, status=200)
