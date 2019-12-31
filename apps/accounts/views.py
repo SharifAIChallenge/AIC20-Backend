@@ -49,11 +49,14 @@ class SignUpView(GenericAPIView):
                     [serializer.validated_data['email']]
                 )
             msg.attach_alternative(email_html_message, "text/html")
-            msg.send()
+            try:
+                msg.send()
 
-            serializer.save()
-            serializer.instance.is_active = False
-            serializer.instance.save()
+                serializer.save()
+                serializer.instance.is_active = False
+                serializer.instance.save()
+            except:
+                return Response({'detail': 'Invalid email or user has not been saved.'}, status=406)
 
             return Response({'detail': 'User created successfully. Check your email for confirmation link'}, status=200)
         else:
