@@ -22,6 +22,7 @@ martor==1.4.4
 Pillow==6.2.1
 PyJWT==1.7.1
 pytz==2019.3
+redis==3.3.11
 requests==2.22.0
 six==1.13.0
 sqlparse==0.3.0
