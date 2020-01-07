@@ -15,6 +15,12 @@ class ProfileAdmin(admin.ModelAdmin):
         'birth_date',
         'university',
     ]
+    list_display = [
+        'firstname_en',
+        'lastname_en',
+        'birth_date',
+        'university',
+    ]
 
 
 @admin.register(ResetPasswordToken)
