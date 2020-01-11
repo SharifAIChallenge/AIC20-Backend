@@ -156,3 +156,22 @@ class ProfileView(GenericAPIView):
         user_serializer.update(user, request.data)
         return Response(user_serializer.data)
 
+
+class ChangePasswordAPIView(GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            data = serializer.data
+
+        if not request.user.check_password(data['old_password']):
+            return Response({'detail': 'incorrect current password'}, status=406)
+
+        request.user.password = make_password(data['new_password1'])
+        request.user.save()
+        return Response({'detail': 'password changed successfully'}, status=200)
+
+

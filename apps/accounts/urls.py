@@ -14,6 +14,7 @@ urlpatterns = [
     path('activate/<slug:eid>/<slug:token>', ActivateView.as_view()),
     path('logout', LogoutView.as_view()),
     path('profile', ProfileView.as_view()),
+    path('password/change/', ChangePasswordAPIView.as_view()),
     path('password/reset/', ResetPasswordView.as_view()),
     path('password/reset/confirm/', ResetPasswordConfirmView.as_view()),
 

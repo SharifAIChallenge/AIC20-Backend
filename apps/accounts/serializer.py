@@ -42,28 +42,11 @@ class UserSerializer(serializers.ModelSerializer):
 class UserViewSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
 
-    old_password = serializers.CharField(style={'input_type': 'password'})
-    new_password1 = serializers.CharField(style={'input_type': 'password'})
-    new_password2 = serializers.CharField(style={'input_type': 'password'})
-
     class Meta:
         model = User
-        fields = ['profile', 'email', 'old_password', 'new_password1', 'new_password2']
-
-    def validate(self, data):
-        if 'old_password' in data and 'new_password1' in data and 'new_password2' in data:
-            if data['new_password1'] != data['new_password2']:
-                raise serializers.ValidationError('passwords don\'t match!')
-        elif 'old_password' in data or 'new_password1' in data or 'new_password2' in data:
-            raise serializers.ValidationError('3 password fields required!')
-        return data
+        fields = ['profile', 'email']
 
     def update(self, instance, validated_data):
-        if 'old_password' in validated_data:
-            made_old_password = make_password(validated_data['old_password'])
-            if instance.password != made_old_password:
-                return
-            instance.password = make_password(validated_data['new_password1'])
         instance.save()
         profile = instance.profile
         profile.firstname_fa = validated_data.get('firstname_fa', profile.firstname_fa)
@@ -75,6 +58,17 @@ class UserViewSerializer(serializers.ModelSerializer):
         profile.save()
         return instance
 
+
+class ChangePasswordSerializer(serializers.Serializer):
+
+    old_password = serializers.CharField(style={'input_type': 'password'})
+    new_password1 = serializers.CharField(style={'input_type': 'password'})
+    new_password2 = serializers.CharField(style={'input_type': 'password'})
+
+    def validate(self, data):
+        if data['new_password1'] != data['new_password2']:
+            raise serializers.ValidationError('passwords don\'t match!')
+        return data
 
 class ResetPasswordSerializer(serializers.Serializer):
 
