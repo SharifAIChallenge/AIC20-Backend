@@ -59,6 +59,17 @@ class UserViewSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ChangePasswordSerializer(serializers.Serializer):
+
+    old_password = serializers.CharField(style={'input_type': 'password'})
+    new_password1 = serializers.CharField(style={'input_type': 'password'})
+    new_password2 = serializers.CharField(style={'input_type': 'password'})
+
+    def validate(self, data):
+        if data['new_password1'] != data['new_password2']:
+            raise serializers.ValidationError('passwords don\'t match!')
+        return data
+
 class ResetPasswordSerializer(serializers.Serializer):
 
     email = serializers.EmailField()
