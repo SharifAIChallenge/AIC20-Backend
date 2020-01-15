@@ -48,7 +48,8 @@ class Match(models.Model):
 
 
 class MatchTeam(models.Model):
-    pass
+    team = models.OneToOneField('participation.Team', related_name='game_team', on_delete=models.CASCADE)
+    match = models.ForeignKey('challenge.Match', related_name='match_teams', on_delete=models.CASCADE)
 
 
 class Game(models.Model):
@@ -56,11 +57,12 @@ class Game(models.Model):
 
 
 class GameSide(models.Model):
-    pass
+    game = models.ForeignKey('challenge.Game', related_name='game_sides', on_delete=models.CASCADE)
 
 
 class GameTeam(models.Model):
-    pass
+    team = models.OneToOneField('participation.Team', related_name='game_team', on_delete=models.CASCADE)
+    game_side = models.ForeignKey('challenge.GameSide', related_name='game_teams', on_delete=models.CASCADE)
 
 
 class Info(models.Model):
