@@ -31,11 +31,16 @@ class Tournament(PolymorphicModel):
 
 
 class Stage(models.Model):
-    pass
+    tournament = models.ForeignKey('challenge.Tournament', related_name='stages', on_delete=models.CASCADE)
 
 
-class Groups(models.Model):
-    pass
+class Group(models.Model):
+    scoreboard = models.OneToOneField('scoreboard.Score', related_name='group', on_delete=None)
+
+
+class TeamGroup(models.Model):
+    team = models.OneToOneField('participation.Team', related_name='team_group', on_delete=models.CASCADE)
+    group = models.ForeignKey('challenge.Group', related_name='team_groups', on_delete=models.CASCADE)
 
 
 class Match(models.Model):
