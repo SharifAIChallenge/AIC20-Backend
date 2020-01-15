@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 from polymorphic.models import PolymorphicModel
@@ -13,6 +14,15 @@ class TournamentTypes:
         (LEAGUE, 'league'),
         (HOURLY, 'hourly'),
         (DOUBLE_ELIMINATION, 'double elimination')
+    )
+
+
+class MatchTypes:
+    TWO = 2
+    FOUR = 4
+    TYPES = (
+        (TWO, 'Two Participants'),
+        (FOUR, 'Four Participants'),
     )
 
 
@@ -44,7 +54,8 @@ class TeamGroup(models.Model):
 
 
 class Match(models.Model):
-    pass
+    map = models.ForeignKey('challenge.Map', related_name='matches', on_delete=None)
+    type = models.PositiveSmallIntegerField(choices=MatchTypes.TYPES)
 
 
 class MatchTeam(models.Model):
@@ -53,21 +64,31 @@ class MatchTeam(models.Model):
 
 
 class Game(models.Model):
-    pass
+    match = models.ForeignKey('challenge.Match', related_name='games', on_delete=models.CASCADE)
+    info = models.OneToOneField('challenge.Info', related_name='game', on_delete=models.CASCADE)
 
 
 class GameSide(models.Model):
     game = models.ForeignKey('challenge.Game', related_name='game_sides', on_delete=models.CASCADE)
+    has_won = models.BooleanField(default=False)
 
 
 class GameTeam(models.Model):
-    team = models.OneToOneField('participation.Team', related_name='game_team', on_delete=models.CASCADE)
+    team = models.ForeignKey('participation.Team', related_name='game_teams', on_delete=models.CASCADE)
     game_side = models.ForeignKey('challenge.GameSide', related_name='game_teams', on_delete=models.CASCADE)
 
 
 class Info(models.Model):
-    pass
+    status = models.CharField(max_length=50)
+    detail = models.CharField(max_length=500)
 
 
 class Submission(models.Model):
+    team = models.ForeignKey('participation.Team', related_name='submissions', on_delete=models.CASCADE)
+    participant = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
+    type = models.CharField(max_length=50)
+    submit_date = models.DateTimeField(auto_now_add=True)
+
+
+class Map(models.Model):
     pass
