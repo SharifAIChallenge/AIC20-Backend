@@ -52,3 +52,13 @@ class SubmitAPIView(GenericAPIView):
 class SubmissionsListAPIView(GenericAPIView):
     def get(self, request):
         pass
+
+
+class MapsListAPIView(GenericAPIView):
+    def get(self, request):
+        pass
+
+
+class MapDetailAPIView(GenericAPIView):
+    def get(self, request):
+        pass
