@@ -65,7 +65,7 @@ class MatchTeam(models.Model):
 
 class Game(models.Model):
     match = models.ForeignKey('challenge.Match', related_name='games', on_delete=models.CASCADE)
-    info = models.OneToOneField('challenge.Info', related_name='game', on_delete=models.CASCADE)
+    info = models.OneToOneField('challenge.Info', related_name='game', on_delete=models.CASCADE, null=True)
 
 
 class GameSide(models.Model):
