@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -20,32 +19,38 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='teamgroup',
             name='team',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='team_group', to='participation.Team'),
+            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='team_group',
+                                       to='participation.Team'),
         ),
         migrations.AddField(
             model_name='submission',
             name='participant',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='submissions', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='submissions',
+                                    to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='submission',
             name='team',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='submissions', to='participation.Team'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='submissions',
+                                    to='participation.Team'),
         ),
         migrations.AddField(
             model_name='stage',
             name='tournament',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='stages', to='challenge.Tournament'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='stages',
+                                    to='challenge.Tournament'),
         ),
         migrations.AddField(
             model_name='matchteam',
             name='match',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='match_teams', to='challenge.Match'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='match_teams',
+                                    to='challenge.Match'),
         ),
         migrations.AddField(
             model_name='matchteam',
             name='team',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='game_team', to='participation.Team'),
+            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='game_team',
+                                       to='participation.Team'),
         ),
         migrations.AddField(
             model_name='match',
@@ -60,26 +65,31 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='gameteam',
             name='game_side',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='game_teams', to='challenge.GameSide'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='game_teams',
+                                    to='challenge.GameSide'),
         ),
         migrations.AddField(
             model_name='gameteam',
             name='team',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='game_teams', to='participation.Team'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='game_teams',
+                                    to='participation.Team'),
         ),
         migrations.AddField(
             model_name='gameside',
             name='game',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='game_sides', to='challenge.Game'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='game_sides',
+                                    to='challenge.Game'),
         ),
         migrations.AddField(
             model_name='game',
             name='info',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='game', to='challenge.Info'),
+            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='game',
+                                       to='challenge.Info'),
         ),
         migrations.AddField(
             model_name='game',
             name='match',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='games', to='challenge.Match'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='games',
+                                    to='challenge.Match'),
         ),
     ]
