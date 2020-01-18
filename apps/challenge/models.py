@@ -52,17 +52,18 @@ class Group(models.Model):
 
 
 class TeamGroup(models.Model):
-    team = models.OneToOneField('participation.Team', related_name='team_group', on_delete=models.CASCADE)
+    team = models.ForeignKey('participation.Team', related_name='team_group', on_delete=models.CASCADE)
     group = models.ForeignKey('challenge.Group', related_name='team_groups', on_delete=models.CASCADE)
 
 
 class Match(models.Model):
+    group = models.ForeignKey('challenge.Group', related_name='matches', on_delete=models.CASCADE)
     map = models.ForeignKey('challenge.Map', related_name='matches', on_delete=None)
     type = models.PositiveSmallIntegerField(choices=MatchTypes.TYPES)
 
 
 class MatchTeam(models.Model):
-    team = models.OneToOneField('participation.Team', related_name='game_team', on_delete=models.CASCADE)
+    team = models.ForeignKey('participation.Team', related_name='game_team', on_delete=models.CASCADE)
     match = models.ForeignKey('challenge.Match', related_name='match_teams', on_delete=models.CASCADE)
 
 
