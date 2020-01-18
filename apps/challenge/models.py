@@ -34,6 +34,7 @@ class Challenge(models.Model):
 
 
 class Tournament(PolymorphicModel):
+    challenge = models.ForeignKey('challenge.Challenge', related_name='tournaments', on_delete=models.CASCADE)
     type = models.CharField(max_length=20, choices=TournamentTypes.TYPES)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -42,9 +43,11 @@ class Tournament(PolymorphicModel):
 
 class Stage(models.Model):
     tournament = models.ForeignKey('challenge.Tournament', related_name='stages', on_delete=models.CASCADE)
+    finished = models.BooleanField(default=False)
 
 
 class Group(models.Model):
+    stage = models.ForeignKey('challenge.Stage', related_name='groups', on_delete=models.CASCADE)
     scoreboard = models.OneToOneField('scoreboard.Score', related_name='group', on_delete=None)
 
 
