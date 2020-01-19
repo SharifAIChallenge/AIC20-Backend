@@ -1,78 +1,105 @@
 from rest_framework.serializers import ModelSerializer
 
 from . import models as challenge_models
-
-
-class ChallengeSerializer(ModelSerializer):
-    class Meta:
-        model = challenge_models.Challenge
-        fields = ['__all__']
-
-
-class TournamentSerializer(ModelSerializer):
-    class Meta:
-        model = challenge_models.Tournament
-        fields = ['__all__']
-
-
-class StageSerializer(ModelSerializer):
-    class Meta:
-        model = challenge_models.Stage
-        fields = ['__all__']
-
-
-class GroupSerializer(ModelSerializer):
-    class Meta:
-        model = challenge_models.Group
-        fields = ['__all__']
-
-
-class TeamGroupSerializer(ModelSerializer):
-    class Meta:
-        model = challenge_models.TeamGroup
-        fields = ['__all__']
-
-
-class MatchSerializer(ModelSerializer):
-    class Meta:
-        model = challenge_models.Match
-        fields = ['__all__']
-
-
-class MatchTeamSerializer(ModelSerializer):
-    class Meta:
-        model = challenge_models.MatchTeam
-        fields = ['__all__']
-
-
-class GameSerializer(ModelSerializer):
-    class Meta:
-        model = challenge_models.Game
-        fields = ['__all__']
-
-
-class GameSideSerializer(ModelSerializer):
-    class Meta:
-        model = challenge_models.GameSide
-        fields = ['__all__']
-
-
-class GameTeamSerializer(ModelSerializer):
-    class Meta:
-        model = challenge_models.GameTeam
-        fields = ['__all__']
+from ..participation import serializers as participation_serializers
 
 
 class InfoSerializer(ModelSerializer):
     class Meta:
         model = challenge_models.Info
-        fields = ['__all__']
+        fields = ['id', 'status', 'detail']
+
+
+class GameTeamSerializer(ModelSerializer):
+    team = participation_serializers.TeamSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = challenge_models.GameTeam
+        fields = ['id', 'game_side_id', 'team']
+
+
+class GameSideSerializer(ModelSerializer):
+    game_teams = GameTeamSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = challenge_models.GameSide
+        fields = ['id', 'game_id', 'has_won', 'game_teams']
+
+
+class GameSerializer(ModelSerializer):
+    info = InfoSerializer(read_only=True, allow_null=True)
+    game_sides = GameSideSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = challenge_models.Game
+        fields = ['id', 'match_id', 'info', 'game_sides']
+
+
+class MatchTeamSerializer(ModelSerializer):
+    team = participation_serializers.TeamSerializer()
+
+    class Meta:
+        model = challenge_models.MatchTeam
+        fields = ['id', 'match_id', 'team']
+
+
+class MatchSerializer(ModelSerializer):
+    match_teams = MatchTeamSerializer(many=True, read_only=True)
+    games = GameSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = challenge_models.Match
+        fields = ['id', 'group_id', 'type', 'match_teams', 'games']
+
+
+class TeamGroupSerializer(ModelSerializer):
+    team = participation_serializers.TeamSerializer(read_only=True)
+
+    class Meta:
+        model = challenge_models.TeamGroup
+        fields = ['id', 'group_id', 'team']
+
+
+class GroupSerializer(ModelSerializer):
+    team_groups = TeamGroupSerializer(many=True, read_only=True)
+    matches = MatchSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = challenge_models.Group
+        fields = ['id', 'stage_id', 'team_groups', 'matches']
+
+
+class StageSerializer(ModelSerializer):
+    groups = GroupSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = challenge_models.Stage
+        fields = ['id', 'tournament_id', 'finished', 'groups']
+
+
+class TournamentSerializer(ModelSerializer):
+    stages = StageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = challenge_models.Tournament
+        fields = ['id', 'challenge_id', 'type', 'start_time', 'end_time', 'run_time', 'stages']
+
+
+class ChallengeSerializer(ModelSerializer):
+    tournaments = TournamentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = challenge_models.Challenge
+        fields = ['id', 'name', 'type', 'start_time', 'end_time', 'tournaments']
 
 
 class SubmissionSerializer(ModelSerializer):
+    team = participation_serializers.TeamSerializer(read_only=True)
+    participant = participation_serializers.ParticipantSerializer(read_only=True)
+
     class Meta:
         model = challenge_models.Submission
-        fields = ['__all__']
+        fields = ['id', 'type', 'submit_date', 'team', 'participant']
 
 
 class MapSerializer(ModelSerializer):
