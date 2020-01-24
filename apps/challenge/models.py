@@ -48,7 +48,7 @@ class Stage(models.Model):
 
 class Group(models.Model):
     stage = models.ForeignKey('challenge.Stage', related_name='groups', on_delete=models.CASCADE)
-    scoreboard = models.OneToOneField('scoreboard.Score', related_name='group', on_delete=None)
+    scoreboard = models.OneToOneField('scoreboard.ScoreBoard', related_name='group', on_delete=None)
 
 
 class TeamGroup(models.Model):
