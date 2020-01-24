@@ -1,9 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
-
-
 class Row(models.Model):
     team = models.ForeignKey('participation.Participant', related_name='rows', on_delete=models.CASCADE)
     scoreboard = models.ForeignKey('scoreboard.ScoreBoard', related_name='rows', on_delete=models.CASCADE)
