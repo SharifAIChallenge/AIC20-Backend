@@ -29,10 +29,9 @@ urlpatterns = [
     path('api/blog/', include('apps.blog.urls')),
     path('api/subscribe/', include('apps.notification.urls')),
     path('api/go/', include('apps.go.urls')),
-
+    path('api/participation/', include('apps.participation.urls')),
+    path('api/challenge/', include('apps.challenge.urls')),
 ]
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
