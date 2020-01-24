@@ -17,17 +17,16 @@ class ParticipantSerializer(serializers.ModelSerializer):
         fields = ['id', 'user']
 
 
+class BadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Badge
+        fields = ['id', 'title', 'text', 'image']
+
+
 class TeamSerializer(serializers.ModelSerializer):
     participants = ParticipantSerializer(many=True, read_only=True)
+    badges = BadgeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Team
-        fields = ['id', 'participants']
-
-
-class BadgeSerializer(serializers.ModelSerializer):
-    teams = TeamSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Badge
-        fields = ['id', 'title', 'text', 'image', 'teams']
+        fields = ['id', 'badges', 'participants']
