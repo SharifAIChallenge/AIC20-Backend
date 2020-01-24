@@ -95,4 +95,3 @@ venv/
 *.jpg
 *.png
 *.jpeg
-apps/participation/migrations/0002_invitation.py
