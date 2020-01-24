@@ -16,4 +16,3 @@ class Score(models.Model):
 
 class ScoreBoard(models.Model):
     tournament = models.ForeignKey('challenge.Tournament', related_name='scoreboards', on_delete=models.CASCADE)
-    stage = models.OneToOneField('challenge.Stage', related_name='scoreboard', on_delete=models.CASCADE)
