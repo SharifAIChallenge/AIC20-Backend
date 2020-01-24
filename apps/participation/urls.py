@@ -1,7 +1,10 @@
-from .views import BadgeViewSet, ParticipantViewSet
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-router = DefaultRouter()
-router.register('badge', BadgeViewSet)
-router.register('participant', ParticipantViewSet)
-urlpatterns = router.urls
+from . import views
+
+app_name = 'participation'
+
+urlpatterns = [
+    path('badges/', views.BadgeListAPIView.as_view(), name='badge_list'),
+    path('participants/', views.ParticipantListAPIView.as_view(), name='participant_list'),
+]
