@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Badge, Team, Participant
+from .models import Badge, Team, Participant, Invitation
+from ..accounts import serializer as accounts_serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -30,3 +31,12 @@ class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ['id', 'badges', 'participants']
+
+
+class InvitationSerializer(serializers.ModelSerializer):
+    target = accounts_serializers.UserSerializer()
+    source = accounts_serializers.UserSerializer()
+
+    class Meta:
+        model = Invitation
+        fields = ['target', 'source']
