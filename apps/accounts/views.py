@@ -35,28 +35,28 @@ class SignUpView(GenericAPIView):
             )
             activate_user_token.save()
 
-            context = {
-                'domain': 'aichallenge.sharif.edu',
-                'eid': activate_user_token.eid,
-                'token': activate_user_token.token,
-            }
-            email_html_message = render_to_string('accounts/email/user_activate_email.html', context)
-            email_plaintext_message = render_to_string('accounts/email/user_activate_email.txt', context)
-            msg = EmailMultiAlternatives(
-                _("Activate Account for {title}".format(title="DataDays")),
-                email_plaintext_message,
-                "aichallenge.sharif@gmail.com",
-                [serializer.validated_data['email']]
-            )
-            msg.attach_alternative(email_html_message, "text/html")
-            try:
-                msg.send()
+            # context = {
+            #     'domain': 'aichallenge.sharif.edu',
+            #     'eid': activate_user_token.eid,
+            #     'token': activate_user_token.token,
+            # }
+            # email_html_message = render_to_string('accounts/email/user_activate_email.html', context)
+            # email_plaintext_message = render_to_string('accounts/email/user_activate_email.txt', context)
+            # msg = EmailMultiAlternatives(
+            #     _("Activate Account for {title}".format(title="DataDays")),
+            #     email_plaintext_message,
+            #     "aichallenge.sharif@gmail.com",
+            #     [serializer.validated_data['email']]
+            # )
+            # msg.attach_alternative(email_html_message, "text/html")
+            # try:
+            #     msg.send()
 
-                serializer.save()
-                serializer.instance.is_active = False
-                serializer.instance.save()
-            except:
-                return Response({'detail': 'Invalid email or user has not been saved.'}, status=406)
+            serializer.save()
+            serializer.instance.is_active = False
+            serializer.instance.save()
+            # except:
+            #     return Response({'detail': 'Invalid email or user has not been saved.'}, status=406)
 
             return Response({'detail': 'User created successfully. Check your email for confirmation link'}, status=200)
         else:
