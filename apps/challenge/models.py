@@ -98,7 +98,7 @@ class Info(models.Model):
 
 class Submission(models.Model):
     team = models.ForeignKey('participation.Team', related_name='submissions', on_delete=models.CASCADE)
-    participant = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
     type = models.CharField(max_length=50)
     submit_date = models.DateTimeField(auto_now_add=True)
 
