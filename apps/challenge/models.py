@@ -6,6 +6,15 @@ from polymorphic.models import PolymorphicModel
 
 # Create your models here.
 
+class ChallengeTypes:
+    PRIMARY = 'primary'
+    FINAL = 'final'
+    TYPES = (
+        (PRIMARY, 'Primary Challenge'),
+        (FINAL, 'Finale Challenge'),
+    )
+
+
 class TournamentTypes:
     LEAGUE = 'league'
     HOURLY = 'hourly'
@@ -28,7 +37,7 @@ class MatchTypes:
 
 class Challenge(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    type = models.CharField(max_length=50)
+    type = models.CharField(max_length=50, choices=ChallengeTypes.TYPES)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
@@ -48,7 +57,7 @@ class Stage(models.Model):
 
 class Group(models.Model):
     stage = models.ForeignKey('challenge.Stage', related_name='groups', on_delete=models.CASCADE)
-    scoreboard = models.OneToOneField('scoreboard.Score', related_name='group', on_delete=None)
+    scoreboard = models.OneToOneField('scoreboard.ScoreBoard', related_name='group', on_delete=None)
 
 
 class TeamGroup(models.Model):
@@ -89,7 +98,7 @@ class Info(models.Model):
 
 class Submission(models.Model):
     team = models.ForeignKey('participation.Team', related_name='submissions', on_delete=models.CASCADE)
-    participant = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
     type = models.CharField(max_length=50)
     submit_date = models.DateTimeField(auto_now_add=True)
 

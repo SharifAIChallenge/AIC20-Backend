@@ -30,24 +30,24 @@ class SignUpView(GenericAPIView):
         if serializer.is_valid(raise_exception=True):
 
             activate_user_token = ActivateUserToken(
-                    token=secrets.token_urlsafe(32),
-                    eid=urlsafe_base64_encode(force_bytes(serializer.validated_data['email'])),
-                    )
+                token=secrets.token_urlsafe(32),
+                eid=urlsafe_base64_encode(force_bytes(serializer.validated_data['email'])),
+            )
             activate_user_token.save()
 
             context = {
-                'domain': 'datadays.sharif.edu',
+                'domain': 'aichallenge.sharif.edu',
                 'eid': activate_user_token.eid,
                 'token': activate_user_token.token,
             }
             email_html_message = render_to_string('accounts/email/user_activate_email.html', context)
             email_plaintext_message = render_to_string('accounts/email/user_activate_email.txt', context)
             msg = EmailMultiAlternatives(
-                    _("Activate Account for {title}".format(title="DataDays")),
-                    email_plaintext_message,
-                    "datadays.sharif@gmail.com",
-                    [serializer.validated_data['email']]
-                )
+                _("Activate Account for {title}".format(title="AI Challenge")),
+                email_plaintext_message,
+                "sharif.aichallenge@gmail.com",
+                [serializer.validated_data['email']]
+            )
             msg.attach_alternative(email_html_message, "text/html")
             try:
                 msg.send()
@@ -55,7 +55,9 @@ class SignUpView(GenericAPIView):
                 serializer.save()
                 serializer.instance.is_active = False
                 serializer.instance.save()
-            except:
+            except Exception as e:
+                print(e)
+                print(serializer.validated_data['email'])
                 return Response({'detail': 'Invalid email or user has not been saved.'}, status=406)
 
             return Response({'detail': 'User created successfully. Check your email for confirmation link'}, status=200)
@@ -67,14 +69,14 @@ class ActivateView(GenericAPIView):
 
     def get(self, request, eid, token):
         activate_user_token = get_object_or_404(ActivateUserToken,
-                eid=eid, token=token)
+                                                eid=eid, token=token)
 
         email = urlsafe_base64_decode(activate_user_token.eid).decode('utf-8')
         user = get_object_or_404(User, email=email)
         user.is_active = True
         user.save()
 
-        return redirect('http://datadays.sharif.edu/login')
+        return redirect('http://aichallenge.sharif.edu/login')
 
 
 class LogoutView(GenericAPIView):
@@ -98,14 +100,14 @@ class ResetPasswordView(GenericAPIView):
         uid = urlsafe_base64_encode(force_bytes(user.id))
         ResetPasswordToken.objects.filter(uid=uid).delete()
         reset_password_token = ResetPasswordToken(
-                uid=uid,
-                token=secrets.token_urlsafe(32),
-                expiration_date=timezone.now() + timezone.timedelta(hours=24),
-            )
+            uid=uid,
+            token=secrets.token_urlsafe(32),
+            expiration_date=timezone.now() + timezone.timedelta(hours=24),
+        )
         reset_password_token.save()
 
         context = {
-            'domain': 'datadays.sharif.edu',
+            'domain': 'aichallenge.sharif.edu',
             'username': user.username,
             'uid': reset_password_token.uid,
             'token': reset_password_token.token,
@@ -113,11 +115,11 @@ class ResetPasswordView(GenericAPIView):
         email_html_message = render_to_string('accounts/email/user_reset_password.html', context)
         email_plaintext_message = render_to_string('accounts/email/user_reset_password.txt', context)
         msg = EmailMultiAlternatives(
-                _("Password Reset for {title}".format(title="DataDays")),
-                email_plaintext_message,
-                "datadays.sharif@gmail.com",
-                [user.email]
-            )
+            _("Password Reset for {title}".format(title="AI Challenge")),
+            email_plaintext_message,
+            "aichallenge.sharif@gmail.com",
+            [user.email]
+        )
         msg.attach_alternative(email_html_message, "text/html")
         msg.send()
 
@@ -173,5 +175,3 @@ class ChangePasswordAPIView(GenericAPIView):
         request.user.password = make_password(data['new_password1'])
         request.user.save()
         return Response({'detail': 'password changed successfully'}, status=200)
-
-
