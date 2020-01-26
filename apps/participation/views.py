@@ -41,7 +41,7 @@ class SendInvitationAPIView(GenericAPIView):
 class LeaveTeamAPIView(GenericAPIView):
 
     def post(self, request, team_name):
-        errors = LeaveTeam(request=request, team_name=team_name)
+        errors = LeaveTeam(request=request, team_name=team_name)()
         if errors:
             return Response(data={'errors': json.dumps(errors)}, status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response(data={'details': 'You left your team successfully'}, status=status.HTTP_200_OK)
@@ -50,7 +50,19 @@ class LeaveTeamAPIView(GenericAPIView):
 class AnswerInvitationAPIView(GenericAPIView):
 
     def post(self, request, invitation_id):
-        errors = AnswerInvitation(request=request, invitation_id=invitation_id)
+        errors = AnswerInvitation(request=request, invitation_id=invitation_id)()
         if errors:
             return Response(data={'errors': json.dumps(errors)}, status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response(data={'details': 'You answered invitation successfully'}, status=status.HTTP_200_OK)
+
+
+class CreateTeamAPIView(GenericAPIView):
+    serializer_class = participation_serializers.TeamSerializer
+
+    def post(self, request):
+        team = self.get_serializer(data=request.body)
+        if team.is_valid(raise_exception=True):
+            team = team.save()
+        request.user.participant.team = team
+        request.user.participant.save()
+        return Response(data={'details': 'Team Created Successfully'}, status=status.HTTP_200_OK)

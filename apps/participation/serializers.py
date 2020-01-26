@@ -1,5 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+
+from apps.challenge.models import Challenge
 from .models import Badge, Team, Participant, Invitation
 from ..accounts import serializer as accounts_serializers
 
@@ -31,6 +34,17 @@ class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ['id', 'badges', 'participants']
+
+
+class TeamPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ['name', 'challenge_id']
+
+    def validate(self, attrs):
+        if not Challenge.objects.filter(id=attrs['challenge_id']).exists():
+            raise ValidationError("Challenge Not Exists")
+        return attrs
 
 
 class InvitationSerializer(serializers.ModelSerializer):
