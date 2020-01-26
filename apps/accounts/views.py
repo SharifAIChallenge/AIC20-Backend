@@ -55,7 +55,9 @@ class SignUpView(GenericAPIView):
                 serializer.save()
                 serializer.instance.is_active = False
                 serializer.instance.save()
-            except:
+            except Exception as e:
+                print(e)
+                print(serializer.validated_data['email'])
                 return Response({'detail': 'Invalid email or user has not been saved.'}, status=406)
 
             return Response({'detail': 'User created successfully. Check your email for confirmation link'}, status=200)
