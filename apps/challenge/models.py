@@ -131,7 +131,8 @@ class Info(models.Model):
 
 
 def get_submission_file_directory(instance, filename):
-    return os.path.join(instance.team.id.__str__(), filename + uuid.uuid4().__str__() + '.zip')
+    print("oomad jasho taein kone :)))")
+    return os.path.join(instance.team.name, str(instance.user.id), filename + uuid.uuid4().__str__() + '.zip')
 
 
 class Submission(models.Model):
@@ -139,8 +140,8 @@ class Submission(models.Model):
     user = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
     language = models.CharField(max_length=50, choices=SubmissionLanguagesTypes.TYPES,
                                 default=SubmissionLanguagesTypes.JAVA)
-    submit_time = models.DateTimeField(auto_now_add=True)
     file = models.FileField(upload_to=get_submission_file_directory)
+    submit_time = models.DateTimeField(auto_now_add=True)
     is_final = models.BooleanField(default=True)
     status = models.CharField(max_length=50, choices=SubmissionStatusTypes.TYPES,
                               default=SubmissionStatusTypes.UPLOADING)

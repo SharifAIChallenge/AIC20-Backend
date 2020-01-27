@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from . import models as challenge_models
@@ -99,12 +100,13 @@ class SubmissionSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Submission
-        fields = ['id', 'language', 'is_final', 'submit_date', 'team', 'user']
+        fields = ['id', 'language', 'is_final', 'submit_time', 'team', 'user', 'file']
 
 
 class SubmissionPostSerializer(ModelSerializer):
     class Meta:
-        fields = ['team_id', 'user_id', 'language', 'file']
+        model = challenge_models.Submission
+        fields = ['team', 'user', 'language', 'file']
 
 
 class MapSerializer(ModelSerializer):
