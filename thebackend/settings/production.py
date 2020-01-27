@@ -2,7 +2,6 @@ import os
 
 from .development import *
 
-
 SECRET_KEY = 'oaeu#@$puoeuj,#$>Ueok,4IY@#$"PU.ohukAEOUO>AYU34$IPK'
 
 DEBUG = False
@@ -85,7 +84,6 @@ LOGGING = {
     }
 }
 
-
 TIME_ZONE = 'Iran'
 
 STATIC_URL = '/static/'
@@ -102,4 +100,3 @@ EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
-
