@@ -73,7 +73,7 @@ class GameDetailAPIView(GenericAPIView):
 
 class SubmitAPIView(GenericAPIView):
     serializer_class = challenge_serializers.SubmissionSerializer
-
+    
     def post(self, request):
         pass
 

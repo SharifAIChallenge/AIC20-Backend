@@ -153,5 +153,5 @@ class Submission(models.Model):
 
 
 class Map(models.Model):
-    name = models.CharField(max_length=128, null=False, blank=False)
-    token = models.CharField(max_length=256, null=True, blank=False, unique=True)
+    name = models.CharField(max_length=128)
+    infra_token = models.CharField(max_length=256, null=True, blank=False, unique=True)
