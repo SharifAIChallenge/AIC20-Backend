@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from apps.participation.models import Team, Participant
 from apps.participation.services.answer_invitation import AnswerInvitation
+from apps.participation.services.dashboard import TeamDashBoard
 from apps.participation.services.leave_team import LeaveTeam
 from apps.participation.services.send_invitation import SendInvitation
 from . import models as participation_models
@@ -70,11 +71,13 @@ class CreateTeamAPIView(GenericAPIView):
         return Response(data={'details': 'Team Created Successfully'}, status=status.HTTP_200_OK)
 
 
-class NumberOfWinAPIView(GenericAPIView):
+class TeamDetailAPIView(GenericAPIView):
 
     def post(self, request):
         participant = get_object_or_404(Participant, user=request.user)
         team = participant.team
-
-
-
+        dashboard = TeamDashBoard(team)
+        count_of_win = dashboard.count_of_win()
+        count_of_submit = dashboard.count_of_submit()
+        tournaments = dashboard.participated_tournaments()
+        # todo return Response -> shAli

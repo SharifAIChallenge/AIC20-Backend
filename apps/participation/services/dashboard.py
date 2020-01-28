@@ -18,6 +18,9 @@ class TeamDashBoard:
 
         return result
 
-    def participated_tournaments(self) -> str:
+    def participated_tournaments(self) -> list:
+        tournaments_name = []
+        for tournament in self.team.tournament.all():
+            tournaments_name.append(tournament.name)
 
-        pass
+        return tournaments_name
