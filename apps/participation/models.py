@@ -26,6 +26,7 @@ class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
     badges = models.ManyToManyField('participation.Badge', related_name='teams')
     challenge = models.ForeignKey('challenge.Challenge', related_name='teams', on_delete=models.CASCADE)
+    tournament = models.ManyToManyField('challenge.Tournament', related_name='teams', null=True, blank=True)
 
 
 class Participant(models.Model):

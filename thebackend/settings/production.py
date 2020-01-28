@@ -89,10 +89,10 @@ LOGGING = {
 TIME_ZONE = 'Iran'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/static'
+STATIC_ROOT = '/files/aic/static'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/media'
+MEDIA_ROOT = '/files/aic/media'
 
 CSRF_COOKIE_HTTPONLY = True
 
