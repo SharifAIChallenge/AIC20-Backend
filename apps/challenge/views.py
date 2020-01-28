@@ -74,6 +74,13 @@ class GameDetailAPIView(GenericAPIView):
     def get(self, request):
         pass
 
+    #TODO: only allow infra to change game result
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"ok": "true"})
+
 
 class SubmissionSubmitAPIView(GenericAPIView):
     serializer_class = challenge_serializers.SubmissionPostSerializer
