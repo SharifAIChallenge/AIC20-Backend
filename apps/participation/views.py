@@ -4,11 +4,13 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
+from apps.participation.models import Team, Participant
 from apps.participation.services.answer_invitation import AnswerInvitation
 from apps.participation.services.leave_team import LeaveTeam
 from apps.participation.services.send_invitation import SendInvitation
 from . import models as participation_models
 from . import serializers as participation_serializers
+from django.shortcuts import get_object_or_404
 
 
 class BadgeListAPIView(GenericAPIView):
@@ -66,3 +68,13 @@ class CreateTeamAPIView(GenericAPIView):
         request.user.participant.team = team
         request.user.participant.save()
         return Response(data={'details': 'Team Created Successfully'}, status=status.HTTP_200_OK)
+
+
+class NumberOfWinAPIView(GenericAPIView):
+
+    def post(self, request):
+        participant = get_object_or_404(Participant, user=request.user)
+        team = participant.team
+
+
+
