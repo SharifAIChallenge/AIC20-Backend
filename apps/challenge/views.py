@@ -1,6 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from rest_framework import status
 from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
+from rest_framework import parsers
 
+from apps.challenge.models import SubmissionStatusTypes
 from . import models as challenge_models
 from . import serializers as challenge_serializers
 
@@ -71,19 +75,26 @@ class GameDetailAPIView(GenericAPIView):
         pass
 
 
-class SubmitAPIView(GenericAPIView):
-    serializer_class = challenge_serializers.SubmissionSerializer
+class SubmissionSubmitAPIView(GenericAPIView):
+    serializer_class = challenge_serializers.SubmissionPostSerializer
+    parser_classes = (parsers.MultiPartParser,)
 
     def post(self, request):
-        pass
+        submission = self.get_serializer(data=request.data)
+        if submission.is_valid(raise_exception=True):
+            submission = submission.save()
+            return Response(
+                data={'details': 'Submission information successfully submitted', 'submission_id': submission.id})
+        return Response(data={'errors': ['Something Went Wrong']}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 class SubmissionsListAPIView(GenericAPIView):
-    queryset = challenge_models.Submission
+    queryset = challenge_models.Submission.objects.all()
     serializer_class = challenge_serializers.SubmissionSerializer
 
-    def get(self, request):
-        pass
+    def get(self, request, team_id):
+        data = self.get_serializer(self.get_queryset().filter(team_id=team_id), many=True).data
+        return Response(data={'submissions': data}, status=status.HTTP_200_OK)
 
 
 class MapsListAPIView(GenericAPIView):

@@ -1,5 +1,9 @@
+import os
+import uuid
+
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.translation import ugettext_lazy as _, ugettext
 
 from polymorphic.models import PolymorphicModel
 
@@ -32,6 +36,36 @@ class MatchTypes:
     TYPES = (
         (TWO, 'Two Participants'),
         (FOUR, 'Four Participants'),
+    )
+
+
+class SubmissionLanguagesTypes:
+    CPP = 'cpp'
+    JAVA = 'java'
+    PYTHON3 = 'py3'
+    GO = 'go'
+
+    TYPES = (
+        (CPP, _('C++')),
+        (JAVA, _('Java')),
+        (PYTHON3, _('Python 3')),
+        (GO, _('Go'))
+    )
+
+
+class SubmissionStatusTypes:
+    UPLOADING = 'uploading'
+    UPLOADED = 'uploaded'
+    COMPILING = 'compiling'
+    COMPILED = 'compiled'
+    FAILED = 'failed'
+
+    TYPES = (
+        (UPLOADING, _('Uploading')),
+        (UPLOADED, _('Uploaded')),
+        (COMPILING, _('Compiling')),
+        (COMPILED, _('Compiled')),
+        (FAILED, _('Failed'))
     )
 
 
@@ -96,12 +130,29 @@ class Info(models.Model):
     detail = models.CharField(max_length=500)
 
 
+def get_submission_file_directory(instance, filename):
+    print("oomad jasho taein kone :)))")
+    return os.path.join(instance.team.name, str(instance.user.id), filename + uuid.uuid4().__str__() + '.zip')
+
+
 class Submission(models.Model):
     team = models.ForeignKey('participation.Team', related_name='submissions', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
-    type = models.CharField(max_length=50)
-    submit_date = models.DateTimeField(auto_now_add=True)
+    language = models.CharField(max_length=50, choices=SubmissionLanguagesTypes.TYPES,
+                                default=SubmissionLanguagesTypes.JAVA)
+    file = models.FileField(upload_to=get_submission_file_directory)
+    submit_time = models.DateTimeField(auto_now_add=True)
+    is_final = models.BooleanField(default=True)
+    status = models.CharField(max_length=50, choices=SubmissionStatusTypes.TYPES,
+                              default=SubmissionStatusTypes.UPLOADING)
+    infra_compile_message = models.CharField(max_length=1023, null=True, blank=True)
+    infra_token = models.CharField(max_length=256, null=True, blank=True, unique=True)
+    infra_compile_token = models.CharField(max_length=256, null=True, blank=True, unique=True)
+
+    def __str__(self):
+        return str(self.id) + ' team: ' + str(self.team) + ' is final: ' + str(self.is_final)
 
 
 class Map(models.Model):
-    pass
+    name = models.CharField(max_length=128)
+    infra_token = models.CharField(max_length=256, null=True, blank=False, unique=True)

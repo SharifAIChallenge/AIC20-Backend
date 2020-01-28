@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from . import models as challenge_models
@@ -95,14 +96,20 @@ class ChallengeSerializer(ModelSerializer):
 
 class SubmissionSerializer(ModelSerializer):
     team = participation_serializers.TeamSerializer(read_only=True)
-    participant = participation_serializers.ParticipantSerializer(read_only=True)
+    user = participation_serializers.UserSerializer(read_only=True)
 
     class Meta:
         model = challenge_models.Submission
-        fields = ['id', 'type', 'submit_date', 'team', 'participant']
+        fields = ['id', 'language', 'is_final', 'submit_time', 'team', 'user', 'file']
+
+
+class SubmissionPostSerializer(ModelSerializer):
+    class Meta:
+        model = challenge_models.Submission
+        fields = ['team', 'user', 'language', 'file']
 
 
 class MapSerializer(ModelSerializer):
     class Meta:
         model = challenge_models.Map
-        fields = ['__all__']
+        fields = ['id', 'name', 'infra_token']

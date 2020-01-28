@@ -24,14 +24,14 @@ class Badge(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    badges = models.ManyToManyField('participation.Badge', related_name='teams')
+    badges = models.ManyToManyField('participation.Badge', related_name='teams', null=True, blank=True)
     challenge = models.ForeignKey('challenge.Challenge', related_name='teams', on_delete=models.CASCADE)
     tournament = models.ManyToManyField('challenge.Tournament', related_name='teams', null=True, blank=True)
 
 
 class Participant(models.Model):
     user = models.OneToOneField(User, related_name='participant', on_delete=models.CASCADE)
-    team = models.ForeignKey('participation.Team', related_name='participants', on_delete=None, null=True)
+    team = models.ForeignKey('participation.Team', related_name='participants', on_delete=None, null=True, blank=True)
 
 
 class Invitation(models.Model):
