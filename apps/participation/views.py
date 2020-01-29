@@ -76,8 +76,8 @@ class TeamDetailAPIView(GenericAPIView):
     def post(self, request):
         participant = get_object_or_404(Participant, user=request.user)
         team = participant.team
-        dashboard = TeamDashBoard(team)
-        count_of_win = dashboard.count_of_win()
-        count_of_submit = dashboard.count_of_submit()
-        tournaments = dashboard.participated_tournaments()
-        # todo return Response -> shAli
+        if team is None:
+            return Response(data={'errors': json.dumps(['Sorry! You are not participated in any team'])},
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
+        data = TeamDashBoard(team)()
+        return Response(data={'team_info': json.dumps(data)}, status=status.HTTP_200_OK)
