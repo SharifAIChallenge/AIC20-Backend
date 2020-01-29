@@ -16,31 +16,38 @@ class ChallengesListAPIView(GenericAPIView):
     serializer_class = challenge_serializers.ChallengeSerializer
 
     def get(self, request):
-        pass
+        data = self.get_serializer(self.get_queryset(), many=True).data
+        return Response(data={'challenges': data}, status=status.HTTP_200_OK)
 
 
 class ChallengeDetailAPIView(GenericAPIView):
     queryset = challenge_models.Challenge.objects.all()
     serializer_class = challenge_serializers.ChallengeSerializer
 
-    def get(self, request):
-        pass
+    def get(self, request, challenge_id):
+        challenge = get_object_or_404(self.get_queryset(), id=challenge_id)
+        data = self.get_serializer(challenge).data
+        return Response(data={'challenge': data}, status=status.HTTP_200_OK)
 
 
 class TournamentsListAPIView(GenericAPIView):
     queryset = challenge_models.Tournament.objects.all()
     serializer_class = challenge_serializers.TournamentSerializer
 
-    def get(self, request):
-        pass
+    def get(self, request, challenge_id):
+        challenge = get_object_or_404(challenge_models.Challenge, id=challenge_id)
+        data = self.get_serializer(self.get_queryset().filter(challenge=challenge), many=True).data
+        return Response(data={'challenge_id': challenge_id, 'tournaments': data}, status=status.HTTP_200_OK)
 
 
 class TournamentDetailAPIView(GenericAPIView):
     queryset = challenge_models.Tournament.objects.all()
     serializer_class = challenge_serializers.TournamentSerializer
 
-    def get(self, request):
-        pass
+    def get(self, request, challenge_id, tournament_id):
+        tournament = get_object_or_404(self.get_queryset(), id=tournament_id)
+        data = self.get_serializer(tournament).data
+        return Response(data={'tournament': data}, status=status.HTTP_200_OK)
 
 
 class MatchesListAPIView(GenericAPIView):
@@ -73,6 +80,13 @@ class GameDetailAPIView(GenericAPIView):
 
     def get(self, request):
         pass
+
+    # TODO: only allow infra to change game result
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"ok": "true"})
 
 
 class SubmissionSubmitAPIView(GenericAPIView):
