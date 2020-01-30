@@ -15,5 +15,5 @@ class QuestionsListAPIView(GenericAPIView):
     serializer_class = faq_serializers.QuestionSerializer
 
     def get(self, request):
-        data = self.get_serializer(self.get_queryset()).data
+        data = self.get_serializer(self.get_queryset(), many=True).data
         return Response(data={'questions': data}, status=status.HTTP_200_OK)
