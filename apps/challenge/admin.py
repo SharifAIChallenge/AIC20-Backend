@@ -8,17 +8,20 @@ from . import models as challenge_models
 
 @admin.register(challenge_models.Challenge)
 class ChallengeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name', 'type', 'start_time', 'end_time']
+    list_editable = ['name', 'type']
 
 
 @admin.register(challenge_models.Tournament)
 class TournamentAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'type', 'start_time', 'end_time']
+    list_editable = ['type']
 
 
 @admin.register(challenge_models.Stage)
 class StageAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'finished']
+    list_editable = ['finished']
 
 
 @admin.register(challenge_models.Group)
@@ -33,7 +36,8 @@ class TeamGroupAdmin(admin.ModelAdmin):
 
 @admin.register(challenge_models.Match)
 class MathAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'type']
+    list_editable = ['type']
 
 
 @admin.register(challenge_models.MatchTeam)
@@ -48,7 +52,7 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(challenge_models.GameSide)
 class GameSideAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'has_won']
 
 
 @admin.register(challenge_models.GameTeam)

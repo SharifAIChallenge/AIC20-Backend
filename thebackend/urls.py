@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/go/', include('apps.go.urls')),
     path('api/participation/', include('apps.participation.urls')),
     path('api/challenge/', include('apps.challenge.urls')),
+    path('api/faq/', include('apps.faq.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,16 +1,23 @@
 from django.contrib import admin
-from django.contrib.admin import ModelAdmin
 
-from .models import Badge, Participant, Team
+from .models import Badge, Participant, Team, Invitation
+
 
 @admin.register(Badge)
-class BadgeAdmin(ModelAdmin):
+class BadgeAdmin(admin.ModelAdmin):
     pass
+
 
 @admin.register(Participant)
-class ParticipantAdmin(ModelAdmin):
+class ParticipantAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(Team)
-class TeamAdmin(ModelAdmin):
+class TeamAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Invitation)
+class InvitationAdmin(admin.ModelAdmin):
     pass
