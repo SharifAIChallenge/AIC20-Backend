@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'apps.challenge',
     'apps.participation',
     'apps.scoreboard',
-    'apps.faq'
+    'apps.faq',
+    'apps.staff'
 ]
 
 MIDDLEWARE = [
