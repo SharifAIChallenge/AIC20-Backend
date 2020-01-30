@@ -7,4 +7,8 @@ class Staff(models.Model):
     title = models.CharField(max_length=256)
     first_name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
-    image = models.FileField()
+
+    def upload_path(self, filename):
+        return f'staff/{self.title}/{filename}'
+
+    image = models.FileField(upload_to=upload_path)
