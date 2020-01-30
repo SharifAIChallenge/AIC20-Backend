@@ -5,4 +5,5 @@ from . import models as staff_models
 
 class StaffSerializer(ModelSerializer):
     class Meta:
-        fields = ['__all__']
+        model = staff_models.Staff
+        fields = '__all__'

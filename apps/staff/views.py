@@ -20,9 +20,6 @@ class StaffsListAPIView(GenericAPIView):
         return Response(data={'staffs': data}, status=status.HTTP_200_OK)
 
 
-g
-
-
 class StaffsByTitleListAPIView(GenericAPIView):
     queryset = staff_models.Staff.objects.all()
     serializer_class = staff_serializers.StaffSerializer
