@@ -17,9 +17,12 @@ from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.timezone import now
 
 from apps.accounts.serializer import *
 from apps.accounts.models import ResetPasswordToken, ActivateUserToken
+from apps.challenge.models import Challenge
+from apps.challenge.serializers import ChallengeSerializer
 
 
 class SignUpView(GenericAPIView):
@@ -182,7 +185,17 @@ class UserContext(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        current_challange = Challenge.objects.filter(
+            start_time__lt= now(),
+            end_time__gt= now(),
+        )
+        if current_challange.count() != 0:
+            current_challange = ChallengeSerializer(current_challange.first()).data
+        else:
+            current_challange = {}
         return Response({
             'profile': UserSerializer(request.user).data,
-
+            'can_submit': True, 
+            #TODO: vaghti pool ezafe shod bazi vaghta false e
+            'current_challange': current_challange,
         })
