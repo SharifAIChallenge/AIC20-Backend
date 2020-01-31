@@ -175,3 +175,11 @@ class ChangePasswordAPIView(GenericAPIView):
         request.user.password = make_password(data['new_password1'])
         request.user.save()
         return Response({'detail': 'password changed successfully'}, status=200)
+
+class UserContext(GenericAPIView):
+
+    def get(self, request):
+        return Response({
+            'profile': UserSerializer(request.user).data,
+            
+        })
