@@ -5,6 +5,7 @@ from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
+from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
@@ -178,8 +179,10 @@ class ChangePasswordAPIView(GenericAPIView):
 
 class UserContext(GenericAPIView):
 
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         return Response({
             'profile': UserSerializer(request.user).data,
-            
+
         })
