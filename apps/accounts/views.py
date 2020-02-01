@@ -5,6 +5,7 @@ from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
+from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
@@ -16,9 +17,12 @@ from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.timezone import now
 
 from apps.accounts.serializer import *
 from apps.accounts.models import ResetPasswordToken, ActivateUserToken
+from apps.challenge.models import Challenge
+from apps.challenge.serializers import ChallengeSerializer
 
 
 class SignUpView(GenericAPIView):
@@ -82,9 +86,10 @@ class ActivateView(GenericAPIView):
 class LogoutView(GenericAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
+        print(request.user, request.user.is_authenticated, request.user.is_active)
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
 
@@ -175,3 +180,23 @@ class ChangePasswordAPIView(GenericAPIView):
         request.user.password = make_password(data['new_password1'])
         request.user.save()
         return Response({'detail': 'password changed successfully'}, status=200)
+
+class UserContext(GenericAPIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        current_challange = Challenge.objects.filter(
+            start_time__lt= now(),
+            end_time__gt= now(),
+        )
+        if current_challange.count() != 0:
+            current_challange = ChallengeSerializer(current_challange.first()).data
+        else:
+            current_challange = {}
+        return Response({
+            'profile': UserSerializer(request.user).data,
+            'can_submit': True, 
+            #TODO: vaghti pool ezafe shod bazi vaghta false e
+            'current_challange': current_challange,
+        })
