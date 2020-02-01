@@ -2,7 +2,6 @@ from django.urls import path, include
 from rest_framework.authtoken import views
 from apps.accounts.views import *
 
-
 urlpatterns = [
     path('login', views.obtain_auth_token),
     path('signup', SignUpView.as_view()),
@@ -14,4 +13,3 @@ urlpatterns = [
     path('password/reset/confirm', ResetPasswordConfirmView.as_view()),
     path('usercontext', UserContext.as_view())
 ]
-
