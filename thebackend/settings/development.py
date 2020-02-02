@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'apps.challenge',
     'apps.participation',
     'apps.scoreboard',
+    'apps.faq',
+    'apps.staff'
 ]
 
 MIDDLEWARE = [
@@ -145,11 +147,11 @@ MEDIA_ROOT = BASE_DIR + '/media/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_AUTHENTICATION_PERMISSIONS': [
         'rest_framework.permissions.IsAuthenticated',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],

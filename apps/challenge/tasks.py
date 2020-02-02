@@ -41,4 +41,3 @@ def six_hour_tournament(teams: list):
         for i in range(4 - len(teams)):
             teams.append(None)
         teams_segmentation.append(teams)
-

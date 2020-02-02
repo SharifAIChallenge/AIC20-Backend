@@ -2,6 +2,7 @@ import json
 
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from apps.participation.models import Team, Participant
@@ -17,6 +18,7 @@ from django.shortcuts import get_object_or_404
 class BadgeListAPIView(GenericAPIView):
     queryset = participation_models.Badge.objects.all()
     serializer_class = participation_serializers.BadgeSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         data = self.get_serializer(self.get_queryset(), many=True).data
@@ -26,6 +28,7 @@ class BadgeListAPIView(GenericAPIView):
 class ParticipantListAPIView(GenericAPIView):
     queryset = participation_models.Participant.objects.all()
     serializer_class = participation_serializers.ParticipantSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         data = self.get_serializer(self.get_queryset(), many=True).data
@@ -33,6 +36,7 @@ class ParticipantListAPIView(GenericAPIView):
 
 
 class SendInvitationAPIView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         invitation_serializer, errors = SendInvitation(request=request)()
@@ -42,6 +46,7 @@ class SendInvitationAPIView(GenericAPIView):
 
 
 class LeaveTeamAPIView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, team_name):
         errors = LeaveTeam(request=request, team_name=team_name)()
@@ -51,6 +56,7 @@ class LeaveTeamAPIView(GenericAPIView):
 
 
 class AnswerInvitationAPIView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, invitation_id):
         errors = AnswerInvitation(request=request, invitation_id=invitation_id)()
@@ -61,6 +67,7 @@ class AnswerInvitationAPIView(GenericAPIView):
 
 class CreateTeamAPIView(GenericAPIView):
     serializer_class = participation_serializers.TeamSerializer
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         team = self.get_serializer(data=request.body)
@@ -72,6 +79,7 @@ class CreateTeamAPIView(GenericAPIView):
 
 
 class TeamDetailAPIView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         participant = get_object_or_404(Participant, user=request.user)
