@@ -1,0 +1,34 @@
+from ..models import Staff
+
+
+class StaffsListSerializer:
+
+    def __init__(self):
+        self.staffs = list(Staff.objects.all())
+        self.group_titles = list(set([staff.group_title for staff in self.staffs]))
+        self.data = {}
+
+    def data(self):
+        self._partitioning_by_group_title()
+        return self.data
+
+    def _partitioning_by_group_title(self):
+        for group_title in self.group_titles:
+            self.data[group_title] = {}
+            team_titles = list(set([staff.team_title for staff in self.staffs if staff.group_title == group_title]))
+            for team_title in team_titles:
+                staffs = [staff for staff in self.staffs if
+                          staff.group_title == group_title and staff.team_title == team_title]
+                self.data[group_title][team_title] = []
+                for staff in staffs:
+                    self.data[group_title][team_title].append({
+                        'group_title': staff.group_title,
+                        'team_title': staff.team_title,
+                        'first_name_en': staff.first_name_en,
+                        'first_name_fa': staff.first_name_fa,
+                        'last_name_en': staff.last_name_en,
+                        'last_name_fa': staff.last_name_fa,
+                        'url': staff.url,
+                        'image': staff.image.url
+                    })
+                self.staffs = [staff for staff in self.staffs if staff not in staffs]
