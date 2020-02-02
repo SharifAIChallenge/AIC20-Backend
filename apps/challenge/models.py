@@ -31,11 +31,11 @@ class TournamentTypes:
 
 
 class MatchTypes:
-    TWO = 2
-    FOUR = 4
+    SIMILAR = "similar"
+    DIFFERENT = "different"
     TYPES = (
-        (TWO, 'Two Participants'),
-        (FOUR, 'Four Participants'),
+        (SIMILAR, 'Two Participants'),
+        (DIFFERENT, 'Four Participants'),
     )
 
 
@@ -101,7 +101,7 @@ class TeamGroup(models.Model):
 class Match(models.Model):
     group = models.ForeignKey('challenge.Group', related_name='matches', on_delete=models.CASCADE)
     map = models.ForeignKey('challenge.Map', related_name='matches', on_delete=None)
-    type = models.PositiveSmallIntegerField(choices=MatchTypes.TYPES)
+    type = models.CharField(max_length=64, choices=MatchTypes.TYPES)
 
 
 class MatchTeam(models.Model):
