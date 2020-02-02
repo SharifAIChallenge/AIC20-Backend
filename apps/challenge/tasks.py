@@ -44,3 +44,6 @@ def six_hour_tournament_segmentation_teams(teams: list):
     return teams_segmentation
 
 
+def create_match_from_list_of_teams(match_teams):
+    for teams_of_a_match in match_teams:
+        pass
