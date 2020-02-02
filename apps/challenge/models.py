@@ -31,11 +31,11 @@ class TournamentTypes:
 
 
 class MatchTypes:
-    TWO = 2
-    FOUR = 4
+    SIMILAR = "similar"
+    DIFFERENT = "different"
     TYPES = (
-        (TWO, 'Two Participants'),
-        (FOUR, 'Four Participants'),
+        (SIMILAR, 'Similar Teams'),
+        (DIFFERENT, 'Different Teams'),
     )
 
 
@@ -79,9 +79,8 @@ class Challenge(models.Model):
 class Tournament(PolymorphicModel):
     challenge = models.ForeignKey('challenge.Challenge', related_name='tournaments', on_delete=models.CASCADE)
     type = models.CharField(max_length=20, choices=TournamentTypes.TYPES)
-    start_time = models.DateTimeField()
+    start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField()
-    run_time = models.DateTimeField()
 
 
 class Stage(models.Model):
@@ -91,7 +90,6 @@ class Stage(models.Model):
 
 class Group(models.Model):
     stage = models.ForeignKey('challenge.Stage', related_name='groups', on_delete=models.CASCADE)
-    scoreboard = models.OneToOneField('scoreboard.ScoreBoard', related_name='group', on_delete=None)
 
 
 class TeamGroup(models.Model):
@@ -102,7 +100,7 @@ class TeamGroup(models.Model):
 class Match(models.Model):
     group = models.ForeignKey('challenge.Group', related_name='matches', on_delete=models.CASCADE)
     map = models.ForeignKey('challenge.Map', related_name='matches', on_delete=None)
-    type = models.PositiveSmallIntegerField(choices=MatchTypes.TYPES)
+    type = models.CharField(max_length=64, choices=MatchTypes.TYPES)
 
 
 class MatchTeam(models.Model):
@@ -131,7 +129,6 @@ class Info(models.Model):
 
 
 def get_submission_file_directory(instance, filename):
-    print("oomad jasho taein kone :)))")
     return os.path.join(instance.team.name, str(instance.user.id), filename + uuid.uuid4().__str__() + '.zip')
 
 

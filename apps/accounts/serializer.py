@@ -36,7 +36,6 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['password'] = make_password(validated_data.pop('password_2'))
         user = User.objects.create(**validated_data)
         Profile.objects.create(user=user, **profile_data)
-        Participant.objects.create(user=user)
         return user
 
 
