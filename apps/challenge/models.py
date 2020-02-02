@@ -130,7 +130,6 @@ class Info(models.Model):
 
 
 def get_submission_file_directory(instance, filename):
-    print("oomad jasho taein kone :)))")
     return os.path.join(instance.team.name, str(instance.user.id), filename + uuid.uuid4().__str__() + '.zip')
 
 
