@@ -1,5 +1,8 @@
 from random import random
 
+from celery.schedules import crontab
+from celery.task import periodic_task
+
 from apps.challenge.models import Info, Game
 from thebackend.celery import app
 from .models import MatchTypes, Match
@@ -47,3 +50,5 @@ def six_hour_tournament_segmentation_teams(teams: list):
 def create_match_from_list_of_teams(match_teams):
     for teams_of_a_match in match_teams:
         pass
+
+
