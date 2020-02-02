@@ -58,11 +58,15 @@ class Stat(models.Model):
 
 
 class Sponsor(models.Model):
-    image = models.FileField()
     name_en = models.CharField(max_length=200)
     name_fa = models.CharField(max_length=200)
     url = models.CharField(max_length=500)
     grade = models.CharField(max_length=20, choices=SponsorGradeTypes.TYPES)
+
+    def upload_path(self, filename):
+        return f'sponsor/{self.grade}/{self.name_en}/{filename}'
+
+    image = models.FileField()
 
 
 class WhyThisEvent(models.Model):
