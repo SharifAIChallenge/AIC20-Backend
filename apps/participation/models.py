@@ -23,6 +23,8 @@ class Badge(models.Model):
 
 
 class Team(models.Model):
+    MAX_SIZE = 3
+
     name = models.CharField(max_length=100, unique=True)
     badges = models.ManyToManyField('participation.Badge', related_name='teams', null=True, blank=True)
     challenge = models.ForeignKey('challenge.Challenge', related_name='teams', on_delete=models.CASCADE)
@@ -31,7 +33,7 @@ class Team(models.Model):
 
 class Participant(models.Model):
     user = models.OneToOneField(User, related_name='participant', on_delete=models.CASCADE)
-    team = models.ForeignKey('participation.Team', related_name='participants', on_delete=None, null=True, blank=True)
+    team = models.ForeignKey('participation.Team', related_name='participants', on_delete=models.CASCADE)
 
 
 class Invitation(models.Model):
