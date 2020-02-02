@@ -34,8 +34,8 @@ class MatchTypes:
     SIMILAR = "similar"
     DIFFERENT = "different"
     TYPES = (
-        (SIMILAR, 'Two Participants'),
-        (DIFFERENT, 'Four Participants'),
+        (SIMILAR, 'Similar Teams'),
+        (DIFFERENT, 'Different Teams'),
     )
 
 
@@ -79,9 +79,8 @@ class Challenge(models.Model):
 class Tournament(PolymorphicModel):
     challenge = models.ForeignKey('challenge.Challenge', related_name='tournaments', on_delete=models.CASCADE)
     type = models.CharField(max_length=20, choices=TournamentTypes.TYPES)
-    start_time = models.DateTimeField()
+    start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField()
-    run_time = models.DateTimeField()
 
 
 class Stage(models.Model):
