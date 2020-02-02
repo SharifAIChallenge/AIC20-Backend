@@ -17,5 +17,5 @@ class ChallengeScoreBoard(ScoreBoard):
     challenge = models.OneToOneField('challenge.Challenge', related_name='scoreboard', on_delete=models.CASCADE)
 
 
-class GroupScoreBoard(models.Model):
+class GroupScoreBoard(ScoreBoard):
     group = models.OneToOneField('challenge.Group', related_name='scoreboard', on_delete=models.CASCADE)
