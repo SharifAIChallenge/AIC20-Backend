@@ -42,5 +42,6 @@ class LeaveTeam:
             self.errors.append("You can't leave this team, because you have a submission right now")
 
     def _leave_team(self):
-        self.request.user.participant.team = None
+        self.request.user.participant.delete()
+        self.request.user.p
         self.request.user.participant.save()

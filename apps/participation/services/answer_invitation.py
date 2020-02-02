@@ -1,6 +1,6 @@
 import json
 
-from apps.participation.models import Invitation, InvitationStatusTypes, Team
+from apps.participation.models import Invitation, InvitationStatusTypes, Team, Participant
 
 
 class AnswerInvitation:
@@ -56,6 +56,9 @@ class AnswerInvitation:
 
     def _answer_invitation(self):
         self.invitation.status = self.answer
-        self.request.user.participant.team = self.invitation.source.participant.team
         self.invitation.save()
-        self.request.user.participant.save()
+        if self.answer == InvitationStatusTypes.ACCEPTED:
+            self._handle_accept_invitation()
+
+    def _handle_accept_invitation(self):
+        Participant.objects.create(user=self.request.user, team=self.invitation.source.participant.team)

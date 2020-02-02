@@ -73,8 +73,7 @@ class CreateTeamAPIView(GenericAPIView):
         team = self.get_serializer(data=request.body)
         if team.is_valid(raise_exception=True):
             team = team.save()
-        request.user.participant.team = team
-        request.user.participant.save()
+        Participant.objects.create(user=request.user, team=team)
         return Response(data={'details': 'Team Created Successfully'}, status=status.HTTP_200_OK)
 
 
