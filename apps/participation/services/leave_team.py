@@ -1,5 +1,6 @@
 from apps.challenge.models import Submission
 from apps.participation.models import Team
+from django.utils.translation import ugettext_lazy as _
 
 
 class LeaveTeam:
@@ -33,13 +34,13 @@ class LeaveTeam:
             if self.request.user.email == participant.user.mail:
                 return
         self.valid = False
-        self.errors.append("You're Not in this team")
+        self.errors.append(_("You're Not in this team"))
 
     def _check_leave_conditions(self):
         if self.request.user.participant.team.participants.all().count() != 1 and \
                 Submission.objects.filter(user=self.request.user, team=self.request.user.participant.team).exists():
             self.valid = False
-            self.errors.append("You can't leave this team, because you have a submission right now")
+            self.errors.append(_("You can't leave this team, because you have a submission right now"))
 
     def _leave_team(self):
         self.request.user.participant.delete()

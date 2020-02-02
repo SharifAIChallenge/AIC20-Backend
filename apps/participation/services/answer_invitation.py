@@ -1,6 +1,7 @@
 import json
 
 from apps.participation.models import Invitation, InvitationStatusTypes, Team, Participant
+from django.utils.translation import ugettext_lazy as _
 
 
 class AnswerInvitation:
@@ -28,7 +29,7 @@ class AnswerInvitation:
         answer = self.data.get('answer')
         if not answer:
             self.valid = False
-            self.errors.append("Answer field required")
+            self.errors.append(_("Answer field required"))
             return
         if answer == 'accept':
             self.answer = InvitationStatusTypes.ACCEPTED
@@ -36,7 +37,7 @@ class AnswerInvitation:
             self.answer = InvitationStatusTypes.REJECTED
         else:
             self.valid = False
-            self.errors.append("Answer Must one of these: accept or reject")
+            self.errors.append(_("Answer Must one of these: accept or reject"))
 
     def _validate_invitation(self):
         try:
@@ -47,12 +48,12 @@ class AnswerInvitation:
 
         if self.invitation.status is not InvitationStatusTypes.NOT_ANSWERED:
             self.valid = False
-            self.errors.append('Invitation answered before')
+            self.errors.append(_('Invitation answered before'))
 
     def _validate_team_size(self):
         if self.invitation.source.participant.team.participants.count() >= Team.MAX_SIZE:
             self.valid = False
-            self.errors.append("Team is already full.")
+            self.errors.append(_("Team is already full."))
 
     def _answer_invitation(self):
         self.invitation.status = self.answer
