@@ -1,6 +1,7 @@
 import secrets
 import base64
 
+from django.conf import settings
 from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -33,6 +34,7 @@ class SignUpView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
 
+            print(settings.EMAIL_BACKEND)
             activate_user_token = ActivateUserToken(
                 token=secrets.token_urlsafe(32),
                 eid=urlsafe_base64_encode(force_bytes(serializer.validated_data['email'])),
