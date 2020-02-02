@@ -65,6 +65,26 @@ class AnswerInvitationAPIView(GenericAPIView):
         return Response(data={'details': 'You answered invitation successfully'}, status=status.HTTP_200_OK)
 
 
+class InvitationsToMeAPIView(GenericAPIView):
+    queryset = participation_models.Invitation.objects.all()
+    serializer_class = participation_serializers.InvitationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        data = self.get_serializer(self.get_queryset().filter(target=self.request.usesr)).data
+        return Response(data={"invitations": data}, status=status.HTTP_200_OK)
+
+
+class InvitationsToOthersAPIView(GenericAPIView):
+    queryset = participation_serializers.Invitation.objects.all()
+    serializer_class = participation_serializers.InvitationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        data = self.get_serializer(self.get_queryset().filter(source=self.request.user)).data
+        return Response(data={'invitations': data}, status=status.HTTP_200_OK)
+
+
 class CreateTeamAPIView(GenericAPIView):
     serializer_class = participation_serializers.TeamSerializer
     permission_classes = [IsAuthenticated]
@@ -73,8 +93,7 @@ class CreateTeamAPIView(GenericAPIView):
         team = self.get_serializer(data=request.body)
         if team.is_valid(raise_exception=True):
             team = team.save()
-        request.user.participant.team = team
-        request.user.participant.save()
+        Participant.objects.create(user=request.user, team=team)
         return Response(data={'details': 'Team Created Successfully'}, status=status.HTTP_200_OK)
 
 

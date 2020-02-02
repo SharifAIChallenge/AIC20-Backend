@@ -15,9 +15,8 @@ app.config_from_object('django.conf:settings')
 
 
 @setup_logging.connect
-def config_loggers(*args, **kwags):
+def config_loggers(*args, **kwargs):
     dictConfig(settings.LOGGING)
 
 
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
-

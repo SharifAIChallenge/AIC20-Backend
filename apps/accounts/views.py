@@ -86,7 +86,7 @@ class ActivateView(GenericAPIView):
 class LogoutView(GenericAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         print(request.user, request.user.is_authenticated, request.user.is_active)
