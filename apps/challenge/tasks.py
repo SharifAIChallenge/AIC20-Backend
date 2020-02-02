@@ -15,11 +15,11 @@ def run_single_game(match):
     return game
 
 
-def random_four_numbers():
+def random_four_numbers(max_number):
     list_of_random_number = []
     count_of_random_number = 0
     while count_of_random_number < 4:
-        random_number = (random() * 8) + 1
+        random_number = (random() * max_number)
         if random_number not in list_of_random_number:
             list_of_random_number.append(random_number)
             count_of_random_number += 1
@@ -32,5 +32,13 @@ def permutations_for_single_games(match_type=MatchTypes.DIFFERENT):
     return [[1, 2, 3, 4], [1, 3, 2, 4], [1, 4, 2, 3]]
 
 
-def six_hour_tournament():
-    pass
+def six_hour_tournament(teams: list):
+    teams_segmentation = []
+    while len(teams) >= 4:
+        selected_teams_index = random_four_numbers(max(8, len(teams)))  # 4 random number between 0 to (7 or len)
+        teams_segmentation.append([teams.pop(index) for index in selected_teams_index])
+    if len(teams) > 0:
+        for i in range(4 - len(teams)):
+            teams.append(None)
+        teams_segmentation.append(teams)
+
