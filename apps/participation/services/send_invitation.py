@@ -2,6 +2,7 @@ import json
 from typing import Union
 
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 
 from apps.participation.models import Invitation
 from apps.participation.serializers import InvitationSerializer
@@ -34,7 +35,7 @@ class SendInvitation:
         self.user_email = self.data.get('user_email')
         if not self.user_email:
             self.valid = False
-            self.errors.append("Email Field is required")
+            self.errors.append(_("Email Field is required"))
 
     def _set_user(self):
         try:
@@ -46,12 +47,12 @@ class SendInvitation:
     def _validate_inviter_has_team(self):
         if self.request.user.participant.team is None:
             self.valid = False
-            self.errors.append("You don't have any team to invite other people to it")
+            self.errors.append(_("You don't have any team to invite other people to it"))
 
     def _validate_target_has_team(self):
         if self.user.participant.team is not None:
             self.valid = False
-            self.errors.append('User already has a team')
+            self.errors.append(_('User already has a team'))
 
     def _invite(self):
         invitation = Invitation.objects.create(source=self.request.user, target=self.user)

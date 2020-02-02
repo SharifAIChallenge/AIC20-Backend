@@ -62,11 +62,12 @@ class SignUpView(GenericAPIView):
             except Exception as e:
                 print(e)
                 print(serializer.validated_data['email'])
-                return Response({'detail': 'Invalid email or user has not been saved.'}, status=406)
+                return Response({'detail': _('Invalid email or user has not been saved.')}, status=406)
 
-            return Response({'detail': 'User created successfully. Check your email for confirmation link'}, status=200)
+            return Response({'detail': _('User created successfully. Check your email for confirmation link')},
+                            status=200)
         else:
-            return Response({'error': 'Error occurred during User creation'}, status=500)
+            return Response({'error': _('Error occurred during User creation')}, status=500)
 
 
 class ActivateView(GenericAPIView):
@@ -128,7 +129,7 @@ class ResetPasswordView(GenericAPIView):
         msg.attach_alternative(email_html_message, "text/html")
         msg.send()
 
-        return Response({'detail': 'Successfully Sent Reset Password Email'}, status=200)
+        return Response({'detail': _('Successfully Sent Reset Password Email')}, status=200)
 
 
 class ResetPasswordConfirmView(GenericAPIView):
@@ -144,7 +145,7 @@ class ResetPasswordConfirmView(GenericAPIView):
         user = get_object_or_404(User, id=urlsafe_base64_decode(data['uid']).decode('utf-8'))
         user.password = make_password(data['new_password1'])
         user.save()
-        return Response({'detail': 'Successfully Changed Password'}, status=200)
+        return Response({'detail': _('Successfully Changed Password')}, status=200)
 
 
 class ProfileView(GenericAPIView):
@@ -175,20 +176,20 @@ class ChangePasswordAPIView(GenericAPIView):
             data = serializer.data
 
         if not request.user.check_password(data['old_password']):
-            return Response({'detail': 'incorrect current password'}, status=406)
+            return Response({'detail': _('incorrect current password')}, status=406)
 
         request.user.password = make_password(data['new_password1'])
         request.user.save()
-        return Response({'detail': 'password changed successfully'}, status=200)
+        return Response({'detail': _('password changed successfully')}, status=200)
+
 
 class UserContext(GenericAPIView):
-
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         current_challange = Challenge.objects.filter(
-            start_time__lt= now(),
-            end_time__gt= now(),
+            start_time__lt=now(),
+            end_time__gt=now(),
         )
         if current_challange.count() != 0:
             current_challange = ChallengeSerializer(current_challange.first()).data
@@ -196,7 +197,7 @@ class UserContext(GenericAPIView):
             current_challange = {}
         return Response({
             'profile': UserSerializer(request.user).data,
-            'can_submit': True, 
-            #TODO: vaghti pool ezafe shod bazi vaghta false e
+            'can_submit': True,
+            # TODO: vaghti pool ezafe shod bazi vaghta false e
             'current_challange': current_challange,
         })

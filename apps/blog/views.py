@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from apps.blog.serializers import *
 from apps.blog import paginations
+from django.utils.translation import ugettext_lazy as _
 
 
 # Create your views here.
@@ -52,10 +53,8 @@ class CommentListView(GenericAPIView):
         data = CommentSerializer(comments, many=True).data
         return Response(data)
 
-
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"detail": "کامنت شما ثبت شد."})
-
+        return Response({"detail": _("Your comment has been submitted")})
