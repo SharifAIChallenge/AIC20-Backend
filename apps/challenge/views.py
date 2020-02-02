@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import parsers
-
+from django.utils.translation import ugettext_lazy as _
 from apps.challenge.models import SubmissionStatusTypes
 from . import models as challenge_models
 from . import serializers as challenge_serializers
@@ -98,8 +98,8 @@ class SubmissionSubmitAPIView(GenericAPIView):
         if submission.is_valid(raise_exception=True):
             submission = submission.save()
             return Response(
-                data={'details': 'Submission information successfully submitted', 'submission_id': submission.id})
-        return Response(data={'errors': ['Something Went Wrong']}, status=status.HTTP_406_NOT_ACCEPTABLE)
+                data={'details': _('Submission information successfully submitted'), 'submission_id': submission.id})
+        return Response(data={'errors': [_('Something Went Wrong')]}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 class SubmissionsListAPIView(GenericAPIView):
