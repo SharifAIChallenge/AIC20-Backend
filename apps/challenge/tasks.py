@@ -47,14 +47,9 @@ def six_hour_tournament_segmentation_teams(teams: list):
 def run_six_hour_tournament(teams, group, match_map):
     match_teams = six_hour_tournament_segmentation_teams(teams)
     for teams_of_a_match in match_teams:
-
-<< << << < HEAD
-pass
-
-== == == =
-match = Match(type=MatchTypes.DIFFERENT, group=group, map=match_map)
-create_match(match, teams_of_a_match)
-create_games(match)
+        match = Match(type=MatchTypes.DIFFERENT, group=group, map=match_map)
+        create_match(match, teams_of_a_match)
+        create_games(match)
 
 
 def create_games(match):
@@ -82,6 +77,3 @@ def create_match(match, teams_of_a_match):
         match_teams.append(MatchTeam(team=team, match=match))
     MatchTeam.objects.bulk_create(match_teams)
     match.save()
-
->> >> >> > 1
-ffe5ea62c176a7fce9e084a0db3cb2063e4b6eb
