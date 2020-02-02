@@ -2,7 +2,7 @@ from random import random
 
 from apps.challenge.models import Info, Game
 from thebackend.celery import app
-from .models import MatchTypes
+from .models import MatchTypes, Match
 
 
 @app.task('run_single_game')
@@ -32,7 +32,7 @@ def permutations_for_single_games(match_type=MatchTypes.DIFFERENT):
     return [[1, 2, 3, 4], [1, 3, 2, 4], [1, 4, 2, 3]]
 
 
-def six_hour_tournament(teams: list):
+def six_hour_tournament_segmentation_teams(teams: list):
     teams_segmentation = []
     while len(teams) >= 4:
         selected_teams_index = random_four_numbers(max(8, len(teams)))  # 4 random number between 0 to (7 or len)
@@ -41,3 +41,6 @@ def six_hour_tournament(teams: list):
         for i in range(4 - len(teams)):
             teams.append(None)
         teams_segmentation.append(teams)
+    return teams_segmentation
+
+
