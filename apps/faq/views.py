@@ -11,8 +11,8 @@ from . import models as faq_models
 # Create your views here.
 
 class QuestionsListAPIView(GenericAPIView):
-    queryset = faq_models.Question.objects.all()
-    serializer_class = faq_serializers.QuestionSerializer
+    queryset = faq_models.QuestionWithAnswer.objects.all()
+    serializer_class = faq_serializers.QuestionWithAnswerSerializer
 
     def get(self, request):
         data = self.get_serializer(self.get_queryset(), many=True).data
