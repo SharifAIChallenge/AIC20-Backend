@@ -15,7 +15,8 @@ from . import models as staff_models
 
 
 class StaffsListAPIView(GenericAPIView):
+    queryset = staff_models.Staff.objects.all()
 
     def get(self, request):
-        data = StaffsListSerializer().data()
+        data = StaffsListSerializer(self.get_queryset()).data()
         return Response(data={'staffs': json.dumps(data)}, status=status.HTTP_200_OK)
