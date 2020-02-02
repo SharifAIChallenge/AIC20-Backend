@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.utils.translation import ugettext_lazy as _
 
 from apps.participation.models import Team, Participant
 from apps.participation.services.answer_invitation import AnswerInvitation
@@ -52,7 +53,7 @@ class LeaveTeamAPIView(GenericAPIView):
         errors = LeaveTeam(request=request, team_name=team_name)()
         if errors:
             return Response(data={'errors': json.dumps(errors)}, status=status.HTTP_406_NOT_ACCEPTABLE)
-        return Response(data={'details': 'You left your team successfully'}, status=status.HTTP_200_OK)
+        return Response(data={'details': _('You left your team successfully')}, status=status.HTTP_200_OK)
 
 
 class AnswerInvitationAPIView(GenericAPIView):
@@ -62,7 +63,7 @@ class AnswerInvitationAPIView(GenericAPIView):
         errors = AnswerInvitation(request=request, invitation_id=invitation_id)()
         if errors:
             return Response(data={'errors': json.dumps(errors)}, status=status.HTTP_406_NOT_ACCEPTABLE)
-        return Response(data={'details': 'You answered invitation successfully'}, status=status.HTTP_200_OK)
+        return Response(data={'details': _('You answered invitation successfully')}, status=status.HTTP_200_OK)
 
 
 class InvitationsToMeAPIView(GenericAPIView):
@@ -94,7 +95,7 @@ class CreateTeamAPIView(GenericAPIView):
         if team.is_valid(raise_exception=True):
             team = team.save()
         Participant.objects.create(user=request.user, team=team)
-        return Response(data={'details': 'Team Created Successfully'}, status=status.HTTP_200_OK)
+        return Response(data={'details': _('Team Created Successfully')}, status=status.HTTP_200_OK)
 
 
 class TeamDetailAPIView(GenericAPIView):
@@ -104,7 +105,7 @@ class TeamDetailAPIView(GenericAPIView):
         participant = get_object_or_404(Participant, user=request.user)
         team = participant.team
         if team is None:
-            return Response(data={'errors': json.dumps(['Sorry! You are not participated in any team'])},
+            return Response(data={'errors': json.dumps([_('Sorry! You are not participated in any team')])},
                             status=status.HTTP_406_NOT_ACCEPTABLE)
         data = TeamDashBoard(team)()
         return Response(data={'team_info': json.dumps(data)}, status=status.HTTP_200_OK)
