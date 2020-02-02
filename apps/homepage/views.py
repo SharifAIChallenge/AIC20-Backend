@@ -16,7 +16,7 @@ class HomepageView(GenericAPIView):
             'prizes': PrizeSerializer(Prize.objects.all().order_by('id'), many=True).data,
             'stats': StatSerializer(Stat.objects.all(), many=True).data,
             'sponsors': SponsorSerializer(Sponsor.objects.all(), many=True).data,
-            'why_this_event': WhyThisEventSerializer(WhyThisEvent.objects.all(), many=True).data,
+            'why': WhyThisEventSerializer(WhyThisEvent.objects.all(), many=True).data,
             'quotes': QuoteSerializer(Quote.objects.all(), many=True).data
         }
         return Response(data)
