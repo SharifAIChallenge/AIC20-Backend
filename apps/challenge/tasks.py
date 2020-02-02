@@ -62,11 +62,13 @@ def create_games(match):
 
 
 def create_game_side(game, permutation):
+    game_sides = []
     for side in permutation:
         game_side = GameSide(game=game)
         for team_of_side in side:
             GameTeam.objects.create(team=team_of_side, game_side=game_side)
-        game_side.save()
+        game_sides.append(game_side)
+    GameSide.objects.bulk_create(game_sides)
 
 
 def create_match(match, teams_of_a_match):
