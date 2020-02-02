@@ -33,7 +33,7 @@ class Team(models.Model):
 
 class Participant(models.Model):
     user = models.OneToOneField(User, related_name='participant', on_delete=models.CASCADE)
-    team = models.ForeignKey('participation.Team', related_name='participants', on_delete=None, null=True, blank=True)
+    team = models.ForeignKey('participation.Team', related_name='participants', on_delete=models.CASCADE)
 
 
 class Invitation(models.Model):
