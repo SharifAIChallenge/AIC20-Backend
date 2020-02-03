@@ -7,6 +7,6 @@ Activate Account
 {% autoescape off %}
 {% trans 'Hello' %}!
 {% trans 'Click on the link below to activate your account:' %}
-http://{{ domain }}/api/accounts/activate/{{ eid }}/{{ token }}
+http://{{ domain }}/signup/activate?eid={{ eid }}&token={{ token }}
 {% endautoescape %}
 
