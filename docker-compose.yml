@@ -6,33 +6,40 @@ services:
     container_name: thebackend_nginx
     restart: always
     ports:
-      - 80:80
-      - 443:443
+      - 800:800
     volumes:
       - ./static/:/static/
       - ./media/:/media/
-      - /var/log/thebackend:/var/log/thebackend
       - /var/log/thebackend/nginx/:/var/log/nginx/
-      - ./deploy/config/nginx/sites-enabled:/etc/nginx/sites-enabled
-      - ./deploy/config/nginx/sites-available:/etc/nginx/sites-available
-      - ./deploy/config/nginx/nginx.conf:/etc/nginx/nginx.conf
-
+      - ./deploy/config/nginx:/etc/nginx/conf.d
     depends_on:
       - thebackend_web
   thebackend_web:
     build: .
     container_name: thebackend_web
     restart: always
-    command: bash -c "export DJANGO_SETTINGS_MODULE=thebackend.settings.production && python3 manage.py migrate && python3 manage.py compilemessages && python3 manage.py collectstatic <<< yes && gunicorn -b 0.0.0.0:8000 --workers=4 thebackend.wsgi"
+    environment:
+      DJANGO_SETTINGS_MODULE: "thebackend.settings.production"
+    command: >
+      sh -c "
+        ./manage.py migrate;
+        ./manage.py compilemessages;
+        ./manage.py collectstatic --noinput;
+        gunicorn --bind=0.0.0.0:8000 --timeout=90 --preload thebackend.wsgi:application;
+      "
     volumes:
-      - ./static/:/root/thebackend/static/
-      - ./media/:/root/thebackend/media/
+      - ./static/:/static/
+      - ./media/:/media/
       - /var/log/thebackend:/var/log/thebackend
     depends_on:
       - thebackend_db
-    expose:
-      - 8000
+    ports:
+      - 8000:8000
   thebackend_db:
     image: postgres:latest
     container_name: thebackend_db
     restart: always
+    volumes:
+      - ./init.sh:/docker-entrypoint-initdb.d/init.sh
+    expose:
+      - 5432
