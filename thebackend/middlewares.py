@@ -1,6 +1,8 @@
 from rest_framework.response import Response
 import re
 
+Always200MiddlewareExceptions = ['api/accounts/login']
+
 
 class TranslationMiddleware:
     def __init__(self, get_response):
@@ -53,17 +55,20 @@ class Always200Middleware:
         response = self.get_response(request)
         if hasattr(response, 'data'):
             if isinstance(response.data, dict):
-                data = response.data
-                data['status_code'] = response.status_code
-            try:
-                r = Response(data=data, status=200)
-                r.accepted_renderer = response.accepted_renderer
-                r.accepted_media_type = response.accepted_media_type
-                r.renderer_context = response.renderer_context
-                r.render()
-                return r
-            except Exception:
-                pass
+                if request.path in Always200MiddlewareExceptions:
+                    pass
+                else:
+                    data = response.data
+                    data['status_code'] = response.status_code
+                try:
+                    r = Response(data=data, status=200)
+                    r.accepted_renderer = response.accepted_renderer
+                    r.accepted_media_type = response.accepted_media_type
+                    r.renderer_context = response.renderer_context
+                    r.render()
+                    return r
+                except Exception:
+                    pass
         return response
 
 
@@ -88,4 +93,3 @@ class WrapSerializerErrorsMiddleware:
             return response
         else:
             return response
-

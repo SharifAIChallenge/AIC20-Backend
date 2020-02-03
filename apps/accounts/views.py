@@ -49,7 +49,7 @@ class SignUpView(GenericAPIView):
             msg = EmailMultiAlternatives(
                 _("Activate Account for {title}".format(title="AI Challenge")),
                 email_plaintext_message,
-                "sharif.aichallenge@gmail.com",
+                "AIC-2020",
                 [serializer.validated_data['email']]
             )
             msg.attach_alternative(email_html_message, "text/html")
