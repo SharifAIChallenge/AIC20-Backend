@@ -2,7 +2,7 @@ import os
 
 from .development import *
 
-from thebackend import env
+from decouple import config
 
 SECRET_KEY = 'oaeu#@$puoeuj,#$>Ueok,4IY@#$"PU.ohukAEOUO>AYU34$IPK'
 
@@ -15,15 +15,15 @@ WSGI_APPLICATION = 'thebackend.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": env.DB_NAME,
-        "USER": env.DB_USER,
-        "PASSWORD": env.DB_PASSWORD,
-        "HOST": env.DB_HOST,
-        "PORT": env.DB_PORT,
+        "NAME": config('DB_NAME'),
+        "USER": config('DB_USER'),
+        "PASSWORD": config('DB_PASSWORD'),
+        "HOST": config('DB_HOST'),
+        "PORT": config('DB_PORT'),
     }
 }
 
-LOG_ROOT = env.LOG_ROOT
+LOG_ROOT = config('LOG_ROOT')
 
 LOGGING = {
     'version': 1.0,
@@ -96,10 +96,9 @@ MEDIA_ROOT = '/media'
 
 CSRF_COOKIE_HTTPONLY = True
 
-EMAIL_BACKEND = env.EMAIL_BACKEND
-EMAIL_USE_TLS = env.EMAIL_USE_TLS
-EMAIL_HOST = env.EMAIL_HOST
-EMAIL_HOST_USER = env.EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = env.EMAIL_HOST_PASSWORD
-EMAIL_PORT = env.EMAIL_PORT
-
+EMAIL_BACKEND = config("EMAIL_BACKEND")
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT')
