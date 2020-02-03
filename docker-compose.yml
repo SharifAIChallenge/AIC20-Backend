@@ -34,6 +34,7 @@ services:
     depends_on:
       - thebackend_db
     ports:
+      - 172.17.0.1:8787:8000
       - 8000:8000
   thebackend_db:
     image: postgres:latest
