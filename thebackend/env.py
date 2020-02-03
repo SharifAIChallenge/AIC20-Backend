@@ -1,9 +1,9 @@
 DJANGO_SETTINGS_MODULE = 'thebackend.settings.production'
 
-DB_NAME = 'AIC2020'
+DB_NAME = 'aic'
 DB_USER = 'aic'
 DB_PASSWORD = '@ich@llenge2o2ow!llbefunenough'
-DB_HOST = 'localhost'
+DB_HOST = 'thebackend_db'
 DB_PORT = '5432'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
