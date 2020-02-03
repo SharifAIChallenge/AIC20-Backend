@@ -78,11 +78,14 @@ class ActivateView(GenericAPIView):
                                                 eid=eid, token=token)
 
         email = urlsafe_base64_decode(activate_user_token.eid).decode('utf-8')
-        user = get_object_or_404(User, email=email)
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response(data={'errors': ['Activation Failed']}, status=status.HTTP_404_NOT_FOUND)
         user.is_active = True
         user.save()
 
-        return redirect('http://aichallenge.sharif.edu/login')
+        return Response(data={'detail': _('Account Activated')}, status=status.HTTP_200_OK)
 
 
 class LogoutView(GenericAPIView):

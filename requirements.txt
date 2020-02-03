@@ -1,4 +1,4 @@
-decouple
+python-decouple==3.3
 amqp==2.5.2
 anyjson==0.3.3
 asn1crypto==1.2.0
