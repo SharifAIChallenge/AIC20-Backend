@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'apps.participation',
     'apps.scoreboard',
     'apps.faq',
-    'apps.staff'
+    'apps.staff',
 ]
 
 MIDDLEWARE = [
@@ -160,5 +160,3 @@ REST_FRAMEWORK = {
 }
 
 from .martor import *
-
-
