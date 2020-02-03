@@ -60,15 +60,15 @@ class Always200Middleware:
                 else:
                     data = response.data
                     data['status_code'] = response.status_code
-                try:
-                    r = Response(data=data, status=200)
-                    r.accepted_renderer = response.accepted_renderer
-                    r.accepted_media_type = response.accepted_media_type
-                    r.renderer_context = response.renderer_context
-                    r.render()
-                    return r
-                except Exception:
-                    pass
+                    try:
+                        r = Response(data=data, status=200)
+                        r.accepted_renderer = response.accepted_renderer
+                        r.accepted_media_type = response.accepted_media_type
+                        r.renderer_context = response.renderer_context
+                        r.render()
+                        return r
+                    except Exception:
+                        pass
         return response
 
 
