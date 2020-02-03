@@ -105,13 +105,10 @@ Activate Account
                                 <td style="padding:0px 18px 9px;color:#bc1b1b;font-family:&quot;Comic Sans MS&quot;,&quot;Marker Felt-Thin&quot;,Arial,sans-serif;font-size:11px;font-style:normal;font-weight:normal;line-height:125%;word-break:break-word;text-align:left"
                                     valign="top">
 
-                                    <h2 style="text-align:right;display:block;margin:0;padding:0;color:#202020;font-family:Helvetica;font-size:22px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:normal"><span>!سلام<br>
-دوازدهمین دوره‌ی مسابقه هوش مصنوعی شریف، اسفند ماه سال جاری در&nbsp;دانشکده&nbsp;مهندسی کامپیوتر برگزار خواهد شد</span>
+                                    <h2 style="text-align:right;display:block;margin:0;padding:0;color:#202020;font-family:Helvetica;font-size:22px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:normal"><span>Dear {{ first_name }},<br>
+Clink on button bellow to activate your account</span>
                                     </h2>
 
-                                    <h2 style="text-align:right;display:block;margin:0;padding:0;color:#202020;font-family:Helvetica;font-size:22px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:normal">
-                                        <span>خواهشمندیم در صورت امکان با به اشتراک گذاشتن نظرات خود در مورد رویداد سال گذشته و انتقادات و پیشنهاداتتان برای هرچه بهتر برگزار شدن این رویداد،&nbsp;با تیم برگزاری این مسابقه همراهی کنید</span>
-                                    </h2>
 
                                 </td>
                             </tr>
@@ -129,32 +126,7 @@ Activate Account
         <td id="m_2782689107409773923m_-4509687422814257272templateFooter"
             style="background:#fafafa none no-repeat center/cover;background-color:#fafafa;background-image:none;background-repeat:no-repeat;background-position:center;background-size:cover;border-top:0;border-bottom:0;padding-top:9px;padding-bottom:9px"
             valign="top">
-            <table style="min-width:100%;border-collapse:collapse" width="100%" cellspacing="0" cellpadding="0"
-                   border="0">
-                <tbody>
-                <tr>
-                    <td style="padding-top:0;padding-right:18px;padding-bottom:18px;padding-left:18px" valign="top"
-                        align="center">
-                        <table style="border-collapse:separate!important;border-radius:4px;background-color:#19c13a"
-                               cellspacing="0" cellpadding="0" border="0">
-                            <tbody>
-                            <tr>
-                                <td style="font-family:Arial;font-size:16px;padding:18px" valign="middle"
-                                    align="center">
-                                    <a title="فرم نظرسنجی"
-                                       href="https://docs.google.com/forms/d/e/1FAIpQLSctZw9bFsR7GsrfibeLR0TsIODUrSuICa84SffBAra6nJOnrw/viewform?usp=sf_link"
-                                       style="font-weight:bold;letter-spacing:normal;line-height:100%;text-align:center;text-decoration:none;color:#ffffff;display:block"
-                                       rel="noreferrer" target="_blank"
-                                       data-saferedirecturl="https://www.google.com/url?q=https://docs.google.com/forms/d/e/1FAIpQLSctZw9bFsR7GsrfibeLR0TsIODUrSuICa84SffBAra6nJOnrw/viewform?usp%3Dsf_link&amp;source=gmail&amp;ust=1580843594691000&amp;usg=AFQjCNGIKpvtMhLhOeqPpQWHq5aeCb2Kgw">فرم
-                                        نظرسنجی</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+
             <table style="min-width:100%;border-collapse:collapse" width="100%" cellspacing="0" cellpadding="0"
                    border="0">
                 <tbody>
@@ -167,7 +139,7 @@ Activate Account
                             <tr>
                                 <td style="font-family:Arial;font-size:16px;padding:18px" valign="middle"
                                     align="center">
-                                    <a title="لینک سایت" href="http://{{ domain }}/signup/activate?eid={{ eid }}&token={{ token }}"
+                                    <a title="Account activation" href="http://{{ domain }}/signup/activate?eid={{ eid }}&token={{ token }}"
                                        style="font-weight:bold;letter-spacing:normal;line-height:100%;text-align:center;text-decoration:none;color:#ffffff;display:block"
                                        rel="noreferrer" target="_blank"
                                        data-saferedirecturl="https://www.google.com/url?q=https://aichallenge.sharif.edu/&amp;source=gmail&amp;ust=1580843594691000&amp;usg=AFQjCNE9SCnjgXGvLz3DFBuhJQWppiC4ew">لینک

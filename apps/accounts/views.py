@@ -43,6 +43,7 @@ class SignUpView(GenericAPIView):
                 'domain': 'aichallenge.sharif.edu',
                 'eid': activate_user_token.eid,
                 'token': activate_user_token.token,
+                'first_name': serializer.validated_data['profile']['firstname_en']
             }
             email_html_message = render_to_string('accounts/email/user_activate_email.html', context)
             email_plaintext_message = render_to_string('accounts/email/user_activate_email.txt', context)
