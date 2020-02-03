@@ -10,7 +10,7 @@ cffi==1.13.2
 chardet==3.0.4
 cryptography==2.8
 decorator==4.4.1
-Django==2.2.8
+Django==2.2.9
 django-appconf==1.0.3
 django-celery==3.3.1
 django-celery-email==3.0.0
