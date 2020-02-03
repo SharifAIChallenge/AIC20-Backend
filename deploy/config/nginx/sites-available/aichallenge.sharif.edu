@@ -1,5 +1,5 @@
-upstream aic_web {
-    server aic_web:8000 fail_timeout=0;
+upstream thebackend_web:8000 {
+    server thebackend_web:8000 fail_timeout=0;
 }
 
 server {
@@ -9,25 +9,8 @@ server {
     return 301 https://aichallenge.sharif.edu$request_uri;
 }
 
-
-
 server {
     listen 80;
-
-    server_name aichallenge.sharif.edu;
-    return 302 https://aichallenge.sharif.edu:443$request_uri;
-}
-
-
-server {
-    listen 2018;
-
-    server_name aichallenge.sharif.ir aichallenge.sharif.ac.ir;
-    return 301 https://aichallenge.sharif.edu$request_uri;
-}
-
-server {
-    listen 2018;
 
     server_name aichallenge.sharif.edu;
     return 302 https://aichallenge.sharif.edu:443$request_uri;
@@ -91,4 +74,4 @@ server {
         log_not_found   on;
     }
 
-}ecorator==4.4.1
+}

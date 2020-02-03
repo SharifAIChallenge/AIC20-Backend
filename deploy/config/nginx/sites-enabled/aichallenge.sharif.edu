@@ -91,4 +91,4 @@ server {
         log_not_found   on;
     }
 
-}ecorator==4.4.1
+}

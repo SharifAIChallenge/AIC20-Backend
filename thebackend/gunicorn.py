@@ -1,28 +1,32 @@
-bind = ''
+bind = 'unix:/home/ssc/AIC20-Backend/thebackend/gunicorn.sock'
+
 workers = 4
-proc_name = 'datadays gunicorn'
+proc_name = 'aic gunicorn'
+
 preload=True
 timeout=30
+
 user = 'root'
 group = 'root'
 loglevel = 'debug'
-errorlog = ''
+
+errorlog = '/var/log/aic/gunicorn_error.log'
+
 raw_env = [
-        'DJANGO_SETTINGS_MODULE=thebackend.settings.production',
+    'DJANGO_SETTINGS_MODULE=thebackend.settings.production',
 
-        'DB_NAME',
-        'DB_USER',
-        'DB_PASSWORD',
-        'DB_HOST',
-        'DB_PORT',
+    'DB_NAME=AIC2020',
+    'DB_USER=aic',
+    'DB_PASSWORD=@ich@llenge2o2ow!llbefunenough',
+    'DB_HOST=localhost',
+    'DB_PORT=5432',
 
-        'EMAIL_BACKEND',
-        'EMAIL_USE_TLS',
-        'EMAIL_HOST',
-        'EMAIL_HOST_USER',
-        'EMAIL_HOST_PASSWORD',
-        'EMAIL_PORT',
+    'EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend',
+    'EMAIL_USE_TLS=true',
+    'EMAIL_HOST=smtp.gmail.com',
+    'EMAIL_HOST_USER=sharif.aichallenge@gmail.com',
+    'EMAIL_HOST_PASSWORD=aichallenge_SSC_96',
+    'EMAIL_PORT=587',
 
-        'LOG_ROOT',
+    'LOG_ROOT=/var/log/aic/',
 ]
-
