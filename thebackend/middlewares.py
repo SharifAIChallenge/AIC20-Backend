@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 import re
 
-Always200MiddlewareExceptions = ['/api/accounts/login']
+Always200MiddlewareExceptions = ['/api/accounts/login', '/api/accounts/profile']
 
 
 class TranslationMiddleware:
