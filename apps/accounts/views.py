@@ -148,8 +148,8 @@ class ResetPasswordConfirmView(GenericAPIView):
             return Response({'error': 'Token Expired'}, status=400)
         if data['new_password1'] != data['new_password2']:
             return Response(data={'errors': [_('passwords don\'t match!')]}, status=status.HTTP_406_NOT_ACCEPTABLE)
-        rs_token.delete()
         user = get_object_or_404(User, id=urlsafe_base64_decode(data['uid']).decode('utf-8'))
+        rs_token.delete()
         user.password = make_password(data['new_password1'])
         user.save()
         return Response(data={'detail': _('Successfully Changed Password')}, status=200)
