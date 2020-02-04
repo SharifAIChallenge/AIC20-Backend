@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/blog/', include('apps.blog.urls')),
     path('api/subscribe/', include('apps.notification.urls')),
     path('go/', include('apps.go.urls')),
+    path('api/go/', include('apps.go.urls')),
     path('api/participation/', include('apps.participation.urls')),
     path('api/challenge/', include('apps.challenge.urls')),
     path('api/faq/', include('apps.faq.urls')),
