@@ -4,7 +4,7 @@ from django.db import models
 
 from martor.widgets import AdminMartorWidget
 
-from .models import Intro, TimelineEvent, Prize, Stat
+from .models import Intro, TimelineEvent, Prize, Stat, Sponsor, WhyThisEvent, Quote
 
 
 @admin.register(Intro)
@@ -34,3 +34,23 @@ class StatAdmin(ModelAdmin):
         models.TextField: {'widget': AdminMartorWidget},
     }
 
+
+@admin.register(Sponsor)
+class SponsorAdmin(ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {'widget': AdminMartorWidget},
+    }
+
+
+@admin.register(WhyThisEvent)
+class WhyThisEventAdmin(ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {'widget': AdminMartorWidget},
+    }
+
+
+@admin.register(Quote)
+class QuoteAdmin(ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {'widget': AdminMartorWidget},
+    }
