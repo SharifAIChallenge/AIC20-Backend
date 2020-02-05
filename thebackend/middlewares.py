@@ -1,7 +1,8 @@
 from rest_framework.response import Response
 import re
 
-Always200MiddlewareExceptions = ['/api/accounts/login', '/api/accounts/profile']
+Always200MiddlewarePathExceptions = ('/api/accounts/login', '/api/accounts/profile')
+Always200MiddlewareStatusCodeExceptions = (401,)
 
 
 class TranslationMiddleware:
@@ -55,7 +56,8 @@ class Always200Middleware:
         response = self.get_response(request)
         if hasattr(response, 'data'):
             if isinstance(response.data, dict):
-                if request.path in Always200MiddlewareExceptions or response.status_code == 401:
+                if request.path in Always200MiddlewarePathExceptions or \
+                        response.status_code in Always200MiddlewareStatusCodeExceptions:
                     pass
                 else:
                     data = response.data
