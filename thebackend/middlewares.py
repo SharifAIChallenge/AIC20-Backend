@@ -55,7 +55,7 @@ class Always200Middleware:
         response = self.get_response(request)
         if hasattr(response, 'data'):
             if isinstance(response.data, dict):
-                if request.path in Always200MiddlewareExceptions:
+                if request.path in Always200MiddlewareExceptions or response.status_code == 401:
                     pass
                 else:
                     data = response.data
