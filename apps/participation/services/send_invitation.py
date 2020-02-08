@@ -4,7 +4,7 @@ from typing import Union
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from apps.participation.models import Invitation
+from apps.participation.models import Invitation, Team
 from apps.participation.serializers import InvitationSerializer
 
 
@@ -27,6 +27,8 @@ class SendInvitation:
             self._validate_inviter_has_team()
         if self.valid:
             self._validate_target_has_team()
+        if self.valid:
+            self._validate_team_filled()
         if self.valid:
             self._invite()
         return self.invitation_serializer, self.errors
@@ -53,6 +55,11 @@ class SendInvitation:
         if self.user.participant.team is not None:
             self.valid = False
             self.errors.append(_('User already has a team'))
+
+    def _validate_team_filled(self):
+        if self.user.participant.team and self.user.participant.team.participants.count() >= Team.MAX_SIZE:
+            self.valid = False
+            self.errors.append(_('Your team is full!'))
 
     def _invite(self):
         invitation = Invitation.objects.create(source=self.request.user, target=self.user)
