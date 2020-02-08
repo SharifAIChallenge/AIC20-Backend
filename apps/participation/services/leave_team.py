@@ -13,7 +13,6 @@ class LeaveTeam:
         self.errors = []
 
     def __call__(self):
-        self._validate_team()
         if self.valid:
             self._validate_user_in_team()
         if self.valid:
@@ -22,19 +21,12 @@ class LeaveTeam:
             self._leave_team()
         return self.errors
 
-    def _validate_team(self):
-        try:
-            self.team = Team.objects.get(name=self.team_name)
-        except (Team.DoesNotExist, Team.MultipleObjectsReturned) as e:
-            self.errors.append(str(e))
-            self.valid = False
-
     def _validate_user_in_team(self):
-        for participant in self.team.participants.all():
-            if self.request.user.email == participant.user.mail:
-                return
+        if self.request.user.participant and self.request.user.participant.team:
+            self.team = self.request.user.participant.team
+            return
         self.valid = False
-        self.errors.append(_("You're Not in this team"))
+        self.errors.append(_("You're Not in any team"))
 
     def _check_leave_conditions(self):
         if self.request.user.participant.team.participants.all().count() != 1 and \

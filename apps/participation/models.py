@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -27,8 +29,14 @@ class Team(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     badges = models.ManyToManyField('participation.Badge', related_name='teams', null=True, blank=True)
-    challenge = models.ForeignKey('challenge.Challenge', related_name='teams', on_delete=models.CASCADE)
+
     tournament = models.ManyToManyField('challenge.Tournament', related_name='teams', null=True, blank=True)
+    challenge = models.ForeignKey('challenge.Challenge', related_name='teams', on_delete=models.CASCADE)
+
+    def get_team_image_directory(self, filename):
+        return os.path.join(self.name, 'image', filename)
+
+    image = models.ImageField(upload_to=get_team_image_directory, null=True)
 
 
 class Participant(models.Model):

@@ -1,6 +1,6 @@
 import json
 
-from rest_framework import status
+from rest_framework import status, parsers
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -87,11 +87,12 @@ class InvitationsToOthersAPIView(GenericAPIView):
 
 
 class CreateTeamAPIView(GenericAPIView):
-    serializer_class = participation_serializers.TeamSerializer
+    serializer_class = participation_serializers.TeamPostSerializer
     permission_classes = [IsAuthenticated]
+    parser_classes = (parsers.MultiPartParser,)
 
     def post(self, request):
-        team = self.get_serializer(data=request.body)
+        team = self.get_serializer(data=request.data)
         if team.is_valid(raise_exception=True):
             team = team.save()
         Participant.objects.create(user=request.user, team=team)
