@@ -13,6 +13,7 @@ class Notification(models.Model):
     text = models.TextField(max_length=200, null=False)
     seen = models.BooleanField(default=False, null=False)
     for_all = models.BooleanField(default=False)
+    create_date = models.DateTimeField(auto_now_add=True)
 
     def pre_save(self):
         if self.for_all:
