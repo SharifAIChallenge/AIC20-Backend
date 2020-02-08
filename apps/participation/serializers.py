@@ -39,12 +39,7 @@ class TeamSerializer(serializers.ModelSerializer):
 class TeamPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
-        fields = ['name', 'challenge_id']
-
-    def validate(self, attrs):
-        if not Challenge.objects.filter(id=attrs['challenge_id']).exists():
-            raise ValidationError("Challenge Not Exists")
-        return attrs
+        fields = ['name', 'challenge', 'image']
 
 
 class InvitationSerializer(serializers.ModelSerializer):
