@@ -18,8 +18,9 @@ class NotificationView(GenericAPIView):
     serializer_class = NotificationSerializer
 
     def get(self, request):
-        data = self.get_serializer(self.get_queryset().filter(user=request.user)).data
-        return Response(data, status=status.HTTP_200_OK)
+        notifications = request.user.notifications.all()
+        data = self.get_serializer(notifications, many=True).data
+        return Response(data={'notifications': data}, status=status.HTTP_200_OK)
 
 
 class SubscriberView(GenericAPIView):
@@ -31,4 +32,4 @@ class SubscriberView(GenericAPIView):
         if subscriber.is_valid():
             subscriber.save()
             return Response(subscriber.data)
-        return Response({'detail': _('something is wrong')})
+        return Response({'detail': 'something is wrong'})
