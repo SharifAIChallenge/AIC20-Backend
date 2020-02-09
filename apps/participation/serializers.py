@@ -39,7 +39,7 @@ class TeamSerializer(serializers.ModelSerializer):
 class TeamPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
-        fields = ['name', 'challenge', 'image']
+        fields = ['name', 'image']
 
 
 class InvitationSerializer(serializers.ModelSerializer):
