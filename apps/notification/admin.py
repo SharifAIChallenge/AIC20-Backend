@@ -9,7 +9,7 @@ from apps.notification.models import Notification, EmailText, Subscriber
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ['id']
 
 
 @admin.register(EmailText)
