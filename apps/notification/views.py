@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 
 from apps.notification.models import Notification, Subscriber
-from apps.notification.serializers import NotificationSerializer, SubscriberSerializer
+from apps.notification.serializers import NotificationSerializer, SubscriberSerializer, PublicNotificationSerializer
 
 
 @permission_classes([IsAuthenticated])
@@ -19,6 +19,17 @@ class NotificationView(GenericAPIView):
 
     def get(self, request):
         notifications = request.user.notifications.all()
+        data = self.get_serializer(notifications, many=True).data
+        return Response(data={'notifications': data}, status=status.HTTP_200_OK)
+
+
+class PublicNotificationsAPIView(GenericAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = PublicNotificationSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        notifications = self.get_queryset().filter(for_all=True)
         data = self.get_serializer(notifications, many=True).data
         return Response(data={'notifications': data}, status=status.HTTP_200_OK)
 

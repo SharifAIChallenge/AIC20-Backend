@@ -8,7 +8,13 @@ from apps.notification.models import Notification, Subscriber
 class NotificationSerializer(ModelSerializer):
     class Meta:
         model = Notification
-        fields = "__all__"
+        exclude = ['for_all']
+
+
+class PublicNotificationSerializer(ModelSerializer):
+    class Meta:
+        model = Notification
+        exclude = ['for_all', 'user']
 
 
 class SubscriberSerializer(ModelSerializer):
