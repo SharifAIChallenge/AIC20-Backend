@@ -15,13 +15,12 @@ class Notification(models.Model):
     for_all = models.BooleanField(default=False)
     create_date = models.DateTimeField(auto_now_add=True)
 
-    def pre_save(self):
-        if self.for_all:
-            self.users = list(User.objects.all())
-
     def save(self, *args, **kwargs):
-        self.pre_save()
         super().save(*args, **kwargs)
+        if self.for_all:
+            for user in User.objects.all():
+                print(user)
+                self.users.add(user)
 
 
 class Subscriber(models.Model):

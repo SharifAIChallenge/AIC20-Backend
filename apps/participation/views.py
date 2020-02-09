@@ -102,7 +102,7 @@ class CreateTeamAPIView(GenericAPIView):
 class TeamDetailAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def get(self, request):
         participant = get_object_or_404(Participant, user=request.user)
         team = participant.team
         if team is None:
