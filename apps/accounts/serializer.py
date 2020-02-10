@@ -10,7 +10,7 @@ from apps.participation.models import Participant
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        exclude = ['user']
+        exclude = ['user', 'id']
 
 
 class UserSerializer(serializers.ModelSerializer):
