@@ -1,5 +1,6 @@
 import json
 
+from django.http import JsonResponse
 from rest_framework import status, parsers
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -41,7 +42,7 @@ class SendInvitationAPIView(GenericAPIView):
     def post(self, request):
         invitation_serializer, errors = SendInvitation(request=request)()
         if errors:
-            return Response(data={'errors': json.dumps(errors)}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(data={'errors': errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response(data={'invitation': invitation_serializer.data}, status=status.HTTP_200_OK)
 
 
@@ -51,7 +52,7 @@ class LeaveTeamAPIView(GenericAPIView):
     def post(self, request, team_name):
         errors = LeaveTeam(request=request, team_name=team_name)()
         if errors:
-            return Response(data={'errors': json.dumps(errors)}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(data={'errors': errors}, status=status.HTTP_200_OK)
         return Response(data={'details': _('You left your team successfully')}, status=status.HTTP_200_OK)
 
 
@@ -61,7 +62,7 @@ class AnswerInvitationAPIView(GenericAPIView):
     def post(self, request, invitation_id):
         errors = AnswerInvitation(request=request, invitation_id=invitation_id)()
         if errors:
-            return Response(data={'errors': json.dumps(errors)}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(data={'errors': errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response(data={'details': _('You answered invitation successfully')}, status=status.HTTP_200_OK)
 
 
@@ -106,7 +107,7 @@ class TeamDetailAPIView(GenericAPIView):
         team_name = request.GET.get('name', '')
         if team_name:
             team = get_object_or_404(Team, team_name)
-        elif request.user.participant:
+        elif hasattr(request.user, 'participant'):
             team = request.user.participant.team
         else:
             return Response(data={'errors': ['Sorry! you dont have a team']})

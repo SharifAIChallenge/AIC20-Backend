@@ -22,7 +22,7 @@ class LeaveTeam:
         return self.errors
 
     def _validate_user_in_team(self):
-        if self.request.user.participant and self.request.user.participant.team:
+        if hasattr(self.request.user, 'participant') and self.request.user.participant.team:
             self.team = self.request.user.participant.team
             return
         self.valid = False

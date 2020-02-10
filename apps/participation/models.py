@@ -35,6 +35,10 @@ class Team(models.Model):
 
     image = models.ImageField(upload_to=get_team_image_directory, null=True)
 
+    @property
+    def is_valid(self):
+        return True if self.participants.count() >= 2 else False
+
 
 class Participant(models.Model):
     user = models.OneToOneField(User, related_name='participant', on_delete=models.CASCADE)

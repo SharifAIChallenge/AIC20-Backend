@@ -33,10 +33,15 @@ class BadgeSerializer(serializers.ModelSerializer):
 class TeamSerializer(serializers.ModelSerializer):
     participants = ParticipantSerializer(many=True, read_only=True)
     badges = BadgeSerializer(many=True, read_only=True)
+    is_valid = serializers.SerializerMethodField('_is_valid', read_only=True)
+
+    @staticmethod
+    def _is_valid(team: Team):
+        return team.is_valid
 
     class Meta:
         model = Team
-        fields = ['name', 'badges', 'participants', 'image']
+        fields = ['name', 'badges', 'participants', 'image', 'is_valid']
 
 
 class TeamPostSerializer(serializers.ModelSerializer):
@@ -56,4 +61,4 @@ class InvitationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Invitation
-        fields = ['id', 'target', 'source', 'team_name', 'statusl']
+        fields = ['id', 'target', 'source', 'team_name', 'status']
