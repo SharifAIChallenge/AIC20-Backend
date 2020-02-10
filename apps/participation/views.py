@@ -49,8 +49,8 @@ class SendInvitationAPIView(GenericAPIView):
 class LeaveTeamAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, team_name):
-        errors = LeaveTeam(request=request, team_name=team_name)()
+    def post(self, request):
+        errors = LeaveTeam(request=request)()
         if errors:
             return Response(data={'errors': errors}, status=status.HTTP_200_OK)
         return Response(data={'details': _('You left your team successfully')}, status=status.HTTP_200_OK)

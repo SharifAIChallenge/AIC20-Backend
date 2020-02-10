@@ -5,9 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 
 class LeaveTeam:
 
-    def __init__(self, request, team_name: str):
+    def __init__(self, request):
         self.request = request
-        self.team_name = team_name
         self.team = None
         self.valid = True
         self.errors = []
