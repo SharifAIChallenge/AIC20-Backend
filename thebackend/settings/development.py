@@ -160,3 +160,5 @@ REST_FRAMEWORK = {
 }
 
 from .martor import *
+
+ENABLE_SUBMISSION = True

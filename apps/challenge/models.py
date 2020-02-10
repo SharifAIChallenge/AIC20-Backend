@@ -1,11 +1,17 @@
+import logging
 import os
 import uuid
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, ugettext
 
 from polymorphic.models import PolymorphicModel
+
+from .tasks import handle_submission
+
+logger = logging.getLogger(__name__)
 
 
 # Create your models here.
@@ -79,8 +85,8 @@ class Challenge(models.Model):
 class Tournament(PolymorphicModel):
     challenge = models.ForeignKey('challenge.Challenge', related_name='tournaments', on_delete=models.CASCADE)
     type = models.CharField(max_length=20, choices=TournamentTypes.TYPES)
-    start_time = models.DateTimeField(auto_now_add=True)
-    end_time = models.DateTimeField()
+    start_time = models.DateTimeField()
+    submit_deadline = models.DateTimeField()
 
 
 class Stage(models.Model):
@@ -148,6 +154,43 @@ class Submission(models.Model):
 
     def __str__(self):
         return str(self.id) + ' team: ' + str(self.team) + ' is final: ' + str(self.is_final)
+
+    def set_final(self):
+        """
+            Use this method instead of changing the is_final attribute directly
+            This makes sure that only one instance of TeamSubmission has is_final flag set to True
+        """
+        if self.status != 'compiled':
+            raise ValueError(_('This submission is not compiled yet.'))
+        Submission.objects.filter(is_final=True, team=self.team).update(is_final=False)
+        self.is_final = True
+        self.save()
+
+    def handle(self):
+        if settings.TESTING:
+            try:
+                self.upload()
+                self.compile()
+            except Exception as error:
+                logger.error(error)
+        else:
+            handle_submission.delay(self.id)
+
+    def upload(self):
+        from . import functions
+        self.infra_token = functions.upload_file(self.file)
+        self.status = 'uploaded'
+        self.save()
+
+    def compile(self):
+        from . import functions
+        result = functions.compile_submissions([self])
+        if result[0]['success']:
+            self.status = 'compiling'
+            self.infra_compile_token = result[0]['run_id']
+        else:
+            logger.error(result[0][self.infra_token]['errors'])
+        self.save()
 
 
 class Map(models.Model):

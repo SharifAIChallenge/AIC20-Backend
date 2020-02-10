@@ -1,8 +1,11 @@
-from random import random
+import logging
+# from random import random
 
-from apps.challenge.models import Info, Game, MatchTeam, GameTeam, GameSide
+# from apps.challenge.models import Info, Game, MatchTeam, GameTeam, GameSide
 from thebackend.celery import app
-from .models import MatchTypes, Match
+# from .models import MatchTypes, Match
+
+logger = logging.getLogger(__name__)
 
 
 @app.task(name='handle_submission')
