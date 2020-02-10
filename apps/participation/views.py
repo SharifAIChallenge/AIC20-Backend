@@ -71,7 +71,7 @@ class InvitationsToMeAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        data = self.get_serializer(self.get_queryset().filter(target=self.request.usesr)).data
+        data = self.get_serializer(self.get_queryset().filter(target=self.request.user), many=True).data
         return Response(data={"invitations": data}, status=status.HTTP_200_OK)
 
 
@@ -81,7 +81,7 @@ class InvitationsToOthersAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        data = self.get_serializer(self.get_queryset().filter(source=self.request.user)).data
+        data = self.get_serializer(self.get_queryset().filter(source=self.request.user), many=True).data
         return Response(data={'invitations': data}, status=status.HTTP_200_OK)
 
 

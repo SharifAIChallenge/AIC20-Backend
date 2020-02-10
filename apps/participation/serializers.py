@@ -2,15 +2,18 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from apps.accounts.serializer import ProfileSerializer
 from apps.challenge.models import Challenge
 from .models import Badge, Team, Participant, Invitation
 from ..accounts import serializer as accounts_serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer(read_only=True)
+
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email']
+        fields = ['email', 'profile']
 
 
 class ParticipantSerializer(serializers.ModelSerializer):
