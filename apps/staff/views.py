@@ -1,5 +1,6 @@
 import json
 
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 
@@ -19,4 +20,4 @@ class StaffsListAPIView(GenericAPIView):
 
     def get(self, request):
         data = StaffsListSerializer(self.get_queryset()).data()
-        return Response(data={'staffs': json.dumps(data)}, status=status.HTTP_200_OK)
+        return JsonResponse(data=data, status=status.HTTP_200_OK)
