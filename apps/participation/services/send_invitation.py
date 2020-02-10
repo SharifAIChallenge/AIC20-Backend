@@ -58,7 +58,7 @@ class SendInvitation:
 
     def _validate_team_filled(self):
         if hasattr(self.request.user,
-                   'participant') and self.request.user.participant.team.participants.count() >= Team.MAX_SIZE:
+                   'participant') and self.request.user.participant.team.participants.count() >= Team.TEAM_MAX_SIZE:
             self.valid = False
             self.errors.append(_('Your team is full!'))
 

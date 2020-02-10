@@ -25,7 +25,9 @@ class Badge(models.Model):
 
 
 class Team(models.Model):
-    MAX_SIZE = 3
+    TEAM_MAX_SIZE = 3
+    IMAGE_MAX_SIZE = 200 * 1024
+    VALID_IMAGE_FORMATS = ('jpeg', 'png', 'jpg')
 
     name = models.CharField(max_length=100, unique=True)
     badges = models.ManyToManyField('participation.Badge', related_name='teams', null=True, blank=True)
