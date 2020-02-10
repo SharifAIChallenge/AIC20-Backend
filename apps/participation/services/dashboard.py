@@ -14,11 +14,11 @@ class TeamDashBoard:
     def __call__(self):
         self._count_of_submit()
         self._count_of_win()
-        self._participated_tournaments()
+        # self._participated_tournaments()
         return self._serialize_data()
 
     def _count_of_submit(self) -> None:
-        self.count_of_submit = Submission.objects.count(team=self.team)
+        self.count_of_submit = Submission.objects.filter(team=self.team).count()
 
     def _count_of_win(self) -> None:
         result = 0
@@ -29,16 +29,16 @@ class TeamDashBoard:
 
         self.count_of_win = result
 
-    def _participated_tournaments(self) -> None:
-        tournaments_name = []
-        for tournament in self.team.tournament.all():
-            tournaments_name.append(tournament.name)
-
-        self.participated_tournaments = tournaments_name
+    # def _participated_tournaments(self) -> None:
+    #     tournaments_name = []
+    #     for tournament in self.team.tournament.all():
+    #         tournaments_name.append(tournament.name)
+    #
+    #     self.participated_tournaments = tournaments_name
 
     def _serialize_data(self) -> Dict[str, Union[int, str]]:
         return {
             'submits_count': self.count_of_submit,
             'wins_count': self.count_of_win,
-            'tournaments_participated': self.participated_tournaments,
+            # 'tournaments_participated': self.participated_tournaments,
         }
