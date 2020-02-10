@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -48,6 +50,14 @@ class TeamPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ['name', 'image']
+
+    def validate(self, attrs):
+        image = attrs.get('image')
+        if image and os.path.splitext(image.name[1][1:]) not in Team.VALID_IMAGE_FORMATS:
+            raise serializers.ValidationError('Invalid file format')
+        if image and image.size > Team.IMAGE_MAX_SIZE:
+            raise serializers.ValidationError('Maximum file size reached')
+        return attrs
 
 
 class InvitationSerializer(serializers.ModelSerializer):
