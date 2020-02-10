@@ -8,7 +8,7 @@ class AnswerInvitation:
 
     def __init__(self, request, invitation_id):
         self.request = request
-        self.data = json.loads(request.data)
+        self.data = json.loads(request.body)
         self.answer = ''
         self.invitation_id = invitation_id
         self.invitation = None
@@ -46,7 +46,7 @@ class AnswerInvitation:
             self.valid = False
             self.errors.append(str(e))
 
-        if self.invitation.status is not InvitationStatusTypes.NOT_ANSWERED:
+        if self.invitation.status != InvitationStatusTypes.NOT_ANSWERED:
             self.valid = False
             self.errors.append(_('Invitation answered before'))
 

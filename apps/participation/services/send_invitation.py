@@ -12,7 +12,7 @@ class SendInvitation:
 
     def __init__(self, request):
         self.request = request
-        self.data = json.loads(request.data)
+        self.data = json.loads(request.body)
         self.user_email = ''
         self.invitation_serializer = None
         self.user = None
@@ -47,17 +47,18 @@ class SendInvitation:
             self.valid = False
 
     def _validate_inviter_has_team(self):
-        if self.request.user.participant.team is None:
+        if not hasattr(self.request.user, 'participant'):
             self.valid = False
             self.errors.append(_("You don't have any team to invite other people to it"))
 
     def _validate_target_has_team(self):
-        if self.user.participant.team is not None:
+        if hasattr(self.user, 'participant'):
             self.valid = False
             self.errors.append(_('User already has a team'))
 
     def _validate_team_filled(self):
-        if self.user.participant.team and self.user.participant.team.participants.count() >= Team.MAX_SIZE:
+        if hasattr(self.request.user,
+                   'participant') and self.request.user.participant.team.participants.count() >= Team.MAX_SIZE:
             self.valid = False
             self.errors.append(_('Your team is full!'))
 
