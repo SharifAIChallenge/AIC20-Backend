@@ -123,6 +123,7 @@ class ActivateView(GenericAPIView):
         except User.DoesNotExist:
             return Response(data={'errors': ['Activation Failed']}, status=status.HTTP_404_NOT_FOUND)
         user.is_active = True
+        activate_user_token.delete()
         user.save()
 
         return Response(data={'detail': _('Account Activated')}, status=status.HTTP_200_OK)
