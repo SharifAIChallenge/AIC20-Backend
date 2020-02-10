@@ -18,7 +18,7 @@ class TeamDashBoard:
         return self._serialize_data()
 
     def _count_of_submit(self) -> None:
-        self.count_of_submit = Submission.objects.count(team=self.team)
+        self.count_of_submit = Submission.objects.filter(team=self.team).count()
 
     def _count_of_win(self) -> None:
         result = 0
