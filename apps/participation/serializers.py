@@ -10,7 +10,7 @@ from ..accounts import serializer as accounts_serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email']
+        fields = ['username', 'first_name', 'last_name', 'email']
 
 
 class ParticipantSerializer(serializers.ModelSerializer):
@@ -18,13 +18,13 @@ class ParticipantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Participant
-        fields = ['id', 'user']
+        fields = ['user']
 
 
 class BadgeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Badge
-        fields = ['id', 'title', 'text', 'image']
+        fields = ['title', 'text', 'image']
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -33,7 +33,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ['id', 'badges', 'participants', 'image']
+        fields = ['name', 'badges', 'participants', 'image']
 
 
 class TeamPostSerializer(serializers.ModelSerializer):
@@ -48,4 +48,4 @@ class InvitationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Invitation
-        fields = ['id', 'target', 'source']
+        fields = ['target', 'source']
