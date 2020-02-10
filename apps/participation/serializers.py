@@ -56,4 +56,4 @@ class InvitationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Invitation
-        fields = ['target', 'source', 'team_name']
+        fields = ['id', 'target', 'source', 'team_name', 'statusl']
