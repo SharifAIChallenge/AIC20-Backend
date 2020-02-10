@@ -8,13 +8,13 @@ from apps.notification.models import Notification, Subscriber
 class NotificationSerializer(ModelSerializer):
     class Meta:
         model = Notification
-        exclude = ['for_all']
+        exclude = ['id', 'for_all']
 
 
 class PublicNotificationSerializer(ModelSerializer):
     class Meta:
         model = Notification
-        exclude = ['for_all', 'user']
+        exclude = ['id', 'for_all', 'user']
 
 
 class SubscriberSerializer(ModelSerializer):
@@ -22,4 +22,4 @@ class SubscriberSerializer(ModelSerializer):
 
     class Meta:
         model = Subscriber
-        fields = "__all__"
+        exclude = ['id']

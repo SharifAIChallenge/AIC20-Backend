@@ -8,7 +8,7 @@ from ..participation import serializers as participation_serializers
 class InfoSerializer(ModelSerializer):
     class Meta:
         model = challenge_models.Info
-        fields = ['id', 'status', 'detail']
+        fields = ['status', 'detail']
 
 
 class GameTeamSerializer(ModelSerializer):
@@ -16,7 +16,7 @@ class GameTeamSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.GameTeam
-        fields = ['id', 'game_side_id', 'team']
+        fields = ['game_side_id', 'team']
 
 
 class GameSideSerializer(ModelSerializer):
@@ -24,7 +24,7 @@ class GameSideSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.GameSide
-        fields = ['id', 'game_id', 'has_won', 'game_teams']
+        fields = ['game_id', 'has_won', 'game_teams']
 
 
 class GameSerializer(ModelSerializer):
@@ -33,7 +33,7 @@ class GameSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Game
-        fields = ['id', 'match_id', 'info', 'game_sides']
+        fields = ['match_id', 'info', 'game_sides']
 
 
 class MatchTeamSerializer(ModelSerializer):
@@ -41,7 +41,7 @@ class MatchTeamSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.MatchTeam
-        fields = ['id', 'match_id', 'team']
+        fields = ['match_id', 'team']
 
 
 class MatchSerializer(ModelSerializer):
@@ -50,7 +50,7 @@ class MatchSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Match
-        fields = ['id', 'group_id', 'type', 'match_teams', 'games']
+        fields = ['group_id', 'type', 'match_teams', 'games']
 
 
 class TeamGroupSerializer(ModelSerializer):
@@ -58,7 +58,7 @@ class TeamGroupSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.TeamGroup
-        fields = ['id', 'group_id', 'team']
+        fields = ['group_id', 'team']
 
 
 class GroupSerializer(ModelSerializer):
@@ -67,7 +67,7 @@ class GroupSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Group
-        fields = ['id', 'stage_id', 'team_groups', 'matches']
+        fields = ['stage_id', 'team_groups', 'matches']
 
 
 class StageSerializer(ModelSerializer):
@@ -75,7 +75,7 @@ class StageSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Stage
-        fields = ['id', 'tournament_id', 'finished', 'groups']
+        fields = ['tournament_id', 'finished', 'groups']
 
 
 class TournamentSerializer(ModelSerializer):
@@ -83,7 +83,7 @@ class TournamentSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Tournament
-        fields = ['id', 'challenge_id', 'type', 'start_time', 'end_time', 'run_time', 'stages']
+        fields = ['challenge_id', 'type', 'start_time', 'end_time', 'run_time', 'stages']
 
 
 class ChallengeSerializer(ModelSerializer):
@@ -91,7 +91,7 @@ class ChallengeSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Challenge
-        fields = ['id', 'name', 'type', 'start_time', 'end_time', 'tournaments']
+        fields = ['name', 'type', 'start_time', 'end_time', 'tournaments']
 
 
 class SubmissionSerializer(ModelSerializer):
@@ -100,7 +100,7 @@ class SubmissionSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Submission
-        fields = ['id', 'language', 'is_final', 'submit_time', 'team', 'user', 'file']
+        fields = ['language', 'is_final', 'submit_time', 'team', 'user', 'file']
 
 
 class SubmissionPostSerializer(ModelSerializer):
@@ -112,4 +112,4 @@ class SubmissionPostSerializer(ModelSerializer):
 class MapSerializer(ModelSerializer):
     class Meta:
         model = challenge_models.Map
-        fields = ['id', 'name', 'infra_token']
+        fields = ['name', 'infra_token']

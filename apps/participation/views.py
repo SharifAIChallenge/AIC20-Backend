@@ -8,7 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from apps.participation.models import Team, Participant
 from apps.participation.services.answer_invitation import AnswerInvitation
-from apps.participation.services.dashboard import TeamDashBoard
 from apps.participation.services.leave_team import LeaveTeam
 from apps.participation.services.send_invitation import SendInvitation
 from . import models as participation_models
@@ -101,12 +100,16 @@ class CreateTeamAPIView(GenericAPIView):
 
 class TeamDetailAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = participation_serializers.TeamSerializer
 
     def get(self, request):
-        participant = get_object_or_404(Participant, user=request.user)
-        team = participant.team
-        if team is None:
-            return Response(data={'errors': json.dumps([_('Sorry! You are not participated in any team')])},
-                            status=status.HTTP_406_NOT_ACCEPTABLE)
-        data = TeamDashBoard(team)()
-        return Response(data={'team_info': json.dumps(data)}, status=status.HTTP_200_OK)
+        team_name = request.GET.get('name', '')
+        if team_name:
+            team = get_object_or_404(Team, team_name)
+        elif request.user.participant:
+            team = request.user.participant.team
+        else:
+            return Response(data={'errors': ['Sorry! you dont have a team']})
+
+        data = self.get_serializer(team).data
+        return Response(data={'team': data}, status=status.HTTP_200_OK)
