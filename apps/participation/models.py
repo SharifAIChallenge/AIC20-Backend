@@ -35,7 +35,7 @@ class Team(models.Model):
     def get_team_image_directory(self, filename):
         return os.path.join(self.name, 'image', filename)
 
-    image = models.ImageField(upload_to=get_team_image_directory, null=True, )
+    image = models.ImageField(upload_to=get_team_image_directory, null=True)
 
     @property
     def is_valid(self):
