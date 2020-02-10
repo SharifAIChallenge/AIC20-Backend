@@ -43,9 +43,14 @@ class TeamPostSerializer(serializers.ModelSerializer):
 
 
 class InvitationSerializer(serializers.ModelSerializer):
-    target = accounts_serializers.UserSerializer()
-    source = accounts_serializers.UserSerializer()
+    target = UserSerializer()
+    source = UserSerializer()
+    team_name = serializers.SerializerMethodField('_team_name', read_only=True)
+
+    @staticmethod
+    def _team_name(invitation: Invitation):
+        return invitation.source.participant.team.name
 
     class Meta:
         model = Invitation
-        fields = ['target', 'source']
+        fields = ['target', 'source', 'team_name']

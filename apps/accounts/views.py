@@ -72,6 +72,45 @@ class SignUpView(GenericAPIView):
             return Response({'error': _('Error occurred during User creation')}, status=500)
 
 
+class ResendActivationEmailAPIView(GenericAPIView):
+    serializer_class = EmailSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+
+            activate_user_token = ActivateUserToken(
+                token=secrets.token_urlsafe(32),
+                eid=urlsafe_base64_encode(force_bytes(serializer.validated_data['email'])),
+            )
+            activate_user_token.save()
+            user = get_object_or_404(User, email=serializer.validated_data['email'])
+
+            context = {
+                'domain': 'aichallenge.sharif.edu',
+                'eid': activate_user_token.eid,
+                'token': activate_user_token.token,
+                'first_name': user.profile.firstname_en
+            }
+            email_html_message = render_to_string('accounts/email/user_activate_email.html', context)
+            email_plaintext_message = render_to_string('accounts/email/user_activate_email.txt', context)
+            msg = EmailMultiAlternatives(
+                _("Activate Account for {title}".format(title="AI Challenge")),
+                email_plaintext_message,
+                "AIC-2020",
+                [serializer.validated_data['email']]
+            )
+            msg.attach_alternative(email_html_message, "text/html")
+            try:
+                msg.send()
+            except Exception as e:
+                return Response({'detail': _('Invalid email or user has not been saved.'), 'email_error': str(e)},
+                                status=406)
+
+            return Response({'detail': _('Email sent successfully. Check your email for confirmation link')},
+                            status=200)
+
+
 class ActivateView(GenericAPIView):
 
     def get(self, request, eid, token):
@@ -84,6 +123,7 @@ class ActivateView(GenericAPIView):
         except User.DoesNotExist:
             return Response(data={'errors': ['Activation Failed']}, status=status.HTTP_404_NOT_FOUND)
         user.is_active = True
+        activate_user_token.delete()
         user.save()
 
         return Response(data={'detail': _('Account Activated')}, status=status.HTTP_200_OK)
@@ -101,7 +141,7 @@ class LogoutView(GenericAPIView):
 
 
 class ResetPasswordView(GenericAPIView):
-    serializer_class = ResetPasswordSerializer
+    serializer_class = EmailSerializer
 
     def post(self, request):
         data = self.get_serializer(request.data).data

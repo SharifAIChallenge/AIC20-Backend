@@ -70,7 +70,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         return data
 
 
-class ResetPasswordSerializer(serializers.Serializer):
+class EmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
 
