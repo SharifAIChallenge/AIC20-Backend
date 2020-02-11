@@ -160,3 +160,7 @@ REST_FRAMEWORK = {
 }
 
 from .martor import *
+
+ENABLE_SUBMISSION = True
+
+TEAM_SUBMISSION_TIME_DELTA = 5

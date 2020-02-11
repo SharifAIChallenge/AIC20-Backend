@@ -31,6 +31,7 @@ class Team(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     badges = models.ManyToManyField('participation.Badge', related_name='teams', null=True, blank=True)
+    challenge = models.ForeignKey('challenge.Challenge', related_name='teams', on_delete=models.DO_NOTHING)
 
     def get_team_image_directory(self, filename):
         return os.path.join(self.name, 'image', filename)
