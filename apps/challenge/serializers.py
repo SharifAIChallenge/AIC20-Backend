@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
@@ -106,7 +107,19 @@ class SubmissionSerializer(ModelSerializer):
 class SubmissionPostSerializer(ModelSerializer):
     class Meta:
         model = challenge_models.Submission
-        fields = ['team', 'user', 'language', 'file']
+        fields = ['language', 'file']
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        if not settings.ENABLE_SUBMISSION:
+            raise serializers.ValidationError('Submission is closes')
+        if not hasattr(user, 'participant'):
+            raise serializers.ValidationError('You cant submit, because you dont have a team')
+        attrs['user'] = user
+        attrs['team'] = user.participant.team
+        if attrs['file'].size > challenge_models.Submission.FILE_SIZE_LIMIT:
+            raise serializers.ValidationError('File size limit exceeded')
+        return attrs
 
 
 class MapSerializer(ModelSerializer):

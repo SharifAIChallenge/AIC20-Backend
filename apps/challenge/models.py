@@ -139,6 +139,8 @@ def get_submission_file_directory(instance, filename):
 
 
 class Submission(models.Model):
+    FILE_SIZE_LIMIT = 20 * 1024 * 1024
+
     team = models.ForeignKey('participation.Team', related_name='submissions', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
     language = models.CharField(max_length=50, choices=SubmissionLanguagesTypes.TYPES,

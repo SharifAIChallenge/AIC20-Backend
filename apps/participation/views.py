@@ -106,7 +106,7 @@ class TeamDetailAPIView(GenericAPIView):
     def get(self, request):
         team_name = request.GET.get('name', '')
         if team_name:
-            team = get_object_or_404(Team, team_name)
+            team = get_object_or_404(Team, name=team_name)
         elif hasattr(request.user, 'participant'):
             team = request.user.participant.team
         else:

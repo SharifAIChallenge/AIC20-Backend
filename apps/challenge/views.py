@@ -94,7 +94,7 @@ class SubmissionSubmitAPIView(GenericAPIView):
     parser_classes = (parsers.MultiPartParser,)
 
     def post(self, request):
-        submission = self.get_serializer(data=request.data)
+        submission = self.get_serializer(data=request.data, context={'request': request})
         if submission.is_valid(raise_exception=True):
             submission = submission.save()
             return Response(
