@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from apps.accounts.serializer import ProfileSerializer
-from apps.challenge.models import Challenge
+from apps.challenge.models import Challenge, ChallengeTypes
 from .models import Badge, Team, Participant, Invitation
 from ..accounts import serializer as accounts_serializers
 
@@ -53,7 +53,10 @@ class TeamPostSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         image = attrs.get('image')
-
+        try:
+            attrs['challenge'] = Challenge.objects.get(type=ChallengeTypes.PRIMARY)
+        except (Challenge.DoesNotExist, Challenge.MultipleObjectsReturned) as e:
+            raise serializers.ValidationError(str(e))
         if image and image.size > Team.IMAGE_MAX_SIZE:
             raise serializers.ValidationError('Maximum file size reached')
         return attrs
