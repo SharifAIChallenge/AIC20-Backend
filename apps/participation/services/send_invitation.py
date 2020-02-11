@@ -62,6 +62,11 @@ class SendInvitation:
             self.valid = False
             self.errors.append(_('Your team is full!'))
 
+    def _validate_invited_before(self):
+        if Invitation.objects.filter(source=self.request.user, target=self.user).exists():
+            self.valid = False
+            self.errors.append(_('Invited before'))
+
     def _invite(self):
         invitation = Invitation.objects.create(source=self.request.user, target=self.user)
         self.invitation_serializer = InvitationSerializer(invitation)
