@@ -53,6 +53,8 @@ class AnswerInvitation:
     def _validate_team_size(self):
         if self.invitation.source.participant.team.participants.count() >= Team.TEAM_MAX_SIZE:
             self.valid = False
+            self.invitation.status = InvitationStatusTypes.REJECTED
+            self.invitation.save()
             self.errors.append(_("Team is already full."))
 
     def _answer_invitation(self):
