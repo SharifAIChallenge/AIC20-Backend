@@ -30,6 +30,8 @@ class SendInvitation:
         if self.valid:
             self._validate_team_filled()
         if self.valid:
+            self._validate_invited_before()
+        if self.valid:
             self._invite()
         return self.invitation_serializer, self.errors
 
