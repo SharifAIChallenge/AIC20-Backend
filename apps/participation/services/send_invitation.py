@@ -4,7 +4,7 @@ from typing import Union
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from apps.participation.models import Invitation, Team
+from apps.participation.models import Invitation, Team, InvitationStatusTypes
 from apps.participation.serializers import InvitationSerializer
 
 
@@ -29,6 +29,8 @@ class SendInvitation:
             self._validate_target_has_team()
         if self.valid:
             self._validate_team_filled()
+        if self.valid:
+            self._validate_invited_before()
         if self.valid:
             self._invite()
         return self.invitation_serializer, self.errors
@@ -63,7 +65,8 @@ class SendInvitation:
             self.errors.append(_('Your team is full!'))
 
     def _validate_invited_before(self):
-        if Invitation.objects.filter(source=self.request.user, target=self.user).exists():
+        if Invitation.objects.filter(source=self.request.user, target=self.user,
+                                     status=InvitationStatusTypes.NOT_ANSWERED).exists():
             self.valid = False
             self.errors.append(_('Invited before'))
 
