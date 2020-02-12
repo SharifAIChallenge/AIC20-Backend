@@ -1,7 +1,11 @@
+from datetime import datetime, timedelta
+
 from django.conf import settings
+from django.utils.timezone import utc
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
+from apps.challenge.models import Tournament
 from . import models as challenge_models
 from ..participation import serializers as participation_serializers
 
@@ -119,7 +123,19 @@ class SubmissionPostSerializer(ModelSerializer):
         attrs['team'] = user.participant.team
         if attrs['file'].size > challenge_models.Submission.FILE_SIZE_LIMIT:
             raise serializers.ValidationError('File size limit exceeded')
+        submissions = attrs['team'].submissions
+
+        if submissions.exists() and datetime.now(utc) - submissions.order_by('-submit_time')[0].time < timedelta(
+                minutes=settings.TEAM_SUBMISSION_TIME_DELTA):
+            raise serializers.ValidationError(
+                f"You have to wait at least {settings.TEAM_SUBMISSION_TIME_DELTA}s minutes between each submission!")
+
         return attrs
+
+    def save(self, **kwargs):
+        instance = super().save(**kwargs)
+        instance.handle()
+        return instance
 
 
 class MapSerializer(ModelSerializer):

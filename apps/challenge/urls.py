@@ -14,4 +14,5 @@ urlpatterns = [
          name='submit_submission_information'),
     path('submission/submissions/<int:team_id>', views.SubmissionsListAPIView.as_view(), name='team_submissions_list'),
     path('game/<int:game_id>', views.GameDetailAPIView.as_view()),
+    # path('report', )
 ]
