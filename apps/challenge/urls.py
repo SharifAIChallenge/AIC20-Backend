@@ -5,7 +5,6 @@ from . import views
 app_name = 'challenge'
 
 urlpatterns = [
-    path('stats', views.StatsAPIView.as_view(), name='challenge_stats'),
     path('challenges/', views.ChallengesListAPIView.as_view(), name='challenges_list'),
     path('challenges/<int:challenge_id>', views.ChallengeDetailAPIView.as_view(), name='challenge_detail'),
     path('challenges/<int:challenge_id>/tournaments', views.TournamentsListAPIView.as_view(), name='tournaments_list'),
