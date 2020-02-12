@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from decouple import config
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Quick-start development settings - unsuitable for production
@@ -164,3 +166,7 @@ from .martor import *
 ENABLE_SUBMISSION = True
 
 TEAM_SUBMISSION_TIME_DELTA = 5
+
+INFRA_IP = config("INFRA_IP")
+INFRA_AUTH_TOKEN = config("INFRA_AUTH_TOKEN")
+INFRA_API_SCHEMA_ADDRESS = config("INFRA_API_SCHEMA_ADDRESS")

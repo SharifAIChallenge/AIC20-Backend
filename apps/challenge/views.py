@@ -125,3 +125,5 @@ class MapDetailAPIView(GenericAPIView):
 
     def get(self, request):
         pass
+
+
