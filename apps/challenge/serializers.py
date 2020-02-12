@@ -125,7 +125,7 @@ class SubmissionPostSerializer(ModelSerializer):
             raise serializers.ValidationError('File size limit exceeded')
         submissions = attrs['team'].submissions
 
-        if submissions.exists() and datetime.now(utc) - submissions.order_by('-submit_time')[0].time < timedelta(
+        if submissions.exists() and datetime.now(utc) - submissions.order_by('-submit_time')[0].submit_time < timedelta(
                 minutes=settings.TEAM_SUBMISSION_TIME_DELTA):
             raise serializers.ValidationError(
                 f"You have to wait at least {settings.TEAM_SUBMISSION_TIME_DELTA}s minutes between each submission!")
