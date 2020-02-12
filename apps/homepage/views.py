@@ -2,6 +2,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 
+from apps.accounts.models import Profile
+from apps.participation.models import Team
 from .models import Intro, TimelineEvent, Prize, Stat, Sponsor, WhyThisEvent, Quote
 from .serializers import *
 
@@ -17,7 +19,9 @@ class HomepageView(GenericAPIView):
             'stats': StatSerializer(Stat.objects.all(), many=True).data,
             'sponsors': SponsorSerializer(Sponsor.objects.all(), many=True).data,
             'why': WhyThisEventSerializer(WhyThisEvent.objects.all(), many=True).data,
-            'quotes': QuoteSerializer(Quote.objects.all(), many=True).data
+            'quotes': QuoteSerializer(Quote.objects.all(), many=True).data,
+            'teams': Team.objects.count(),
+            'registers': Profile.objects.count(),
         }
         return Response(data)
 
