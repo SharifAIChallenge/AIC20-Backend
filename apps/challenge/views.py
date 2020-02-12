@@ -4,7 +4,10 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import parsers
 from django.utils.translation import ugettext_lazy as _
+
+from apps.accounts.models import Profile
 from apps.challenge.models import SubmissionStatusTypes
+from apps.participation.models import Team
 from . import models as challenge_models
 from . import serializers as challenge_serializers
 
@@ -125,3 +128,12 @@ class MapDetailAPIView(GenericAPIView):
 
     def get(self, request):
         pass
+
+
+class StatsAPIView(GenericAPIView):
+
+    def get(self, request):
+        return Response(data={'stats': {
+            'teams': Team.objects.count(),
+            'registers': Profile.objects.count(),
+        }}, status=status.HTTP_200_OK)

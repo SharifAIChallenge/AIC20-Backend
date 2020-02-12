@@ -123,6 +123,8 @@ class SubmissionPostSerializer(ModelSerializer):
         attrs['team'] = user.participant.team
         if attrs['file'].size > challenge_models.Submission.FILE_SIZE_LIMIT:
             raise serializers.ValidationError('File size limit exceeded')
+        if not attrs['team'].is_valid:
+            raise serializers.ValidationError('Please complete your team first')
         submissions = attrs['team'].submissions
 
         if submissions.exists() and datetime.now(utc) - submissions.order_by('-submit_time')[0].submit_time < timedelta(

@@ -1,5 +1,6 @@
 import random
 import string
+import requests
 
 import coreapi
 from django.conf import settings
@@ -11,7 +12,8 @@ def random_token():
 
 
 def create_infra_client():
-    credentials = {settings.INFRA_IP: 'Token {}'.format(settings.INFRA_AUTH_TOKEN)}
+    credentials = {'Authorization': 'Token {}'.format(settings.INFRA_AUTH_TOKEN)}
+    print(credentials)
     transports = [coreapi.transports.HTTPTransport(credentials=credentials)]
     client = coreapi.Client(transports=transports)
     schema = client.get(settings.INFRA_API_SCHEMA_ADDRESS)
@@ -24,11 +26,12 @@ def upload_file(file):
     :param file: File field from TeamSubmission model
     :return: file token or raises error with error message
     """
-    client, schema = create_infra_client()
-    response = client.action(schema,
-                             ['storage', 'new_file', 'update'],
-                             params={'file': file})
-    return response['token']
+
+    response = requests.put(settings.INFRA_IP + "/api/storage/new_file/", files={'file': file},
+                            headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
+    print(response.json(), "Upload =========")
+
+    return response.json()['token']
 
 
 def download_file(file_token):
@@ -48,9 +51,9 @@ def compile_submissions(submissions):
         Tell the infrastructure to compile a list of submissions
     :return: list of dictionaries each have token, success[, errors] keys
     """
-    requests = list()
+    parameters = list()
     for submission in submissions:
-        requests.append({
+        parameters.append({
             "game": submission.team.challenge.game.infra_token,
             "operation": "compile",
             "parameters": {
@@ -60,16 +63,19 @@ def compile_submissions(submissions):
         })
 
     # Send request to infrastructure to compile them
+    #
+    # client, schema = create_infra_client()
+    #
+    # compile_details = client.action(schema,
+    #                                 ['run', 'run', 'create'],
+    #                                 params={
+    #                                     'data': parameters
+    #                                 })
 
-    client, schema = create_infra_client()
-
-    compile_details = client.action(schema,
-                                    ['run', 'run', 'create'],
-                                    params={
-                                        'data': requests
-                                    })
-    print(compile_details)
-    return compile_details
+    response = requests.post(settings.INFRA_IP + "/api/run/run/", data={'data': parameters},
+                             headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
+    print(response.json(), "<===================")
+    return response.json()
 
 
 def run_matches(single_matches):
