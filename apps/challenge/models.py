@@ -169,14 +169,8 @@ class Submission(models.Model):
         self.save()
 
     def handle(self):
-        if settings.TESTING:
-            try:
-                self.upload()
-                self.compile()
-            except Exception as error:
-                logger.error(error)
-        else:
-            handle_submission.delay(self.id)
+        handle_submission(self.id)
+        # handle_submission.delay(self.id)
 
     def upload(self):
         from . import functions
