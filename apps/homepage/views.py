@@ -20,6 +20,7 @@ class HomepageView(GenericAPIView):
             'sponsors': SponsorSerializer(Sponsor.objects.all(), many=True).data,
             'why': WhyThisEventSerializer(WhyThisEvent.objects.all(), many=True).data,
             'quotes': QuoteSerializer(Quote.objects.all(), many=True).data,
+            
             'teams': Team.objects.count(),
             'registers': Profile.objects.count(),
         }

@@ -54,7 +54,7 @@ def compile_submissions(submissions):
     parameters = list()
     for submission in submissions:
         parameters.append({
-            "game": submission.team.challenge.game.infra_token,
+            "game": 'AI2020',
             "operation": "compile",
             "parameters": {
                 "language": submission.language,
@@ -73,8 +73,9 @@ def compile_submissions(submissions):
     #                                 })
 
     response = requests.post(settings.INFRA_IP + "/api/run/run/", data={'data': parameters},
-                             headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
-    print(response.json(), "<===================")
+                             headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}',
+                                      'content-type': 'application/json'})
+    print(response.json(), response.text, response.status_code, "<===================")
     return response.json()
 
 

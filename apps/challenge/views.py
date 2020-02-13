@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework import parsers
 from django.utils.translation import ugettext_lazy as _
 
-
 from . import models as challenge_models
 from . import serializers as challenge_serializers
 
@@ -107,8 +106,11 @@ class SubmissionsListAPIView(GenericAPIView):
     queryset = challenge_models.Submission.objects.all()
     serializer_class = challenge_serializers.SubmissionSerializer
 
-    def get(self, request, team_id):
-        data = self.get_serializer(self.get_queryset().filter(team_id=team_id), many=True).data
+    def get(self, request):
+        if not hasattr(request.user, 'participant'):
+            return Response(data={'errors': ['Sorry! you dont have a team']})
+        data = self.get_serializer(self.get_queryset().filter(team=request.user.participant.team),
+                                   many=True).data
         return Response(data={'submissions': data}, status=status.HTTP_200_OK)
 
 
