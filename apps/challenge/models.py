@@ -162,8 +162,8 @@ class Submission(models.Model):
             Use this method instead of changing the is_final attribute directly
             This makes sure that only one instance of TeamSubmission has is_final flag set to True
         """
-        # if self.status != 'compiled':
-        #     raise ValueError(_('This submission is not compiled yet.'))
+        if self.status != 'compiled':
+            raise ValueError(_('This submission is not compiled yet.'))
         Submission.objects.filter(is_final=True, team=self.team).update(is_final=False)
         self.is_final = True
         self.save()
