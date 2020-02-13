@@ -29,7 +29,7 @@ def upload_file(file):
 
     response = requests.put(settings.INFRA_IP + "/api/storage/new_file/", files={'file': file},
                             headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
-    print(response.json(), "Upload =========")
+    print(response.status_code, response.json(), "==== Upload File ====")
 
     return response.json()['token']
 
@@ -40,10 +40,9 @@ def download_file(file_token):
     :param file_token: the file token obtained already from infra.
     :return: sth that TeamSubmission file field can be assigned to
     """
-    client, schema = create_infra_client()
-    return client.action(schema,
-                         ['storage', 'get_file', 'read'],
-                         params={'token': file_token})
+    response = requests.get(settings.INFRA_IP + f"/api/storage/get_file/{file_token}/", allow_redirects=True)
+    print(response.status_code, response.content, "==== Download File ====")
+    return response
 
 
 def compile_submissions(submissions):
@@ -61,21 +60,10 @@ def compile_submissions(submissions):
                 "code_zip": submission.infra_token
             }
         })
-
-    # Send request to infrastructure to compile them
-    #
-    # client, schema = create_infra_client()
-    #
-    # compile_details = client.action(schema,
-    #                                 ['run', 'run', 'create'],
-    #                                 params={
-    #                                     'data': parameters
-    #                                 })
-
-    response = requests.post(settings.INFRA_IP + "/api/run/run/", data={'data': parameters},
+    response = requests.post(settings.INFRA_IP + "/api/run/run/", json=parameters,
                              headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}',
-                                      'content-type': 'application/json'})
-    print(response.json(), response.text, response.status_code, "<===================")
+                                      'Content-Type': 'application/json'})
+    print(response.status_code, response.json(), "==== Compile File ====")
     return response.json()
 
 
