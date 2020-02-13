@@ -10,9 +10,11 @@ urlpatterns = [
     path('challenges/<int:challenge_id>/tournaments', views.TournamentsListAPIView.as_view(), name='tournaments_list'),
     path('challenges/<int:challenge_id>/tournaments/<int:tournament_id>', views.TournamentDetailAPIView.as_view(),
          name='tournament_detail'),
-    path('submission/submit/information', views.SubmissionSubmitAPIView.as_view(),
-         name='submit_submission_information'),
-    path('submission/submissions/<int:team_id>', views.SubmissionsListAPIView.as_view(), name='team_submissions_list'),
+    path('submission/submit', views.SubmissionSubmitAPIView.as_view(),
+         name='submit_submission'),
+    path('submission/submissions', views.SubmissionsListAPIView.as_view(), name='team_submissions_list'),
+    path('submission/change_final/<int:submission_id>', views.ChangeFinalSubmissionAPIView.as_view(),
+         name='change_final_submission'),
     path('game/<int:game_id>', views.GameDetailAPIView.as_view()),
-    # path('report', )
+    path('report', views.report, 'report')
 ]
