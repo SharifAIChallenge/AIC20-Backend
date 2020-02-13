@@ -147,7 +147,7 @@ class Submission(models.Model):
                                 default=SubmissionLanguagesTypes.JAVA)
     file = models.FileField(upload_to=get_submission_file_directory)
     submit_time = models.DateTimeField(auto_now_add=True)
-    is_final = models.BooleanField(default=True)
+    is_final = models.BooleanField(default=False)
     status = models.CharField(max_length=50, choices=SubmissionStatusTypes.TYPES,
                               default=SubmissionStatusTypes.UPLOADING)
     infra_compile_message = models.CharField(max_length=1023, null=True, blank=True)
@@ -162,8 +162,8 @@ class Submission(models.Model):
             Use this method instead of changing the is_final attribute directly
             This makes sure that only one instance of TeamSubmission has is_final flag set to True
         """
-        if self.status != 'compiled':
-            raise ValueError(_('This submission is not compiled yet.'))
+        # if self.status != 'compiled':
+        #     raise ValueError(_('This submission is not compiled yet.'))
         Submission.objects.filter(is_final=True, team=self.team).update(is_final=False)
         self.is_final = True
         self.save()
