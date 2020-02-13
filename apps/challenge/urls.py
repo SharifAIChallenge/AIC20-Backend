@@ -16,5 +16,4 @@ urlpatterns = [
     path('submission/change_final/<int:submission_id>', views.ChangeFinalSubmissionAPIView.as_view(),
          name='change_final_submission'),
     path('game/<int:game_id>', views.GameDetailAPIView.as_view()),
-    path('report', views.report, 'report')
 ]

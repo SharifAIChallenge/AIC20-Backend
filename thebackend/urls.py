@@ -20,6 +20,8 @@ from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
 
+from apps.challenge import views as challenge_views
+
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/', include('apps.homepage.urls')),
@@ -34,6 +36,8 @@ urlpatterns = [
     path('api/challenge/', include('apps.challenge.urls')),
     path('api/faq/', include('apps.faq.urls')),
     path('api/staff/', include('apps.staff.urls')),
+    path('game/api/report', challenge_views.report, 'report')
+
 ]
 
 if settings.DEBUG:
