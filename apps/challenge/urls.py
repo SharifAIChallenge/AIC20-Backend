@@ -13,6 +13,7 @@ urlpatterns = [
     path('submission/submit', views.SubmissionSubmitAPIView.as_view(),
          name='submit_submission'),
     path('submission/submissions', views.SubmissionsListAPIView.as_view(), name='team_submissions_list'),
-    path('submission/change_final', views.SubmissionSubmitAPIView.as_view(), name='change_final_submission'),
+    path('submission/change_final/<int:submission_id>', views.ChangeFinalSubmissionAPIView.as_view(),
+         name='change_final_submission'),
     path('game/<int:game_id>', views.GameDetailAPIView.as_view()),
 ]

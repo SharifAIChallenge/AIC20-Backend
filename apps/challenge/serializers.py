@@ -5,7 +5,7 @@ from django.utils.timezone import utc
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from apps.challenge.models import Tournament
+from apps.challenge.models import Tournament, SubmissionStatusTypes
 from . import models as challenge_models
 from ..participation import serializers as participation_serializers
 
@@ -105,7 +105,7 @@ class SubmissionSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Submission
-        fields = ['language', 'is_final', 'submit_time', 'team', 'user', 'file', 'status']
+        fields = ['id', 'language', 'is_final', 'submit_time', 'team', 'user', 'file', 'status']
 
 
 class SubmissionPostSerializer(ModelSerializer):
@@ -123,14 +123,14 @@ class SubmissionPostSerializer(ModelSerializer):
         attrs['team'] = user.participant.team
         if attrs['file'].size > challenge_models.Submission.FILE_SIZE_LIMIT:
             raise serializers.ValidationError('File size limit exceeded')
-        # if not attrs['team'].is_valid:
-        #     raise serializers.ValidationError('Please complete your team first')
+        if not attrs['team'].is_valid:
+            raise serializers.ValidationError('Please complete your team first')
         submissions = attrs['team'].submissions
 
-        # if submissions.exists() and datetime.now(utc) - submissions.order_by('-submit_time')[0].submit_time < timedelta(
-        #         minutes=settings.TEAM_SUBMISSION_TIME_DELTA):
-        #     raise serializers.ValidationError(
-        #         f"You have to wait at least {settings.TEAM_SUBMISSION_TIME_DELTA} minute between each submission!")
+        if submissions.exists() and datetime.now(utc) - submissions.order_by('-submit_time')[0].submit_time < timedelta(
+                minutes=settings.TEAM_SUBMISSION_TIME_DELTA):
+            raise serializers.ValidationError(
+                f"You have to wait at least {settings.TEAM_SUBMISSION_TIME_DELTA} minute between each submission!")
 
         return attrs
 

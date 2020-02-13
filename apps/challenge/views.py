@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import parsers
 from django.utils.translation import ugettext_lazy as _
 
+from apps.challenge.models import Submission
 from . import models as challenge_models
 from . import serializers as challenge_serializers
 
@@ -98,7 +99,8 @@ class SubmissionSubmitAPIView(GenericAPIView):
         if submission.is_valid(raise_exception=True):
             submission = submission.save()
             return Response(
-                data={'details': _('Submission information successfully submitted'), 'submission_id': submission.id})
+                data={'details': _('Submission information successfully submitted'), 'submission_id': submission.id},
+                status=status.HTTP_200_OK)
         return Response(data={'errors': [_('Something Went Wrong')]}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
@@ -108,10 +110,21 @@ class SubmissionsListAPIView(GenericAPIView):
 
     def get(self, request):
         if not hasattr(request.user, 'participant'):
-            return Response(data={'errors': ['Sorry! you dont have a team']})
+            return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
         data = self.get_serializer(self.get_queryset().filter(team=request.user.participant.team),
                                    many=True).data
         return Response(data={'submissions': data}, status=status.HTTP_200_OK)
+
+
+class ChangeFinalSubmissionAPIView(GenericAPIView):
+
+    def put(self, request, submission_id):
+        submission = get_object_or_404(Submission, id=submission_id)
+        try:
+            submission.set_final()
+            return Response(data={'details': 'Final submission changed successfully'}, status=status.HTTP_200_OK)
+        except ValueError as e:
+            return Response(data={'errors': [str(e)]}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 class MapsListAPIView(GenericAPIView):

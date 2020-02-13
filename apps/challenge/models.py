@@ -175,14 +175,14 @@ class Submission(models.Model):
     def upload(self):
         from . import functions
         self.infra_token = functions.upload_file(self.file)
-        self.status = 'uploaded'
+        self.status = SubmissionStatusTypes.UPLOADED
         self.save()
 
     def compile(self):
         from . import functions
         result = functions.compile_submissions([self])
         if result[0]['success']:
-            self.status = 'compiling'
+            self.status = SubmissionStatusTypes.COMPILING
             self.infra_compile_token = result[0]['run_id']
         else:
             logger.error(result[0][self.infra_token]['errors'])
