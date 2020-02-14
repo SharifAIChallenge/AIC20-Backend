@@ -67,42 +67,35 @@ def compile_submissions(submissions):
     return response.json()
 
 
-def run_matches(games):
+def run_games(single_games):
     """
         Tell the infrastructure to run a list of single_matches (single_match includes tokens,maps,...)
-    :param games:
+    :param single_games:
     :return: Returns the list of tokens and success status and errors assigned to the matches
     """
 
     games = []
-    for game in games:
+    for single_game in single_games:
         games.append({
             "game": 'AI2020',
             "operation": "run",
             "parameters": {
-                "server_game_config": game.get_map(),
-                "client1_id": game.match.part1.submission.id,
+                "server_game_config": single_game.get_map(),
+                "client1_id": single_game.match.part1.submission.id,
                 "client1_token": random_token(),
-                "client1_code": game.get_first_file(),
-                "client1_name": game.match.part1.submission.team.team.id,
-                "client2_id": game.match.part2.submission.id,
+                "client1_code": single_game.get_first_file(),
+                "client1_name": single_game.match.part1.submission.team.team.id,
+                "client2_id": single_game.match.part2.submission.id,
                 "client2_token": random_token(),
-                "client2_code": game.get_second_file(),
-                "client2_name": game.match.part2.submission.team.team.id,
-                "map_name": game.map.name
+                "client2_code": single_game.get_second_file(),
+                "client2_name": single_game.match.part2.submission.team.team.id,
+                "map_name": single_game.map.name
             }
         })
 
-    # Send request to infrastructure to compile them
+    response = requests.post(settings.INFRA_IP + "/api/run/run/", json=games,
+                             headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}',
+                                      'Content-Type': 'application/json'})
+    print(response.status_code, response.json(), "==== Run Single Games ====")
 
-    client, schema = create_infra_client()
-
-    match_details = client.action(schema,
-                                  ['run', 'run', 'create'],
-                                  params={
-                                      'data': games
-                                  })
-
-    requests.post()
-
-    return match_details
+    return response.json()

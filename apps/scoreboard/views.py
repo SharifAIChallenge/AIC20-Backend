@@ -10,6 +10,7 @@ from .serializers import ScoreBoardSerializer
 
 class ChallengeScoreBoardAPIView(GenericAPIView):
     serializer_class = ScoreBoardSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         challenge = get_object_or_404(Challenge, type=ChallengeTypes.PRIMARY)
@@ -19,6 +20,7 @@ class ChallengeScoreBoardAPIView(GenericAPIView):
 
 class GroupScoreBoardAPIView(GenericAPIView):
     serializer_class = ScoreBoardSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, group_id):
         group = get_object_or_404(Group, id=group_id)
