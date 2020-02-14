@@ -42,6 +42,9 @@ class Team(models.Model):
     def is_valid(self):
         return True if self.participants.count() >= 2 else False
 
+    def __str__(self):
+        return self.name
+
 
 class Participant(models.Model):
     user = models.OneToOneField(User, related_name='participant', on_delete=models.CASCADE)

@@ -67,29 +67,29 @@ def compile_submissions(submissions):
     return response.json()
 
 
-def run_matches(single_matches):
+def run_matches(games):
     """
         Tell the infrastructure to run a list of single_matches (single_match includes tokens,maps,...)
-    :param single_matches:
+    :param games:
     :return: Returns the list of tokens and success status and errors assigned to the matches
     """
 
     games = []
-    for single_match in single_matches:
+    for game in games:
         games.append({
-            "game": single_match.get_game_id(),
+            "game": 'AI2020',
             "operation": "run",
             "parameters": {
-                "server_game_config": single_match.get_map(),
-                "client1_id": single_match.match.part1.submission.id,
+                "server_game_config": game.get_map(),
+                "client1_id": game.match.part1.submission.id,
                 "client1_token": random_token(),
-                "client1_code": single_match.get_first_file(),
-                "client1_name": single_match.match.part1.submission.team.team.id,
-                "client2_id": single_match.match.part2.submission.id,
+                "client1_code": game.get_first_file(),
+                "client1_name": game.match.part1.submission.team.team.id,
+                "client2_id": game.match.part2.submission.id,
                 "client2_token": random_token(),
-                "client2_code": single_match.get_second_file(),
-                "client2_name": single_match.match.part2.submission.team.team.id,
-                "map_name": single_match.map.name
+                "client2_code": game.get_second_file(),
+                "client2_name": game.match.part2.submission.team.team.id,
+                "map_name": game.map.name
             }
         })
 
@@ -102,5 +102,7 @@ def run_matches(single_matches):
                                   params={
                                       'data': games
                                   })
+
+    requests.post()
 
     return match_details

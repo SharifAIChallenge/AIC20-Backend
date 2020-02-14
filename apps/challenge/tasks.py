@@ -4,8 +4,6 @@ from random import random
 
 from thebackend.celery import app
 
-# from .models import MatchTypes, Match
-
 logger = logging.getLogger(__name__)
 
 
@@ -20,3 +18,10 @@ def handle_submission(submission_id):
 
     except Exception as error:
         logger.error(error)
+
+
+@app.task(name='hourly_tournament')
+def hourly_tournament():
+    from .services.tournament_creator import TournamentCreator
+
+    pass
