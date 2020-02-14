@@ -5,15 +5,8 @@ from django.utils.timezone import utc
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from apps.challenge.models import Tournament, SubmissionStatusTypes
 from . import models as challenge_models
 from ..participation import serializers as participation_serializers
-
-
-class InfoSerializer(ModelSerializer):
-    class Meta:
-        model = challenge_models.Info
-        fields = ['status', 'detail']
 
 
 class GameTeamSerializer(ModelSerializer):
@@ -21,7 +14,7 @@ class GameTeamSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.GameTeam
-        fields = ['game_side_id', 'team']
+        fields = ['game_sid', 'team', 'log', 'score']
 
 
 class GameSideSerializer(ModelSerializer):
@@ -33,12 +26,11 @@ class GameSideSerializer(ModelSerializer):
 
 
 class GameSerializer(ModelSerializer):
-    info = InfoSerializer(read_only=True, allow_null=True)
     game_sides = GameSideSerializer(many=True, read_only=True)
 
     class Meta:
         model = challenge_models.Game
-        fields = ['match_id', 'info', 'game_sides']
+        fields = ['match', 'infra_game_message', 'game_sides', 'status', 'time', 'log']
 
 
 class MatchTeamSerializer(ModelSerializer):
@@ -62,7 +54,7 @@ class TeamGroupSerializer(ModelSerializer):
     team = participation_serializers.TeamSerializer(read_only=True)
 
     class Meta:
-        model = challenge_models.TeamGroup
+        model = challenge_models.GroupTeam
         fields = ['group_id', 'team']
 
 
