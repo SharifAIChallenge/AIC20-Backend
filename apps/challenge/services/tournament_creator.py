@@ -1,11 +1,9 @@
 from random import random
 
 from django.utils import timezone
-
-from apps.challenge.tasks import create_game_side
 from apps.scoreboard.models import ChallengeScoreBoard
 from ..models import Challenge, Tournament, TournamentTypes, Stage, Group, GroupTeam, Match, MatchTeam, MatchTypes, \
-    Info, Game, GameSide, GameTeam
+    Game, GameSide, GameTeam
 
 
 class TournamentCreator:
@@ -76,9 +74,8 @@ class TournamentCreator:
     def create_games(self, match):
         permutations_of_match = self.permutations_for_single_match(match.match_teams.values_list('team', flat=True))
         for permutation in permutations_of_match:
-            info = Info.objects.create(status="pending", detail="")
-            game = Game(match=match, info=info)
-            create_game_side(game, permutation)
+            game = Game(match=match)
+            self.create_game_side(game, permutation)
             game.save()
 
     def create_game_side(self, game, permutation):

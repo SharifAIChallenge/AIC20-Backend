@@ -6,7 +6,9 @@ from polymorphic.models import PolymorphicModel
 class Row(models.Model):
     team = models.ForeignKey('participation.Participant', related_name='rows', on_delete=models.CASCADE)
     scoreboard = models.ForeignKey('scoreboard.ScoreBoard', related_name='rows', on_delete=models.CASCADE)
-    score = models.FloatField(default=1000.0)
+    score = models.IntegerField(default=1000)
+    wins = models.IntegerField(default=0)
+    loss = models.IntegerField(default=0)
 
 
 class ScoreBoard(PolymorphicModel):
@@ -15,6 +17,10 @@ class ScoreBoard(PolymorphicModel):
 
 class ChallengeScoreBoard(ScoreBoard):
     challenge = models.OneToOneField('challenge.Challenge', related_name='scoreboard', on_delete=models.CASCADE)
+
+    @staticmethod
+    def get_scoreboard(challenge):
+        return ChallengeScoreBoard.objects.get(challenge=challenge).rows.all().order_by('-score')
 
 
 class GroupScoreBoard(ScoreBoard):

@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 
 from polymorphic.models import PolymorphicModel
 
+from apps.scoreboard.models import ChallengeScoreBoard
 from .tasks import handle_submission
 
 logger = logging.getLogger(__name__)
@@ -98,12 +99,20 @@ class Challenge(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
+    def pre_save(self):
+        ChallengeScoreBoard.objects.create(challenge=self)
+
+    def save(self, *args, **kwargs):
+        self.pre_save()
+        super().save(*args, **kwargs)
+
 
 class Tournament(PolymorphicModel):
     challenge = models.ForeignKey('challenge.Challenge', related_name='tournaments', on_delete=models.CASCADE)
     type = models.CharField(max_length=20, choices=TournamentTypes.TYPES)
-    start_time = models.DateTimeField()
-    submit_deadline = models.DateTimeField()
+    start_time = models.DateTimeField(auto_now_add=True)
+    run_time = models.DateTimeField(null=True, blank=True)
+    submit_deadline = models.DateTimeField(null=True, blank=True)
 
 
 class Stage(models.Model):
