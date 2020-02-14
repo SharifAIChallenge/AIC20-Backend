@@ -113,6 +113,7 @@ class Tournament(PolymorphicModel):
     start_time = models.DateTimeField(auto_now_add=True)
     run_time = models.DateTimeField(null=True, blank=True)
     submit_deadline = models.DateTimeField(null=True, blank=True)
+    finished = models.BooleanField(default=False)
 
 
 class Stage(models.Model):

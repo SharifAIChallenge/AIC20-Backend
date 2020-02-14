@@ -23,5 +23,5 @@ def handle_submission(submission_id):
 @app.task(name='hourly_tournament')
 def hourly_tournament():
     from .services.tournament_creator import TournamentCreator
-
+    tournament_creator = TournamentCreator()
     pass
