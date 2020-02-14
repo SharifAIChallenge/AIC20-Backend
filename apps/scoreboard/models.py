@@ -9,7 +9,9 @@ class Row(models.Model):
     score = models.IntegerField(default=1000)
     wins = models.IntegerField(default=0)
     loss = models.IntegerField(default=0)
-
+    
+    def __str__(self):
+        return team.name
 
 class ScoreBoard(PolymorphicModel):
     freeze = models.BooleanField(default=False)
