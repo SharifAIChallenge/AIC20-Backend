@@ -37,7 +37,7 @@ urlpatterns = [
     path('api/faq/', include('apps.faq.urls')),
     path('api/staff/', include('apps.staff.urls')),
     path('game/api/report', challenge_views.report, 'report'),
-    path('api/scoreboard', include('apps.scoreboard.urls'))
+    path('api/scoreboard/', include('apps.scoreboard.urls'))
 
 ]
 
