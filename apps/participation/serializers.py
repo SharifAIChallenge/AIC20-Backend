@@ -105,7 +105,7 @@ class LimitedParticipantSerializer(serializers.ModelSerializer):
 
 
 class LimitedTeamSerializer(serializers.ModelSerializer):
-    participants = LimitedParticipantSerializer(read_only=True)
+    participants = LimitedParticipantSerializer(read_only=True, many=True)
 
     class Meta:
         model = Team
