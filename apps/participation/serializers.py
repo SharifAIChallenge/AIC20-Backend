@@ -62,8 +62,13 @@ class TeamPostSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Maximum file size reached')
         return attrs
 
+
+class TeamPutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ['image']
+
     def update(self, instance: Team, validated_data):
-        instance.name = instance.name
         instance.image = validated_data.get('image', instance.image)
         instance.save()
         return instance

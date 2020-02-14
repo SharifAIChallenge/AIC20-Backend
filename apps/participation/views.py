@@ -76,7 +76,7 @@ class InvitationsToOthersAPIView(GenericAPIView):
         return Response(data={'invitations': data}, status=status.HTTP_200_OK)
 
 
-class CreateTeamAPIView(GenericAPIView):
+class TeamAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
     parser_classes = (parsers.MultiPartParser,)
 
@@ -104,7 +104,7 @@ class CreateTeamAPIView(GenericAPIView):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry you dont have any team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
         team = request.user.participant.team
-        updated_team = participation_serializers.TeamPostSerializer(instance=team, data=request.data)
+        updated_team = participation_serializers.TeamPutSerializer(instance=team, data=request.data)
         if updated_team.is_valid(raise_exception=True):
             updated_team.save()
         return Response(data={'details': 'Team updated successfully'})

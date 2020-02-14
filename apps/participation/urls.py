@@ -11,7 +11,8 @@ urlpatterns = [
     path('invitation/<int:invitation_id>', views.AnswerInvitationAPIView.as_view(), name='answer_invitation'),
     path('invitation/invitations-to-me', views.InvitationsToMeAPIView.as_view(), name='invitations_to_me'),
     path('invitation/invitations-to-others', views.InvitationsToOthersAPIView.as_view(), name='invitations_to_others'),
-    path('team/leave', views.LeaveTeamAPIView.as_view(), name='leave_team'),
-    path('team/detail', views.TeamDetailAPIView.as_view(), name='team_detail'),
-    path('team/create', views.CreateTeamAPIView.as_view(), name='create_team'),
+    path('team/leave', views.TeamAPIView.as_view(), name='leave_team'),
+    path('team/detail', views.TeamAPIView.as_view(), name='team_detail'),
+    path('team/create', views.TeamAPIView.as_view(), name='create_team'),
+    path('team/update', views.TeamAPIView.as_view(), name='update_team'),
 ]
