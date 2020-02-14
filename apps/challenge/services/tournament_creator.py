@@ -13,7 +13,6 @@ class TournamentCreator:
         self.challenge = challenge
         self.score_board: ChallengeScoreBoard = ChallengeScoreBoard.objects.get(challenge=challenge)
         self.teams = self.score_board.rows.values_list('team', flat=True)
-        self.match_map = match_map
         self.tournament_type = tournament_type
         self.tournament = tournament
         self.stage = ''

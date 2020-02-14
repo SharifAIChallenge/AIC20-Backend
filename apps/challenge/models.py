@@ -109,7 +109,7 @@ class Challenge(models.Model):
 
 class Tournament(PolymorphicModel):
     challenge = models.ForeignKey('challenge.Challenge', related_name='tournaments', on_delete=models.CASCADE)
-    type = models.CharField(max_length=20, choices=TournamentTypes.TYPES)
+    type = models.CharField(max_length=20, choices=TournamentTypes.TYPES, default=TournamentTypes.HOURLY)
     start_time = models.DateTimeField()
     run_time = models.DateTimeField(null=True, blank=True)
     submit_deadline = models.DateTimeField(null=True, blank=True)
