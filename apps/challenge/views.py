@@ -8,13 +8,16 @@ from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import parsers
 from django.utils.translation import ugettext_lazy as _
 
 from apps.challenge import functions
-from apps.challenge.models import Submission
+from apps.challenge.models import Submission, Lobby
+from apps.challenge.services.friendly_match import FriendlyGameCreator
 from . import models as challenge_models
+from . import tasks
 from . import serializers as challenge_serializers
 
 logger = logging.getLogger(__name__)
@@ -135,6 +138,26 @@ class ChangeFinalSubmissionAPIView(GenericAPIView):
             return Response(data={'details': 'Final submission changed successfully'}, status=status.HTTP_200_OK)
         except ValueError as e:
             return Response(data={'errors': [str(e)]}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+class FriendlyMatchRequestAPIView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if not hasattr(request.user, 'participant'):
+            return Response(data={'errors': ['Sorry! you dont have a team']})
+        try:
+            lobby = Lobby.objects.get(completed=False)
+        except (Lobby.DoesNotExist, Lobby.MultipleObjectsReturned) as e:
+            lobby = Lobby.objects.create()
+        lobby.teams.add(request.user.participant.team)
+        if lobby.teams.count() >= 4:
+            lobby.completed = False
+            lobby.save()
+            friendly_game = FriendlyGameCreator(lobby=lobby)()
+            tasks.run_friendly_game.delay(friendly_game.id)
+            return Response(data={'details': 'Friendly match runned!'})
+        return Response(data={'details': 'your request submitted'})
 
 
 class MapsListAPIView(GenericAPIView):
