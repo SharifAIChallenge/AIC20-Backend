@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 
 from polymorphic.models import PolymorphicModel
 
+from apps.scoreboard.models import ChallengeScoreBoard
 from .tasks import handle_submission
 
 logger = logging.getLogger(__name__)
@@ -59,6 +60,23 @@ class SubmissionLanguagesTypes:
     )
 
 
+class SingleGameStatusTypes:
+    RUNNING = 'running'
+    FAILED = 'failed'
+    DONE = 'done'
+    WAITING = 'waiting'
+    WAITING_ACCEPT = 'waiting_accept'
+    REJECTED = 'rejected'
+    TYPES = (
+        (RUNNING, _('Running')),
+        (FAILED, _('Failed')),
+        (DONE, _('Done')),
+        (WAITING, _('Waiting')),
+        (WAITING_ACCEPT, _('Waiting to accept')),
+        (REJECTED, _('Rejected'))
+    )
+
+
 class SubmissionStatusTypes:
     UPLOADING = 'uploading'
     UPLOADED = 'uploaded'
@@ -81,24 +99,34 @@ class Challenge(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
+    def pre_save(self):
+        ChallengeScoreBoard.objects.create(challenge=self)
+
+    def save(self, *args, **kwargs):
+        self.pre_save()
+        super().save(*args, **kwargs)
+
 
 class Tournament(PolymorphicModel):
     challenge = models.ForeignKey('challenge.Challenge', related_name='tournaments', on_delete=models.CASCADE)
     type = models.CharField(max_length=20, choices=TournamentTypes.TYPES)
-    start_time = models.DateTimeField()
-    submit_deadline = models.DateTimeField()
+    start_time = models.DateTimeField(auto_now_add=True)
+    run_time = models.DateTimeField(null=True, blank=True)
+    submit_deadline = models.DateTimeField(null=True, blank=True)
 
 
 class Stage(models.Model):
     tournament = models.ForeignKey('challenge.Tournament', related_name='stages', on_delete=models.CASCADE)
     finished = models.BooleanField(default=False)
+    time = models.DateTimeField(auto_now_add=True)
 
 
 class Group(models.Model):
     stage = models.ForeignKey('challenge.Stage', related_name='groups', on_delete=models.CASCADE)
+    time = models.DateTimeField(auto_now_add=True)
 
 
-class TeamGroup(models.Model):
+class GroupTeam(models.Model):
     team = models.ForeignKey('participation.Team', related_name='team_group', on_delete=models.CASCADE)
     group = models.ForeignKey('challenge.Group', related_name='team_groups', on_delete=models.CASCADE)
 
@@ -107,6 +135,7 @@ class Match(models.Model):
     group = models.ForeignKey('challenge.Group', related_name='matches', on_delete=models.CASCADE)
     map = models.ForeignKey('challenge.Map', related_name='matches', on_delete=None)
     type = models.CharField(max_length=64, choices=MatchTypes.TYPES)
+    time = models.DateTimeField(auto_now_add=True, null=True)
 
 
 class MatchTeam(models.Model):
@@ -116,7 +145,18 @@ class MatchTeam(models.Model):
 
 class Game(models.Model):
     match = models.ForeignKey('challenge.Match', related_name='games', on_delete=models.CASCADE)
-    info = models.OneToOneField('challenge.Info', related_name='game', on_delete=models.CASCADE, null=True)
+    infra_game_message = models.CharField(max_length=1023, null=True, blank=True)
+    infra_token = models.CharField(max_length=256, null=True, blank=True, unique=True)
+    status = models.CharField(max_length=50, choices=SingleGameStatusTypes.TYPES, default=SingleGameStatusTypes.WAITING)
+    time = models.DateTimeField(auto_now_add=True, null=True)
+
+    def get_log_file_directory(self, filename):
+        teams = []
+        for game_side in self.game_sides:
+            teams.extend(game_side.game_teams.values_list('team', flat=True))
+        return os.path.join('logs', 'single_game', ','.join([team.name for team in teams]), self.infra_token, filename)
+
+    log = models.FileField(upload_to=get_log_file_directory, blank=True, null=True)
 
 
 class GameSide(models.Model):
@@ -128,10 +168,11 @@ class GameTeam(models.Model):
     team = models.ForeignKey('participation.Team', related_name='game_teams', on_delete=models.CASCADE)
     game_side = models.ForeignKey('challenge.GameSide', related_name='game_teams', on_delete=models.CASCADE)
 
+    def team_single_game_log(self, filename):
+        return os.path.join('logs', 'just_team', self.team.name, self.game_side.game.infra_token, filename)
 
-class Info(models.Model):
-    status = models.CharField(max_length=50)
-    detail = models.CharField(max_length=500)
+    log = models.FileField(upload_to=team_single_game_log, null=True, blank=True)
+    score = models.IntegerField(null=True, blank=True)
 
 
 def get_submission_file_directory(instance, filename):
@@ -162,15 +203,15 @@ class Submission(models.Model):
             Use this method instead of changing the is_final attribute directly
             This makes sure that only one instance of TeamSubmission has is_final flag set to True
         """
-        # if self.status != 'compiled':
-        #     raise ValueError(_('This submission is not compiled yet.'))
+        if self.status != 'compiled':
+            raise ValueError(_('This submission is not compiled yet.'))
         Submission.objects.filter(is_final=True, team=self.team).update(is_final=False)
         self.is_final = True
         self.save()
 
     def handle(self):
-        handle_submission(self.id)
-        # handle_submission.delay(self.id)
+        # handle_submission(self.id)
+        handle_submission.delay(self.id)
 
     def upload(self):
         from . import functions
@@ -192,3 +233,18 @@ class Submission(models.Model):
 class Map(models.Model):
     name = models.CharField(max_length=128)
     infra_token = models.CharField(max_length=256, null=True, blank=False, unique=True)
+    time_created = models.DateTimeField(auto_now_add=True)
+    verified = models.NullBooleanField(null=True, blank=True)
+
+    def map_directory_path(self, filename):
+        return os.path.join('maps', self.name, filename)
+
+    file = models.FileField(blank=True, null=True, upload_to=map_directory_path)
+
+    def pre_save(self):
+        from . import functions
+        self.infra_token = functions.upload_file(self.file)
+
+    def save(self, *args, **kwargs):
+        self.pre_save()
+        super().save(*args, **kwargs)

@@ -29,7 +29,7 @@ class GroupAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(challenge_models.TeamGroup)
+@admin.register(challenge_models.GroupTeam)
 class TeamGroupAdmin(admin.ModelAdmin):
     pass
 
@@ -57,11 +57,6 @@ class GameSideAdmin(admin.ModelAdmin):
 
 @admin.register(challenge_models.GameTeam)
 class GameTeamAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(challenge_models.Info)
-class InfoAdmin(admin.ModelAdmin):
     pass
 
 
