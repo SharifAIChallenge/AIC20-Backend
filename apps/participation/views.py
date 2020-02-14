@@ -84,12 +84,13 @@ class TeamAPIView(GenericAPIView):
         team_name = request.GET.get('name', '')
         if team_name:
             team = get_object_or_404(Team, name=team_name)
+            data = participation_serializers.LimitedTeamSerializer(team).data
         elif hasattr(request.user, 'participant'):
             team = request.user.participant.team
+            data = participation_serializers.TeamSerializer(team).data
         else:
             return Response(data={'errors': ['Sorry! you dont have a team']})
 
-        data = participation_serializers.TeamSerializer(team).data
         return Response(data={'team': data}, status=status.HTTP_200_OK)
 
     def post(self, request):
