@@ -8,11 +8,13 @@ from ..models import Challenge, Tournament, TournamentTypes, Stage, Group, Group
 
 class TournamentCreator:
 
-    def __init__(self, challenge, start_time, submit_deadline, match_map, tournament_type=TournamentTypes.HOURLY):
+    def __init__(self, challenge, start_time, submit_deadline, run_time, match_map,
+                 tournament_type=TournamentTypes.HOURLY):
         self.challenge = challenge
         self.score_board: ChallengeScoreBoard = ChallengeScoreBoard.objects.get(challenge=challenge)
         self.teams = self.score_board.rows.values_list('team', flat=True)
         self.start_time = start_time
+        self.run_time = run_time
         self.submit_deadline = submit_deadline
         self.match_map = match_map
         self.tournament_type = tournament_type
@@ -29,7 +31,9 @@ class TournamentCreator:
 
     def _create_tournament(self):
         self.tournament = Tournament.objects.create(challenge=self.challenge, type=self.tournament_type,
-                                                    end_time=self.submit_deadline)
+                                                    start_time=self.submit_deadline,
+                                                    submit_deadline=self.submit_deadline,
+                                                    run_time=self.run_time)
 
     def _create_stages(self):
         self.stage = Stage.objects.create(tournament=self.tournament)
