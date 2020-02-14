@@ -63,6 +63,17 @@ class TeamPostSerializer(serializers.ModelSerializer):
         return attrs
 
 
+class TeamPutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ['image']
+
+    def update(self, instance: Team, validated_data):
+        instance.image = validated_data.get('image', instance.image)
+        instance.save()
+        return instance
+
+
 class InvitationSerializer(serializers.ModelSerializer):
     target = UserSerializer()
     source = UserSerializer()

@@ -19,9 +19,13 @@ class ChallengeScoreBoard(ScoreBoard):
     challenge = models.OneToOneField('challenge.Challenge', related_name='scoreboard', on_delete=models.CASCADE)
 
     @staticmethod
-    def get_scoreboard(challenge):
+    def get_scoreboard_sorted_rows(challenge):
         return ChallengeScoreBoard.objects.get(challenge=challenge).rows.all().order_by('-score')
 
 
 class GroupScoreBoard(ScoreBoard):
     group = models.OneToOneField('challenge.Group', related_name='scoreboard', on_delete=models.CASCADE)
+
+    @staticmethod
+    def get_scoreboard_sorted_rows(group):
+        return GroupScoreBoard.objects.get(group=group).rows.all().order_by('-score')
