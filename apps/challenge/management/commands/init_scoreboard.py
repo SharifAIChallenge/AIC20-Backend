@@ -20,20 +20,21 @@ class Command(BaseCommand):
 
         parser.add_argument(
             'id',
-            nargs='{1}',
+            nargs=1,
             type=int,
             help='Task or milestone ids',
         )
 
     def handle(self, *args, **options):
         if options.get('init'):
+            print("aaaaaaaaaaaac")
             self._handle_init_all(options)
 
     def _handle_init_all(self, options):
-        if not options.get('id') or len(options.get('id')) != 2:
+        if not options.get('id') or len(options.get('id')) != 1:
             print("Please Enter Command Like This: --init {Challenge_id}")
         else:
-            challenge_id = options.get('id')
+            challenge_id = options.get('id')[0]
             try:
                 challenge = Challenge.objects.get(id=challenge_id)
             except (Challenge.MultipleObjectsReturned, Challenge.DoesNotExist) as e:

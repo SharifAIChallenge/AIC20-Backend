@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 
 from apps.accounts.serializer import ProfileSerializer
 from apps.challenge.models import Challenge, ChallengeTypes
+from apps.scoreboard.models import Row
 from .models import Badge, Team, Participant, Invitation
 from ..accounts import serializer as accounts_serializers
 

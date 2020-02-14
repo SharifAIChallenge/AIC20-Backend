@@ -4,7 +4,7 @@ from polymorphic.models import PolymorphicModel
 
 
 class Row(models.Model):
-    team = models.ForeignKey('participation.Participant', related_name='rows', on_delete=models.CASCADE)
+    team = models.ForeignKey('participation.Team', related_name='rows', on_delete=models.CASCADE)
     scoreboard = models.ForeignKey('scoreboard.ScoreBoard', related_name='rows', on_delete=models.CASCADE)
     score = models.IntegerField(default=1000)
     wins = models.IntegerField(default=0)
