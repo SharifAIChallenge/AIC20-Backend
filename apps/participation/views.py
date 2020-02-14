@@ -46,16 +46,6 @@ class SendInvitationAPIView(GenericAPIView):
         return Response(data={'invitation': invitation_serializer.data}, status=status.HTTP_200_OK)
 
 
-class LeaveTeamAPIView(GenericAPIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        errors = LeaveTeam(request=request)()
-        if errors:
-            return Response(data={'errors': errors}, status=status.HTTP_200_OK)
-        return Response(data={'details': _('You left your team successfully')}, status=status.HTTP_200_OK)
-
-
 class AnswerInvitationAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
@@ -87,22 +77,8 @@ class InvitationsToOthersAPIView(GenericAPIView):
 
 
 class CreateTeamAPIView(GenericAPIView):
-    serializer_class = participation_serializers.TeamPostSerializer
     permission_classes = [IsAuthenticated]
     parser_classes = (parsers.MultiPartParser,)
-
-    def post(self, request):
-        team = self.get_serializer(data=request.data)
-        if team.is_valid(raise_exception=True):
-            team = team.save()
-        Participant.objects.create(user=request.user, team=team)
-        Row.objects.create(team=team, scoreboard=team.challenge.scoreboard)
-        return Response(data={'details': _('Team Created Successfully')}, status=status.HTTP_200_OK)
-
-
-class TeamDetailAPIView(GenericAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = participation_serializers.TeamSerializer
 
     def get(self, request):
         team_name = request.GET.get('name', '')
@@ -113,5 +89,28 @@ class TeamDetailAPIView(GenericAPIView):
         else:
             return Response(data={'errors': ['Sorry! you dont have a team']})
 
-        data = self.get_serializer(team).data
+        data = participation_serializers.TeamSerializer(team).data
         return Response(data={'team': data}, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        team = participation_serializers.TeamPostSerializer(data=request.data)
+        if team.is_valid(raise_exception=True):
+            team = team.save()
+        Participant.objects.create(user=request.user, team=team)
+        Row.objects.create(team=team, scoreboard=team.challenge.scoreboard)
+        return Response(data={'details': _('Team Created Successfully')}, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        if not hasattr(request.user, 'participant'):
+            return Response(data={'errors': ['Sorry you dont have any team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        team = request.user.participant.team
+        updated_team = participation_serializers.TeamPostSerializer(instance=team, data=request.data)
+        if updated_team.is_valid(raise_exception=True):
+            updated_team.save()
+        return Response(data={'details': 'Team updated successfully'})
+
+    def delete(self, request):
+        errors = LeaveTeam(request=request)()
+        if errors:
+            return Response(data={'errors': errors}, status=status.HTTP_200_OK)
+        return Response(data={'details': _('You left your team successfully')}, status=status.HTTP_200_OK)
