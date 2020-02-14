@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from apps.accounts.serializer import ProfileSerializer
+from apps.accounts.serializer import ProfileSerializer, LimitedProfileSerializer
 from apps.challenge.models import Challenge, ChallengeTypes
 from apps.scoreboard.models import Row
 from .models import Badge, Team, Participant, Invitation
@@ -86,3 +86,27 @@ class InvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invitation
         fields = ['id', 'target', 'source', 'team_name', 'status']
+
+
+class LimitedUserSerializer(serializers.ModelSerializer):
+    profile = LimitedProfileSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['profile']
+
+
+class LimitedParticipantSerializer(serializers.ModelSerializer):
+    user = LimitedUserSerializer()
+
+    class Meta:
+        model = Participant
+        fields = ['user']
+
+
+class LimitedTeamSerializer(serializers.ModelSerializer):
+    participants = LimitedParticipantSerializer(read_only=True)
+
+    class Meta:
+        model = Team
+        fields = ['name', 'image', 'participants']

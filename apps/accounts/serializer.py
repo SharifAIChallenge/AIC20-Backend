@@ -13,6 +13,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         exclude = ['user', 'id']
 
 
+class LimitedProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['firstname_fa', 'lastname_fa']
+
+
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
 
