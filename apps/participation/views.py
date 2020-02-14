@@ -1,6 +1,5 @@
 import json
 
-from django.http import JsonResponse
 from rest_framework import status, parsers
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated

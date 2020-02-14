@@ -25,3 +25,7 @@ class ChallengeScoreBoard(ScoreBoard):
 
 class GroupScoreBoard(ScoreBoard):
     group = models.OneToOneField('challenge.Group', related_name='scoreboard', on_delete=models.CASCADE)
+
+    @staticmethod
+    def get_scoreboard(group):
+        return GroupScoreBoard.objects.get(group=group).rows.all().order_by('-score')
