@@ -69,7 +69,7 @@ class TeamPutSerializer(serializers.ModelSerializer):
         fields = ['image']
 
     def update(self, instance: Team, validated_data):
-        instance.image = validated_data.get('image', instance.image)
+        instance.image = validated_data.get('image', None)
         instance.save()
         return instance
 
