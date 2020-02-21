@@ -1,10 +1,11 @@
+from random import shuffle
 from ..models import Staff
 
 
 class StaffsListSerializer:
 
     def __init__(self, query_set):
-        self.staffs = list(query_set)
+        self.staffs = shuffle(list(query_set))
         self.group_titles = list(set([staff.group_title for staff in self.staffs]))
         self.data = {}
 
