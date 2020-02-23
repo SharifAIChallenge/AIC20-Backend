@@ -31,6 +31,7 @@ class StaffsListSerializer:
                         'last_name_en': staff.last_name_en,
                         'last_name_fa': staff.last_name_fa,
                         'url': staff.url,
-                        'image': staff.image.url
+                        'image': staff.image.url,
+                        'role': staff.role
                     })
                 self.staffs = [staff for staff in self.staffs if staff not in staffs]
