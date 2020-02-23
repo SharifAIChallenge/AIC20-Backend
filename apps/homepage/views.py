@@ -4,6 +4,8 @@ from rest_framework.generics import GenericAPIView
 
 from apps.accounts.models import Profile
 from apps.participation.models import Team
+from apps.staff.models import Staff
+from apps.staff.services.staffs_list_serializer import StaffsListSerializer
 from .models import Intro, TimelineEvent, Prize, Stat, Sponsor, WhyThisEvent, Quote
 from .serializers import *
 
@@ -20,9 +22,10 @@ class HomepageView(GenericAPIView):
             'sponsors': SponsorSerializer(Sponsor.objects.all(), many=True).data,
             'why': WhyThisEventSerializer(WhyThisEvent.objects.all(), many=True).data,
             'quotes': QuoteSerializer(Quote.objects.all(), many=True).data,
-            
+
             'teams': Team.objects.count(),
             'registers': Profile.objects.count(),
+            'staffs': StaffsListSerializer(Staff.objects.all()).data()
         }
         return Response(data)
 
