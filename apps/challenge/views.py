@@ -143,6 +143,16 @@ class ChangeFinalSubmissionAPIView(GenericAPIView):
 
 class FriendlyMatchRequestAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = challenge_serializers.FriendlyGameSerializer
+    queryset = challenge_models.FriendlyGameTeam.objects.all()
+
+    def get(self, request):
+        if not hasattr(request.user, 'participant'):
+            return Response(data={'errors': ['Sorry! you dont have a team']})
+        data = self.get_serializer(
+            self.get_queryset().filter(team=self.request.user.participant.team).values_list('friendly_game', flat=True),
+            many=True).data
+        return Response(data={'friendlies': data}, status=status.HTTP_200_OK)
 
     def post(self, request):
         if not hasattr(request.user, 'participant'):
@@ -174,11 +184,6 @@ class FriendlyMatchLobbyAPIView(GenericAPIView):
             return Response(data={'errors': ['Sorry! you dont have a team']})
         data = self.get_serializer(self.request.user.participant.team.lobbies.filter(completed=False), many=True).data
         return Response(data={'lobbies': data}, status=status.HTTP_200_OK)
-
-
-class FriendlyMatchListAPIView(GenericAPIView):
-    permission_classes = [IsAuthenticated]
-
 
 
 class MapsListAPIView(GenericAPIView):
