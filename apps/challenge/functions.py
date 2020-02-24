@@ -1,10 +1,14 @@
 import random
 import string
+from typing import List
+
 import requests
 
 import coreapi
 from django.conf import settings
 from django.core.files import File
+
+from apps.challenge.models import Game
 
 
 def random_token():
@@ -71,7 +75,7 @@ def compile_submissions(submissions):
     return response.json()
 
 
-def run_games(single_games):
+def run_games(single_games: List[Game]):
     """
         Tell the infrastructure to run a list of single_matches (single_match includes tokens,maps,...)
     :param single_games:
@@ -85,10 +89,10 @@ def run_games(single_games):
             "game": 'AI2020',
             "operation": "run",
             "parameters": {
-                "server_game_config": single_game.get_map(),
-                "client1_id": single_game.match.part1.submission.id,
+                "server_game_config": single_game.match.map.infra_token,
+                "client1_id": single_game.game_sides.part1.submission.id,
                 "client1_token": random_token(),
-                "client1_code": single_game.get_first_file(),
+                "client1_code": single_game.,
                 "client1_name": single_game.match.part1.submission.team.team.id,
                 "client2_id": single_game.match.part2.submission.id,
                 "client2_token": random_token(),
