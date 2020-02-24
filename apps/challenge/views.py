@@ -12,6 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import parsers
 from django.utils.translation import ugettext_lazy as _
+from django.db import transaction
 
 from apps.challenge import functions
 from apps.challenge.models import Submission, Lobby
@@ -146,18 +147,19 @@ class FriendlyMatchRequestAPIView(GenericAPIView):
     def post(self, request):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']})
-        try:
-            lobby = Lobby.objects.get(completed=False)
-        except (Lobby.DoesNotExist, Lobby.MultipleObjectsReturned) as e:
-            lobby = Lobby.objects.create()
-        lobby.teams.add(request.user.participant.team)
-        if lobby.teams.count() >= 4:
-            lobby.completed = False
-            lobby.save()
-            friendly_game = FriendlyGameCreator(lobby=lobby)()
-            tasks.run_friendly_game.delay(friendly_game.id)
-            return Response(data={'details': 'Friendly match runned!'})
-        return Response(data={'details': 'your request submitted'})
+        with transaction.atomic():
+            try:
+                lobby = Lobby.objects.get(completed=False)
+            except (Lobby.DoesNotExist, Lobby.MultipleObjectsReturned) as e:
+                lobby = Lobby.objects.create()
+            lobby.teams.add(request.user.participant.team)
+            if lobby.teams.count() >= 4:
+                lobby.completed = True
+                lobby.save()
+                friendly_game = FriendlyGameCreator(lobby=lobby)()
+                tasks.run_friendly_game.delay(friendly_game.id)
+                return Response(data={'details': 'Friendly match runned!'})
+            return Response(data={'details': 'your request submitted'})
 
 
 class MapsListAPIView(GenericAPIView):
