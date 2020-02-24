@@ -148,10 +148,12 @@ class FriendlyMatchRequestAPIView(GenericAPIView):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']})
         with transaction.atomic():
-            try:
-                lobby = Lobby.objects.get(completed=False)
-            except (Lobby.DoesNotExist, Lobby.MultipleObjectsReturned) as e:
-                lobby = Lobby.objects.create()
+            # try:
+            #     lobby = Lobby.objects.get(completed=False)
+            # except (Lobby.DoesNotExist, Lobby.MultipleObjectsReturned) as e:
+            #     lobby = Lobby.objects.create()
+            lobby = Lobby.objects.filter(completed=False).last()
+            lobby = lobby if lobby else Lobby.objects.create()
             lobby.teams.add(request.user.participant.team)
             if lobby.teams.count() >= 4:
                 lobby.completed = True
