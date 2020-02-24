@@ -41,7 +41,8 @@ def download_file(file_token):
     :param file_token: the file token obtained already from infra.
     :return: sth that TeamSubmission file field can be assigned to
     """
-    response = requests.get(settings.INFRA_IP + f"/api/storage/get_file/{file_token}/", allow_redirects=True)
+    response = requests.get(settings.INFRA_IP + f"/api/storage/get_file/{file_token}/", allow_redirects=True,
+                            headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
     print(response.status_code, response.content, "==== Download File ====")
     return response
 
