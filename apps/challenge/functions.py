@@ -84,23 +84,23 @@ def run_games(single_games: List[Game]):
 
     print("oomad run kokne")
     games = []
-    for single_game in single_games:
-        games.append({
-            "game": 'AI2020',
-            "operation": "run",
-            "parameters": {
-                "server_game_config": single_game.match.map.infra_token,
-                "client1_id": single_game.game_sides.part1.submission.id,
-                "client1_token": random_token(),
-                "client1_code": single_game.,
-                "client1_name": single_game.match.part1.submission.team.team.id,
-                "client2_id": single_game.match.part2.submission.id,
-                "client2_token": random_token(),
-                "client2_code": single_game.get_second_file(),
-                "client2_name": single_game.match.part2.submission.team.team.id,
-                "map_name": single_game.map.name
-            }
-        })
+    # for single_game in single_games:
+    #     games.append({
+    #         "game": 'AI2020',
+    #         "operation": "run",
+    #         "parameters": {
+    #             "server_game_config": single_game.match.map.infra_token,
+    #             "client1_id": single_game..part1.submission.id,
+    #             "client1_token": random_token(),
+    #             "client1_code": single_game.,
+    #             "client1_name": single_game.match.part1.submission.team.team.id,
+    #             "client2_id": single_game.match.part2.submission.id,
+    #             "client2_token": random_token(),
+    #             "client2_code": single_game.get_second_file(),
+    #             "client2_name": single_game.match.part2.submission.team.team.id,
+    #             "map_name": single_game.map.name
+    #         }
+    #     })
 
     response = requests.post(settings.INFRA_IP + "/api/run/run/", json=games,
                              headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}',

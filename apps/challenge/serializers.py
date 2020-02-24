@@ -5,6 +5,7 @@ from django.utils.timezone import utc
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
+from apps.participation.serializers import LimitedTeamSerializer
 from . import models as challenge_models
 from ..participation import serializers as participation_serializers
 
@@ -136,3 +137,27 @@ class MapSerializer(ModelSerializer):
     class Meta:
         model = challenge_models.Map
         fields = ['name', 'infra_token']
+
+
+class LobbySerializer(ModelSerializer):
+    teams = LimitedTeamSerializer(many=True)
+
+    class Meta:
+        model = challenge_models.Lobby
+        fields = ['teams']
+
+
+class FriendlyGameTeamSerializer(ModelSerializer):
+    team = participation_serializers.TeamSerializer()
+
+    class Meta:
+        model = challenge_models.FriendlyGameTeam
+        fields = ['team', 'log', 'score']
+
+
+class FriendlyGameSerializer(ModelSerializer):
+    friendly_game_teams = FriendlyGameTeamSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = challenge_models.FriendlyGame
+        fields = ['friendly_game_teams', 'status', 'time', 'log']

@@ -164,6 +164,23 @@ class FriendlyMatchRequestAPIView(GenericAPIView):
             return Response(data={'details': 'your request submitted'})
 
 
+class FriendlyMatchLobbyAPIView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = challenge_serializers.LobbySerializer
+    queryset = challenge_models.Lobby.objects.all()
+
+    def get(self, request):
+        if not hasattr(request.user, 'participant'):
+            return Response(data={'errors': ['Sorry! you dont have a team']})
+        data = self.get_serializer(self.request.user.participant.team.lobbies.filter(completed=False), many=True).data
+        return Response(data={'lobbies': data}, status=status.HTTP_200_OK)
+
+
+class FriendlyMatchListAPIView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+
+
 class MapsListAPIView(GenericAPIView):
     queryset = challenge_models.Map
     serializer_class = challenge_serializers.MapSerializer
