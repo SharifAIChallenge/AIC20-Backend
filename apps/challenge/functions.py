@@ -42,7 +42,7 @@ def download_file(file_token):
     """
     response = requests.get(settings.INFRA_IP + f"/api/storage/get_file/{file_token}/", allow_redirects=True)
     print(response.status_code, response.content, "==== Download File ====")
-    return response
+    return response.content
 
 
 def compile_submissions(submissions):
