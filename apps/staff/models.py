@@ -10,7 +10,7 @@ class Staff(models.Model):
     first_name_fa = models.CharField(max_length=128)
     last_name_en = models.CharField(max_length=128)
     last_name_fa = models.CharField(max_length=128)
-    role = models.CharField(max_length=128, default='')
+    role = models.CharField(max_length=128, blank=True, null=False)
     url = models.CharField(max_length=500)
 
     def upload_path(self, filename):
