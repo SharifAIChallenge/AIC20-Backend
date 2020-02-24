@@ -96,7 +96,7 @@ class SubmissionSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Submission
-        fields = ['id', 'language', 'is_final', 'submit_time', 'user', 'file', 'status']
+        fields = ['id', 'language', 'is_final', 'submit_time', 'user', 'file', 'status', 'infra_token']
 
 
 class SubmissionPostSerializer(ModelSerializer):
