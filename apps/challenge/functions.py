@@ -26,7 +26,7 @@ def upload_file(file):
     :param file: File field from TeamSubmission model
     :return: file token or raises error with error message
     """
-
+    print("ommad upload kone")
     response = requests.put(settings.INFRA_IP + "/api/storage/new_file/", files={'file': file},
                             headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
     print(response.status_code, response.json(), "==== Upload File ====")
@@ -50,6 +50,8 @@ def compile_submissions(submissions):
         Tell the infrastructure to compile a list of submissions
     :return: list of dictionaries each have token, success[, errors] keys
     """
+
+    print("oomad compile kone")
     parameters = list()
     for submission in submissions:
         parameters.append({
@@ -74,6 +76,7 @@ def run_games(single_games):
     :return: Returns the list of tokens and success status and errors assigned to the matches
     """
 
+    print("oomad run kokne")
     games = []
     for single_game in single_games:
         games.append({
