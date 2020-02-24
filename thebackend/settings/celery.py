@@ -9,8 +9,8 @@ from celery.signals import setup_logging
 """ RabbitMQ as message broker
 """
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'thebackend.settings.development')
-app = Celery(main='thebackend')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'thebackend.settings.production')
+app = Celery(main='thebackend', broker='amqp://rabbitmq:5672')
 app.config_from_object('django.conf:settings')
 
 
