@@ -225,7 +225,7 @@ def report(request):
                 submit.infra_compile_message = 'Unknown error occurred maybe compilation timed out'
         except BaseException as error:
             submit.status = 'failed'
-            submit.infra_compile_message = str(logfile) + "  " + logfile.text
+            submit.infra_compile_message = str(logfile) + "  " + logfile.text + "  " + str(logfile.raw)
             logger.exception(error)
             submit.save()
             return JsonResponse({'success': False})
