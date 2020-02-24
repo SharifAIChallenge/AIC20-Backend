@@ -96,7 +96,8 @@ class SubmissionSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Submission
-        fields = ['id', 'language', 'is_final', 'submit_time', 'user', 'file', 'status', 'infra_token']
+        fields = ['id', 'language', 'is_final', 'submit_time', 'user', 'file', 'status',
+                  'infra_token']  # infra Token should be removed in production
 
 
 class SubmissionPostSerializer(ModelSerializer):
