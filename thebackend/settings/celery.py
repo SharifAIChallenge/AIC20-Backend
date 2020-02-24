@@ -10,7 +10,7 @@ from celery.signals import setup_logging
 """
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'thebackend.settings.production')
-app = Celery(main='thebackend', broker='amqp://rabbitmq:5672')
+app = Celery(main='thebackend', broker='amqp://user:bitnami@rabbitmq:5672')
 app.config_from_object('django.conf:settings')
 
 
