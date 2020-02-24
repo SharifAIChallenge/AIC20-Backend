@@ -5,7 +5,7 @@ from rest_framework.generics import GenericAPIView
 from apps.accounts.models import Profile
 from apps.participation.models import Team
 from apps.staff.models import Staff
-from apps.staff.services.staffs_list_serializer import StaffsListSerializer
+from apps.staff.serializers import StaffSerializer
 from .models import Intro, TimelineEvent, Prize, Stat, Sponsor, WhyThisEvent, Quote
 from .serializers import *
 
@@ -25,7 +25,7 @@ class HomepageView(GenericAPIView):
 
             'teams': Team.objects.count(),
             'registers': Profile.objects.count(),
-            'staffs': StaffsListSerializer(Staff.objects.all().order_by('?')[:5]).data()
+            'staffs': StaffSerializer(Staff.objects.all().order_by('?')[:5], many=True).data
         }
         return Response(data)
 
