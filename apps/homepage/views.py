@@ -25,7 +25,7 @@ class HomepageView(GenericAPIView):
 
             'teams': Team.objects.count(),
             'registers': Profile.objects.count(),
-            'staffs': StaffsListSerializer(Staff.objects.all()).data()
+            'staffs': StaffsListSerializer(Staff.objects.order_by('?')[:5]).data()
         }
         return Response(data)
 

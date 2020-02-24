@@ -18,7 +18,6 @@ from . import models as staff_models
 
 class StaffsListAPIView(GenericAPIView):
     queryset = staff_models.Staff.objects.all()
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         data = StaffsListSerializer(self.get_queryset()).data()
