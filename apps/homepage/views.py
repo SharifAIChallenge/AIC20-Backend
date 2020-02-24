@@ -7,7 +7,8 @@ from apps.participation.models import Team
 from apps.staff.models import Staff
 from apps.staff.serializers import StaffSerializer
 from .models import Intro, TimelineEvent, Prize, Stat, Sponsor, WhyThisEvent, Quote
-from .serializers import *
+from .serializers import IntroSerializer, TimelineEventSerializer, PrizeSerializer, StatSerializer, \
+    SponsorSerializer, WhyThisEventSerializer, QuoteSerializer
 
 
 class HomepageView(GenericAPIView):
