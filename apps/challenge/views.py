@@ -209,7 +209,7 @@ def report(request):
 
                     reader = codecs.getreader('utf-8')
 
-                    log = json.load(reader(logfile), strict=False)
+                    log = json.load(logfile.text, strict=False)
                     if len(log["errors"]) == 0:
                         print("infrastructure compiled successfully")
                         submit.status = 'compiled'
