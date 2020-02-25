@@ -80,7 +80,7 @@ class LobbyHandler:
         if self.valid:
             self._handle_lobby()
         if self.valid and self.lobby.completed:
-            self.friendly_game = FriendlyGameCreator(lobby=self.lobby)
+            self.friendly_game = FriendlyGameCreator(lobby=self.lobby)()
 
         return self.errors, self.friendly_game, self.test
 
