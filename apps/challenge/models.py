@@ -98,6 +98,8 @@ class Challenge(models.Model):
     type = models.CharField(max_length=50, choices=ChallengeTypes.TYPES)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    friendly_game_delay = models.IntegerField(default=5)
+    code_submit_delay = models.IntegerField(default=5)
 
     def pre_save(self):
         ChallengeScoreBoard.objects.create(challenge=self)
