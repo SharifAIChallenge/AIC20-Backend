@@ -140,24 +140,9 @@ class MapSerializer(ModelSerializer):
 
 
 class LobbySerializer(ModelSerializer):
-    teams = LimitedTeamSerializer(many=True)
+    teams1 = LimitedTeamSerializer(many=True)
+    teams2 = LimitedTeamSerializer(many=True)
 
     class Meta:
         model = challenge_models.Lobby
-        fields = ['teams']
-
-
-class FriendlyGameTeamSerializer(ModelSerializer):
-    team = participation_serializers.TeamSerializer()
-
-    class Meta:
-        model = challenge_models.FriendlyGameTeam
-        fields = ['team', 'log', 'score']
-
-
-class FriendlyGameSerializer(ModelSerializer):
-    friendly_game_teams = FriendlyGameTeamSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = challenge_models.FriendlyGame
-        fields = ['friendly_game_teams', 'status', 'time', 'log']
+        fields = ['teams1', 'teams2', 'multi_play', 'with_friend']
