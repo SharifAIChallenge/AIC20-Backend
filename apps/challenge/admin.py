@@ -68,3 +68,8 @@ class SubmissionAdmin(admin.ModelAdmin):
 @admin.register(challenge_models.Map)
 class MapAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(challenge_models.Lobby)
+class LobbyAdmin(admin.ModelAdmin):
+    pass
