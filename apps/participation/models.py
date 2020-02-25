@@ -37,7 +37,7 @@ class Team(models.Model):
         return os.path.join(self.name, 'image', filename)
 
     image = models.ImageField(upload_to=get_team_image_directory, null=True)
-    allow_multi_friendly = models.BooleanField(default=False)
+    allow_multi_friendly = models.BooleanField(default=False, blank=True, null=True)
 
     @property
     def is_valid(self):
