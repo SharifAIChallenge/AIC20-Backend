@@ -92,7 +92,7 @@ class LobbyHandler:
                 minutes=challenge.friendly_game_delay):
             self.valid = False
             self.errors.append(
-                f"You have to wait at least {challenge.friendly_game_delay} minutes between each friendly game!")
+                f"waitAtLeast{challenge.friendly_game_delay}Minutes")
 
     def _set_type(self):
         self.type = self.data.get('type', FriendlyGameTypes.SINGLE)
@@ -104,35 +104,35 @@ class LobbyHandler:
         self.team_name = self.data.get('team_name')
         if self.multi_type == FriendlyGameTypes.MULTI and not self.team_name:
             self.valid = False
-            self.errors.append("Please give a team name")
+            self.errors.append("provideTeamName")
             return
         if self.team_name == self.request.user.participant.team.name:
             self.valid = False
-            self.errors.append("You cant't play with yourself")
+            self.errors.append("cantInviteYourself")
             return
         self.team = get_object_or_404(Team, name=self.team_name)
         if not self.team.allow_multi_friendly:
             self.valid = False
-            self.errors.append("Entered team multi game is closed")
+            self.errors.append("doesntAcceptInvitation")
         if not self.request.user.participant.team.allow_multi_friendly:
             self.valid = False
-            self.errors.append("Please open your team multi game")
+            self.errors.append("pleaseEnableInvitation")
 
     def _validate_teams(self):
         if not self.request.user.participant.team.is_valid:
             self.valid = False
-            self.errors.append("You team is invalid")
+            self.errors.append("teamInvalid")
             return
         if not Submission.objects.filter(team=self.request.user.participant.team).filter(is_final=True).exists():
             self.valid = False
-            self.errors.append("You dont't have any final submission")
+            self.errors.append("teamHasNoFinalSubmission")
         if self.team and not self.team.is_valid:
             self.valid = False
-            self.errors.append("Entered team is an invalid team")
+            self.errors.append("invitedTeamInvalid")
             return
         if self.team and not Submission.objects.filter(team=self.team).filter(is_final=True).exists():
             self.valid = False
-            self.errors.append("Entered team has not any final submission")
+            self.errors.append("invitedTeamHasNoFinalSubmission")
 
     def _handle_lobby(self):
         if self.type == FriendlyGameTypes.SINGLE:
@@ -189,6 +189,6 @@ class LobbyHandler:
                 self.lobby.teams2.filter(
                     Q(name=self.request.user.participant.team.name) | Q(name=self.team_name)).exists():
             self.valid = False
-            self.errors.append("You or the team that you entered already joined this lobby")
+            self.errors.append("alreadyJoined")
             return False
         return True
