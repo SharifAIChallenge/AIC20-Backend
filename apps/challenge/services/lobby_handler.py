@@ -90,7 +90,7 @@ class LobbyHandler:
         last_friendly_game_time = GameTeam.objects.filter(team=self.request.user.participant.team).filter(
             game_side__game__match=None).order_by('game_side__game__time').values_list('game_side__game__time',
                                                                                        flat=True).last()
-        if last_friendly_game and datetime.now(utc) - last_friendly_game_time < timedelta(
+        if last_friendly_game_time and datetime.now(utc) - last_friendly_game_time < timedelta(
                 minutes=challenge.friendly_game_delay):
             self.valid = False
             self.errors.append(
