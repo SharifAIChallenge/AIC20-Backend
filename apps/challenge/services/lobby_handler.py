@@ -153,8 +153,7 @@ class LobbyHandler:
                 self.lobby.teams1.add(self.request.user.participant.team)
             elif self.lobby.teams2.count() < 2:
                 self.lobby.teams2.add(self.request.user.participant.team)
-
-            else:
+            if self.lobby.teams1.count() + self.lobby.teams1.count() >= 4:
                 self.lobby.completed = True
                 self.lobby.save()
 
@@ -168,7 +167,7 @@ class LobbyHandler:
                 self.lobby.teams1.add(self.request.user.participant.team, self.team)
             elif self.lobby.teams2.count() < 2:
                 self.lobby.teams2.add(self.request.user.participant.team, self.team)
-            else:
+            if self.lobby.teams1.count() + self.lobby.teams1.count() >= 4:
                 self.lobby.completed = True
                 self.lobby.save()
 
@@ -181,7 +180,7 @@ class LobbyHandler:
             if self.lobby.teams1.count() < 2 and self.lobby.teams2.count() < 2:
                 self.lobby.teams1.add(self.request.user.participant.team)
                 self.lobby.teams2.add(self.team)
-            else:
+            if self.lobby.teams1.count() + self.lobby.teams1.count() >= 4:
                 self.lobby.completed = True
                 self.lobby.save()
 
