@@ -16,7 +16,6 @@ from django.db import transaction
 
 from apps.challenge import functions
 from apps.challenge.models import Submission, Lobby
-from apps.challenge.services.friendly_match import FriendlyGameCreator
 
 from apps.challenge.services.lobby_handler import LobbyHandler
 from . import models as challenge_models

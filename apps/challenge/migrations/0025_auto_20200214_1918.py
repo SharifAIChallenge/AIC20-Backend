@@ -7,24 +7,23 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('participation', '0013_team_challenge'),
         ('challenge', '0024_auto_20200214_1706'),
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='FriendlyGame',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('infra_game_message', models.CharField(blank=True, max_length=1023, null=True)),
-                ('infra_token', models.CharField(blank=True, max_length=256, null=True, unique=True)),
-                ('status', models.CharField(choices=[('running', 'Running'), ('failed', 'Failed'), ('done', 'Done'), ('waiting', 'Waiting'), ('waiting_accept', 'Waiting to accept'), ('rejected', 'Rejected')], default='waiting', max_length=50)),
-                ('time', models.DateTimeField(auto_now_add=True, null=True)),
-                ('log', models.FileField(blank=True, null=True, upload_to=apps.challenge.models.FriendlyGame.get_log_file_directory)),
-            ],
-        ),
+        # migrations.CreateModel(
+        #     name='FriendlyGame',
+        #     fields=[
+        #         ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+        #         ('infra_game_message', models.CharField(blank=True, max_length=1023, null=True)),
+        #         ('infra_token', models.CharField(blank=True, max_length=256, null=True, unique=True)),
+        #         ('status', models.CharField(choices=[('running', 'Running'), ('failed', 'Failed'), ('done', 'Done'), ('waiting', 'Waiting'), ('waiting_accept', 'Waiting to accept'), ('rejected', 'Rejected')], default='waiting', max_length=50)),
+        #         ('time', models.DateTimeField(auto_now_add=True, null=True)),
+        #         ('log', models.FileField(blank=True, null=True, upload_to=apps.challenge.models.FriendlyGame.get_log_file_directory)),
+        #     ],
+        # ),
         migrations.RemoveField(
             model_name='tournament',
             name='run_time',
@@ -45,18 +44,20 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('completed', models.BooleanField(default=False)),
-                ('match', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='friendly_matches', to='challenge.Match')),
-                ('teams', models.ManyToManyField(blank=True, null=True, related_name='lobbies', to='participation.Team')),
+                ('match', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                            related_name='friendly_matches', to='challenge.Match')),
+                ('teams',
+                 models.ManyToManyField(blank=True, null=True, related_name='lobbies', to='participation.Team')),
             ],
         ),
-        migrations.CreateModel(
-            name='FriendlyGameTeam',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('log', models.FileField(blank=True, null=True, upload_to=apps.challenge.models.FriendlyGameTeam.team_single_game_log)),
-                ('score', models.IntegerField(blank=True, null=True)),
-                ('friendly_game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='friendly_game_teams', to='challenge.FriendlyGame')),
-                ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='friendly_game_teams', to='participation.Team')),
-            ],
-        ),
+        # migrations.CreateModel(
+        #     name='FriendlyGameTeam',
+        #     fields=[
+        #         ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+        #         ('log', models.FileField(blank=True, null=True, upload_to=apps.challenge.models.FriendlyGameTeam.team_single_game_log)),
+        #         ('score', models.IntegerField(blank=True, null=True)),
+        #         ('friendly_game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='friendly_game_teams', to='challenge.FriendlyGame')),
+        #         ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='friendly_game_teams', to='participation.Team')),
+        #     ],
+        # ),
     ]
