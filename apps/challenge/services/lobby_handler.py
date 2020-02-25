@@ -111,9 +111,12 @@ class LobbyHandler:
             self.errors.append("You cant't play with yourself")
             return
         self.team = get_object_or_404(Team, name=self.team_name)
-        if self.team.allow_multi_friendly is False:
+        if not self.team.allow_multi_friendly:
             self.valid = False
             self.errors.append("Entered team multi game is closed")
+        if not self.request.user.participant.team.allow_multi_friendly:
+            self.valid = False
+            self.errors.append("Please open your team multi game")
 
     def _validate_teams(self):
         if not self.request.user.participant.team.is_valid:
