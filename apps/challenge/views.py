@@ -159,7 +159,7 @@ class FriendlyGameAPIView(GenericAPIView):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']})
 
-        errors, friendly_game = LobbyHandler(request=request)
+        errors, friendly_game = LobbyHandler(request=request)()
         if errors:
             return Response(data={'errors': errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
         if friendly_game:
