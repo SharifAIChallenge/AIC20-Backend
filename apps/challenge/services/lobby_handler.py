@@ -66,6 +66,7 @@ class LobbyHandler:
         self.errors = []
         self.friendly_game = None
         self.valid = True
+        self.test = ''
 
     def __call__(self):
         self._validate_friendly_delay()
@@ -81,7 +82,7 @@ class LobbyHandler:
         if self.valid and self.lobby.completed:
             self.friendly_game = FriendlyGameCreator(lobby=self.lobby)
 
-        return self.errors, self.friendly_game
+        return self.errors, self.friendly_game, self.test
 
     def _validate_friendly_delay(self):
         challenge = Challenge.objects.get(type=ChallengeTypes.PRIMARY)
@@ -92,7 +93,7 @@ class LobbyHandler:
                 minutes=challenge.friendly_game_delay):
             self.valid = False
             self.errors.append(
-                f"waitAtLeast{challenge.friendly_game_delay}Minutes")
+                f"pleaseWait")
 
     def _set_type(self):
         self.type = self.data.get('type', FriendlyGameTypes.SINGLE)
@@ -148,10 +149,14 @@ class LobbyHandler:
             self.lobby = lobby if lobby else Lobby.objects.create()
             if not self._validate_lobby_join():
                 return
+            self.test = f"teams1 Count Before:{self.lobby.teams1.count()}  teams2 Count Before:{self.lobby.teams2.count()}"
             if self.lobby.teams1.count() < 2:
                 self.lobby.teams1.add(self.request.user.participant.team)
+                self.test += f"\nteams1 Count After:{self.lobby.teams1.count()}"
             elif self.lobby.teams2.count() < 2:
                 self.lobby.teams1.add(self.request.user.participant.team)
+                self.test += f"\nteams1 Count After:{self.lobby.teams2.count()}"
+
             else:
                 self.lobby.completed = True
                 self.lobby.save()

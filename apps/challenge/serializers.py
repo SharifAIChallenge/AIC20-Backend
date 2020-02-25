@@ -89,7 +89,7 @@ class ChallengeSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Challenge
-        fields = ['name', 'type', 'start_time', 'end_time', 'tournaments']
+        fields = ['name', 'type', 'start_time', 'end_time', 'tournaments', 'friendly_game_delay', 'code_submit_delay']
 
 
 class SubmissionSerializer(ModelSerializer):
