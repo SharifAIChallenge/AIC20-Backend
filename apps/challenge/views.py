@@ -163,7 +163,7 @@ class FriendlyGameAPIView(GenericAPIView):
         if errors:
             return Response(data={'errors': errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
         if friendly_game:
-            return Response(data={'details': 'Friendly game runned!'})
+            return Response(data={'details': 'gameRunned'})
         return Response(data={'details': 'your request submitted', 'test': test})
 
 
