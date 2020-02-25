@@ -289,3 +289,5 @@ class Lobby(models.Model):
     match = models.ForeignKey('challenge.Match', related_name='friendly_matches', on_delete=models.CASCADE, null=True,
                               blank=True)
     completed = models.BooleanField(default=False)
+    multi_play = models.BooleanField(default=False)
+    with_friend = models.BooleanField(default=True)
