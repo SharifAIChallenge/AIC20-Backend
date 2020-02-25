@@ -31,6 +31,7 @@ class FriendlyGameCreator:
 
     def __call__(self, *args, **kwargs):
         self._create_friendly_game()
+        self._create_game_sides()
         self._create_friendly_game_teams()
         return self.friendly_game
 
