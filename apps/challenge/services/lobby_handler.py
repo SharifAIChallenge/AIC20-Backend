@@ -1,10 +1,12 @@
 import json
+from datetime import datetime, timedelta
 
 from django.db import transaction
 from django.db.models import Q
+from django.utils.timezone import utc
 from rest_framework.generics import get_object_or_404
 
-from apps.challenge.models import Lobby
+from apps.challenge.models import Lobby, Challenge, ChallengeTypes
 from apps.challenge.models import Game, GameSide, GameTeam
 from apps.participation.models import Team
 
@@ -66,16 +68,29 @@ class LobbyHandler:
         self.valid = True
 
     def __call__(self):
-        self._set_type()
-        if self.type == FriendlyGameTypes.MULTI:
+        self._validate_friendly_delay()
+        if self.valid:
+            self._set_type()
+        if self.valid and self.type == FriendlyGameTypes.MULTI:
             self._set_multi_type()
-            self._set_team_name()
+            self._set_team()
         if self.valid:
             self._handle_lobby()
-        if self.lobby.completed:
+        if self.valid and self.lobby.completed:
             self.friendly_game = FriendlyGameCreator(lobby=self.lobby)
 
         return self.errors, self.friendly_game
+
+    def _validate_friendly_delay(self):
+        challenge = Challenge.objects.get(type=ChallengeTypes.PRIMARY)
+        last_friendly_game = GameTeam.objects.filter(team=self.request.user.participant.team).filter(
+            game_side__game__match=None).order_by('game_side__game__time').values_list('game_side__game',
+                                                                                       flat=True).last()
+        if datetime.now(utc) - last_friendly_game.time < timedelta(
+                minutes=challenge.friendly_game_delay):
+            self.valid = False
+            self.errors.append(
+                f"You have to wait at least {challenge.friendly_game_delay} minutes between each friendly game!")
 
     def _set_type(self):
         self.type = self.data.get('type', FriendlyGameTypes.SINGLE)
@@ -83,7 +98,7 @@ class LobbyHandler:
     def _set_multi_type(self):
         self.multi_type = self.data.get('multi_type', MultiFriendlyGameTypes.FRIEND)
 
-    def _set_team_name(self):
+    def _set_team(self):
         self.team_name = self.data.get('team_name')
         if self.multi_type == FriendlyGameTypes.MULTI and not self.team_name:
             self.valid = False
