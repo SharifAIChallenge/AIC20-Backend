@@ -12,4 +12,6 @@ urlpatterns = [
     path('invitation/invitations-to-me', views.InvitationsToMeAPIView.as_view(), name='invitations_to_me'),
     path('invitation/invitations-to-others', views.InvitationsToOthersAPIView.as_view(), name='invitations_to_others'),
     path('team', views.TeamAPIView.as_view(), name='team'),
+    path('team/multi-friendly', views.ToggleAllowFriendlyMultiGameAPIView.as_view(), name='toggle_allow_multi_friendly'),
+
 ]
