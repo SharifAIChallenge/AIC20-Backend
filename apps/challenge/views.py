@@ -174,8 +174,8 @@ class FriendlyMatchLobbyAPIView(GenericAPIView):
     def get(self, request):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']})
-        queryset = request.user.participant.team.lobbies1.filter(
-            completed=False) + request.user.participant.team.lobbies2.filter(completed=False)
+        queryset = list(request.user.participant.team.lobbies1.filter(
+            completed=False)) + list(request.user.participant.team.lobbies2.filter(completed=False))
 
         data = self.get_serializer(queryset, many=True).data
         return Response(data={'lobbies': data}, status=status.HTTP_200_OK)
