@@ -149,17 +149,10 @@ class LobbyHandler:
             self.lobby = lobby if lobby else Lobby.objects.create()
             if not self._validate_lobby_join():
                 return
-            self.test = f"teams1 Count Before:{self.lobby.teams1.count()}  teams2 Count Before:{self.lobby.teams2.count()}"
             if self.lobby.teams1.count() < 2:
-                self.test += f"  teams1 Count After>>:{self.lobby.teams1.count()}"
-                self.test += f"  teams1 Count After>>:{self.lobby.teams2.count()}"
                 self.lobby.teams1.add(self.request.user.participant.team)
-                self.test += f"  teams1 Count After<<:{self.lobby.teams1.count()}"
-                self.test += f"  teams1 Count After<<:{self.lobby.teams2.count()}"
             elif self.lobby.teams2.count() < 2:
-                self.test += f"  teams1 Count After>>:{self.lobby.teams2.count()}"
-                self.lobby.teams1.add(self.request.user.participant.team)
-                self.test += f"  teams1 Count After<<:{self.lobby.teams2.count()}"
+                self.lobby.teams2.add(self.request.user.participant.team)
 
             else:
                 self.lobby.completed = True
