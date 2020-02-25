@@ -115,3 +115,13 @@ class TeamAPIView(GenericAPIView):
         if errors:
             return Response(data={'errors': errors}, status=status.HTTP_200_OK)
         return Response(data={'details': _('You left your team successfully')}, status=status.HTTP_200_OK)
+
+
+class ToggleAllowFriendlyMultiGameAPIView(GenericAPIView):
+
+    def post(self, request):
+        if not hasattr(request.user, 'participant'):
+            return Response(data={'errors': ['Sorry you dont have any team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        request.user.participant.team.allow_multi_friendly = not request.user.participant.team.allow_multi_friendly
+        request.user.participant.team.save()
+        return Response(data={'details': 'changed successfully'})

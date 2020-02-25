@@ -96,6 +96,8 @@ class SubmissionStatusTypes:
 class Challenge(models.Model):
     name = models.CharField(max_length=100, unique=True)
     type = models.CharField(max_length=50, choices=ChallengeTypes.TYPES)
+    friendly_game_delay = models.IntegerField(default=5)
+    code_submit_delay = models.IntegerField(default=5)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
