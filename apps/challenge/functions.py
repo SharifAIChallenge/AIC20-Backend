@@ -8,7 +8,7 @@ import coreapi
 from django.conf import settings
 from django.core.files import File
 
-from apps.challenge.models import Game
+from apps.challenge.models import Game, Map
 
 
 def random_token():
@@ -84,23 +84,42 @@ def run_games(single_games: List[Game]):
 
     print("oomad run kokne")
     games = []
-    # for single_game in single_games:
-    #     games.append({
-    #         "game": 'AI2020',
-    #         "operation": "run",
-    #         "parameters": {
-    #             "server_game_config": single_game.match.map.infra_token,
-    #             "client1_id": single_game..part1.submission.id,
-    #             "client1_token": random_token(),
-    #             "client1_code": single_game.,
-    #             "client1_name": single_game.match.part1.submission.team.team.id,
-    #             "client2_id": single_game.match.part2.submission.id,
-    #             "client2_token": random_token(),
-    #             "client2_code": single_game.get_second_file(),
-    #             "client2_name": single_game.match.part2.submission.team.team.id,
-    #             "map_name": single_game.map.name
-    #         }
-    #     })
+    for single_game in single_games:
+        random_map = Map.objects.all().order_by('?').last()
+        game_map = single_game.match.map if single_game.match else random_map
+        games.append({
+            "game": 'AI2020',
+            "operation": "run",
+            "parameters": {
+                "server_game_config": game_map.infra_token,
+
+                "client1_id": single_game.game_sides.all()[0].game_teams.all()[0].team.final_submission.id,
+                "client1_token": random_token(),
+                "client1_code": single_game.game_sides.all()[0].game_teams.all()[
+                    0].team.final_submission.infra_compile_token,
+                "client1_name": single_game.game_sides.all()[0].game_teams.all()[0].team.id,
+
+                "client2_id": single_game.game_sides.all()[1].game_teams.all()[0].team.final_submission.id,
+                "client2_token": random_token(),
+                "client2_code": single_game.game_sides.all()[1].game_teams.all()[
+                    0].team.final_submission.infra_compile_token,
+                "client2_name": single_game.game_sides.all()[1].game_teams.all()[0].team.id,
+
+                "client3_id": single_game.game_sides.all()[0].game_teams.all()[1].team.final_submission.id,
+                "client3_token": random_token(),
+                "client3_code": single_game.game_sides.all()[0].game_teams.all()[
+                    1].team.final_submission.infra_compile_token,
+                "client3_name": single_game.game_sides.all()[0].game_teams.all()[1].team.id,
+
+                "client4_id": single_game.game_sides.all()[1].game_teams.all()[1].team.final_submission.id,
+                "client4_token": random_token(),
+                "client4_code": single_game.game_sides.all()[1].game_teams.all()[
+                    1].team.final_submission.infra_compile_token,
+                "client4_name": single_game.game_sides.all()[1].game_teams.all()[1].team.id,
+
+                "map_name": game_map.name
+            }
+        })
 
     response = requests.post(settings.INFRA_IP + "/api/run/run/", json=games,
                              headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}',

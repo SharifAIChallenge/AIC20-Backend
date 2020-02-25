@@ -43,6 +43,11 @@ class Team(models.Model):
     def is_valid(self):
         return True if self.participants.count() >= 2 else False
 
+    @property
+    def final_submission(self):
+        from apps.challenge.models import Submission
+        return Submission.objects.filter(is_final=True).filter(team=self).last()
+
     def __str__(self):
         return self.name
 

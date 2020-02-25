@@ -32,20 +32,26 @@ def hourly_tournament(tournament_id):
     for match in group.matches.all():
         for game in match.games.all():
             game_ids.append(game)
-    run_game.delay(game_ids)
+    run_single_game.delay(game_ids)
 
 
-@app.task(name='run_game')
-def run_game(game_ids):
+@app.task(name='run_single_game')
+def run_single_game(game_id):
+    from .models import Game, SingleGameStatusTypes
+    from .functions import run_games
+    single_game = Game.objects.get(game_id)
+    response = run_games(single_games=[single_game])[0]
+    if response['success']:
+        single_game.infra_token = response['run_id']
+        single_game.status = SingleGameStatusTypes.RUNNING
+    else:
+        single_game.status = SingleGameStatusTypes.FAILED
+    single_game.save()
+
+
+@app.task(name='run_multi_games')
+def run_multi_games(game_ids):
     from .models import Game
     from .functions import run_games
     single_games = Game.objects.filter(id__in=game_ids)
     run_games(single_games=single_games)
-
-
-@app.task(name='run_friendly_game')
-def run_friendly_game(game_id):
-    from .models import FriendlyGame
-    from .functions import run_games
-    friendly_game = FriendlyGame.objects.get(id=game_id)
-    run_games([friendly_game])

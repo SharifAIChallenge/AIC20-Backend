@@ -3,6 +3,7 @@ import json
 import logging
 
 from django.conf import settings
+from django.core.files import File
 from django.http import HttpResponseBadRequest, JsonResponse, HttpResponseServerError
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -15,7 +16,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import transaction
 
 from apps.challenge import functions
-from apps.challenge.models import Submission, Lobby
+from apps.challenge.models import Submission, Lobby, Game, SingleGameStatusTypes
 
 from apps.challenge.services.lobby_handler import LobbyHandler
 from . import models as challenge_models
@@ -163,6 +164,13 @@ class FriendlyGameAPIView(GenericAPIView):
         if errors:
             return Response(data={'errors': errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
         if friendly_game:
+            from apps.challenge.tasks import run_single_game
+            try:
+                run_single_game(game_id=friendly_game.id)
+            except Exception as e:
+                friendly_game.status = SingleGameStatusTypes.FAILED
+                friendly_game.save()
+                return Response(data={'errors': [str(e)]}, status=status.HTTP_406_NOT_ACCEPTABLE)
             return Response(data={'details': 'gameRunned'})
         return Response(data={'details': 'your request submitted', 'test': test})
 
@@ -224,8 +232,6 @@ def report(request):
                         logger.error('Error while download log of compile: %s' % e)
                         return HttpResponseServerError()
 
-                    reader = codecs.getreader('utf-8')
-
                     log = json.loads(logfile.text, strict=False)
                     if len(log["errors"]) == 0:
                         print("infrastructure compiled successfully")
@@ -242,45 +248,45 @@ def report(request):
                 submit.infra_compile_message = 'Unknown error occurred maybe compilation timed out'
         except BaseException as error:
             submit.status = 'failed'
-            submit.infra_compile_message = str(logfile) + "  " + logfile.text + "  " + str(logfile.raw)
+            submit.infra_compile_message = 'Unknown error occurred maybe compilation timed out'
             logger.exception(error)
             submit.save()
             return JsonResponse({'success': False})
         submit.save()
         return JsonResponse({'success': True})
-    # elif single_report['operation'] == 'run':
-    #     try:
-    #         single_match = SingleMatch.objects.get(infra_token=single_report['id'])
-    #         logger.debug("Obtained relevant single match")
-    #     except Exception as exception:
-    #         logger.exception(exception)
-    #         return JsonResponse({'success': False})
-    #
-    #     try:
-    #         if single_report['status'] == 2:
-    #             logger.debug("Report status is OK")
-    #             logfile = functions.download_file(single_report['parameters']['graphic_log'])
-    #             client1_log_token = single_report['parameters']['client1_log']
-    #             client2_log_token = single_report['parameters']['client2_log']
-    #             client1_log_file = functions.download_file(client1_log_token)
-    #             client2_log_file = functions.download_file(client2_log_token)
-    #
-    #             single_match.status = 'done'
-    #             single_match.log.save(name='log', content=File(logfile.file))
-    #             single_match.part1_log.save(name='client.zip', content=File(client1_log_file.file))
-    #             single_match.part2_log.save(name='client.zip', content=File(client2_log_file.file))
-    #             single_match.update_scores_from_log()
-    #         elif single_report['status'] == 3:
-    #             single_match.status = 'failed'
-    #             single_match.infra_match_message = single_report['log']
-    #         else:
-    #             return JsonResponse({'success': False, 'error': 'Invalid Status.'})
-    #     except BaseException as error:
-    #         logger.exception(error)
-    #         single_match.status = 'failed'
-    #         single_match.save()
-    #         return JsonResponse({'success': False})
-    #
-    #     single_match.save()
-    #     return JsonResponse({'success': True})
+    elif single_report['operation'] == 'run':
+        try:
+            game = Game.objects.get(infra_token=single_report['id'])
+            logger.debug("Obtained relevant single match")
+        except Exception as exception:
+            logger.exception(exception)
+            return JsonResponse({'success': False})
+
+        try:
+            if single_report['status'] == 2:
+                logger.debug("Report status is OK")
+                logfile = functions.download_file(single_report['parameters']['graphic_log'])
+                client1_log_token = single_report['parameters']['client1_log']
+                client2_log_token = single_report['parameters']['client2_log']
+                client1_log_file = functions.download_file(client1_log_token)
+                client2_log_file = functions.download_file(client2_log_token)
+
+                game.status = 'done'
+                game.log.save(name='log', content=File(logfile.raw))
+                game.part1_log.save(name='client.zip', content=File(client1_log_file.file))
+                game.part2_log.save(name='client.zip', content=File(client2_log_file.file))
+                game.update_scores_from_log()
+            elif single_report['status'] == 3:
+                game.status = 'failed'
+                game.infra_match_message = single_report['log']
+            else:
+                return JsonResponse({'success': False, 'error': 'Invalid Status.'})
+        except BaseException as error:
+            logger.exception(error)
+            game.status = 'failed'
+            game.save()
+            return JsonResponse({'success': False})
+
+        game.save()
+        return JsonResponse({'success': True})
     return HttpResponseServerError()
