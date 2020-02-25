@@ -81,7 +81,7 @@ class TournamentSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Tournament
-        fields = ['challenge_id', 'type', 'start_time', 'end_time', 'run_time', 'stages']
+        fields = ['challenge_id', 'type', 'start_time', 'end_time', 'stages']
 
 
 class ChallengeSerializer(ModelSerializer):
