@@ -96,8 +96,6 @@ class SubmissionStatusTypes:
 class Challenge(models.Model):
     name = models.CharField(max_length=100, unique=True)
     type = models.CharField(max_length=50, choices=ChallengeTypes.TYPES)
-    friendly_game_delay = models.IntegerField(default=5)
-    code_submit_delay = models.IntegerField(default=5)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
@@ -153,7 +151,7 @@ class MatchTeam(models.Model):
 
 
 class Game(models.Model):
-    match = models.ForeignKey('challenge.Match', related_name='games', on_delete=models.CASCADE, null=True, blank=True)
+    match = models.ForeignKey('challenge.Match', related_name='games', on_delete=models.CASCADE)
     infra_game_message = models.CharField(max_length=1023, null=True, blank=True)
     infra_token = models.CharField(max_length=256, null=True, blank=True, unique=True)
     status = models.CharField(max_length=50, choices=SingleGameStatusTypes.TYPES, default=SingleGameStatusTypes.WAITING)
@@ -166,10 +164,6 @@ class Game(models.Model):
         return os.path.join('logs', 'single_game', ','.join([team.name for team in teams]), self.infra_token, filename)
 
     log = models.FileField(upload_to=get_log_file_directory, blank=True, null=True)
-
-    @property
-    def is_friendly(self):
-        return self.match is None
 
 
 class GameSide(models.Model):
@@ -263,11 +257,33 @@ class Map(models.Model):
         super().save(*args, **kwargs)
 
 
+class FriendlyGame(models.Model):
+    infra_game_message = models.CharField(max_length=1023, null=True, blank=True)
+    infra_token = models.CharField(max_length=256, null=True, blank=True, unique=True)
+    status = models.CharField(max_length=50, choices=SingleGameStatusTypes.TYPES, default=SingleGameStatusTypes.WAITING)
+    time = models.DateTimeField(auto_now_add=True, null=True)
+
+    def get_log_file_directory(self, filename):
+        return os.path.join('logs', 'friendly_matches', self.infra_token, filename)
+
+    log = models.FileField(upload_to=get_log_file_directory, blank=True, null=True)
+
+
+class FriendlyGameTeam(models.Model):
+    team = models.ForeignKey('participation.Team', related_name='friendly_game_teams', on_delete=models.CASCADE)
+    friendly_game = models.ForeignKey('challenge.FriendlyGame', related_name='friendly_game_teams',
+                                      on_delete=models.CASCADE)
+
+    def team_single_game_log(self, filename):
+        return os.path.join('logs', 'just_team', 'friendly_matches', self.team.name, self.friendly_game.infra_token,
+                            filename)
+
+    log = models.FileField(upload_to=team_single_game_log, null=True, blank=True)
+    score = models.IntegerField(null=True, blank=True)
+
+
 class Lobby(models.Model):
-    teams1 = models.ManyToManyField('participation.Team', related_name='lobbies1', null=True, blank=True)
-    teams2 = models.ManyToManyField('participation.Team', related_name='lobbies2', null=True, blank=True)
-    game = models.ForeignKey('challenge.Game', related_name='lobbies', on_delete=models.CASCADE, null=True,
-                             blank=True)
+    teams = models.ManyToManyField('participation.Team', related_name='lobbies', null=True, blank=True)
+    match = models.ForeignKey('challenge.Match', related_name='friendly_matches', on_delete=models.CASCADE, null=True,
+                              blank=True)
     completed = models.BooleanField(default=False)
-    multi_play = models.BooleanField(default=False)
-    with_friend = models.BooleanField(default=True)

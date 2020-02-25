@@ -16,7 +16,7 @@ from django.db import transaction
 
 from apps.challenge import functions
 from apps.challenge.models import Submission, Lobby
-from apps.challenge.services.lobby_handler import LobbyHandler
+from apps.challenge.services.friendly_match import FriendlyGameCreator
 from . import models as challenge_models
 from . import tasks
 from . import serializers as challenge_serializers
@@ -141,42 +141,48 @@ class ChangeFinalSubmissionAPIView(GenericAPIView):
             return Response(data={'errors': [str(e)]}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
-class FriendlyGameAPIView(GenericAPIView):
+class FriendlyMatchRequestAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = challenge_serializers.GameSerializer
-    queryset = challenge_models.GameTeam.objects.all()
+    serializer_class = challenge_serializers.FriendlyGameSerializer
+    queryset = challenge_models.FriendlyGameTeam.objects.all()
 
     def get(self, request):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']})
         data = self.get_serializer(
-            self.get_queryset().filter(team=self.request.user.participant.team).filter(game_side__game__match=None)
-                .values_list('game_side__game', flat=True), many=True).data
+            self.get_queryset().filter(team=self.request.user.participant.team).values_list('friendly_game', flat=True),
+            many=True).data
         return Response(data={'friendlies': data}, status=status.HTTP_200_OK)
 
     def post(self, request):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']})
-
-        errors, friendly_game = LobbyHandler(request=request)
-        if errors:
-            return Response(data={'errors': errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
-        if friendly_game:
-            return Response(data={'details': 'Friendly game runned!'})
-        return Response(data={'details': 'your request submitted'})
+        with transaction.atomic():
+            # try:
+            #     lobby = Lobby.objects.get(completed=False)
+            # except (Lobby.DoesNotExist, Lobby.MultipleObjectsReturned) as e:
+            #     lobby = Lobby.objects.create()
+            lobby = Lobby.objects.filter(completed=False).last()
+            lobby = lobby if lobby else Lobby.objects.create()
+            lobby.teams.add(request.user.participant.team)
+            if lobby.teams.count() >= 4:
+                lobby.completed = True
+                lobby.save()
+                friendly_game = FriendlyGameCreator(lobby=lobby)()
+                tasks.run_friendly_game.delay(friendly_game.id)
+                return Response(data={'details': 'Friendly match runned!'})
+            return Response(data={'details': 'your request submitted'})
 
 
 class FriendlyMatchLobbyAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = challenge_serializers.LobbySerializer
+    queryset = challenge_models.Lobby.objects.all()
 
     def get(self, request):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']})
-        queryset = request.user.participant.team.lobbies1.filter(
-            completed=False) + request.user.participant.team.lobbies2.filter(completed=False)
-
-        data = self.get_serializer(queryset, many=True).data
+        data = self.get_serializer(self.request.user.participant.team.lobbies.filter(completed=False), many=True).data
         return Response(data={'lobbies': data}, status=status.HTTP_200_OK)
 
 
