@@ -66,6 +66,7 @@ class LobbyHandler:
         self.errors = []
         self.friendly_game = None
         self.valid = True
+        self.testing = ""
 
     def __call__(self):
         self._validate_friendly_delay()
@@ -77,11 +78,12 @@ class LobbyHandler:
         if self.valid:
             self._validate_teams()
         if self.valid:
+            self.testing = "oomad to lobby"
             self._handle_lobby()
         if self.valid and self.lobby.completed:
             self.friendly_game = FriendlyGameCreator(lobby=self.lobby)
 
-        return self.errors, self.friendly_game
+        return self.errors, self.friendly_game, self.testing
 
     def _validate_friendly_delay(self):
         challenge = Challenge.objects.get(type=ChallengeTypes.PRIMARY)
@@ -136,6 +138,7 @@ class LobbyHandler:
 
     def _handle_lobby(self):
         if self.type == FriendlyGameTypes.SINGLE:
+            self.testing += "  oomad too single"
             self._single_lobby()
         elif self.multi_type == MultiFriendlyGameTypes.FRIEND:
             self._with_friend_multi_lobby()
@@ -149,6 +152,7 @@ class LobbyHandler:
             if not self._validate_lobby_join():
                 return
             if self.lobby.teams1.count() < 2:
+                self.testing += "  ommad too lobby add kone"
                 self.lobby.teams1.add(self.request.user.participant.team)
             elif self.lobby.teams2.count() < 2:
                 self.lobby.teams1.add(self.request.user.participant.team)
