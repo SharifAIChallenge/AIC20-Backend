@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.utils.timezone import utc
 from rest_framework.generics import get_object_or_404
 
-from apps.challenge.models import Lobby, Challenge, ChallengeTypes
+from apps.challenge.models import Lobby, Challenge, ChallengeTypes, Submission
 from apps.challenge.models import Game, GameSide, GameTeam
 from apps.participation.models import Team
 
@@ -61,8 +61,8 @@ class LobbyHandler:
         self.type = ''
         self.multi_type = ''
         self.team_name = ''
-        self.team: Team = Team()
-        self.lobby: Lobby = Lobby()
+        self.team = None
+        self.lobby = None
         self.errors = []
         self.friendly_game = None
         self.valid = True
@@ -74,6 +74,8 @@ class LobbyHandler:
         if self.valid and self.type == FriendlyGameTypes.MULTI:
             self._set_multi_type()
             self._set_team()
+        if self.valid:
+            self._validate_teams()
         if self.valid:
             self._handle_lobby()
         if self.valid and self.lobby.completed:
@@ -112,6 +114,22 @@ class LobbyHandler:
         if self.team.allow_multi_friendly is False:
             self.valid = False
             self.errors.append("Entered team multi game is closed")
+
+    def _validate_teams(self):
+        if not self.request.user.participant.team.is_valid:
+            self.valid = False
+            self.errors.append("You team is invalid")
+            return
+        if not Submission.objects.filter(team=self.request.user.participant.team).filter(is_final=True).exists():
+            self.valid = False
+            self.errors.append("You dont't have any final submission")
+        if self.team and not self.team.is_valid:
+            self.valid = False
+            self.errors.append("Entered team is an invalid team")
+            return
+        if self.team and not Submission.objects.filter(team=self.team).filter(is_final=True).exists():
+            self.valid = False
+            self.errors.append("Entered team has not any final submission")
 
     def _handle_lobby(self):
         if self.type == FriendlyGameTypes.SINGLE:
