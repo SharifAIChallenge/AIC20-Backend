@@ -110,3 +110,9 @@ class LimitedTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ['name', 'image', 'participants']
+
+
+class GameLimitedTeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ['name', 'image']

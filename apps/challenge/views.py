@@ -84,26 +84,24 @@ class MatchDetailAPIView(GenericAPIView):
 
 
 class GamesListAPIView(GenericAPIView):
-    queryset = challenge_models.Game
+    queryset = challenge_models.Game.objects.all()
     serializer_class = challenge_serializers.GameSerializer
 
     def get(self, request):
-        pass
+        if not hasattr(request.user, 'participant'):
+            return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        game_ids = challenge_models.GameTeam.objects.filter(team=self.request.user.participant.team).values_list(
+            'game_side__game_id')
+        data = self.get_serializer(self.get_queryset().filter(id__in=game_ids), many=True).data
+        return Response(data={'games': data}, status=status.HTTP_200_OK)
 
 
 class GameDetailAPIView(GenericAPIView):
-    queryset = challenge_models.Game
     serializer_class = challenge_serializers.GameSerializer
 
-    def get(self, request):
-        pass
-
-    # TODO: only allow infra to change game result
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({"ok": "true"})
+    def get(self, request, game_id):
+        game = get_object_or_404(challenge_models.Game, id=game_id)
+        return
 
 
 class SubmissionSubmitAPIView(GenericAPIView):

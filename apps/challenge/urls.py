@@ -15,6 +15,7 @@ urlpatterns = [
     path('submission/submissions', views.SubmissionsListAPIView.as_view(), name='team_submissions_list'),
     path('submission/change_final/<int:submission_id>', views.ChangeFinalSubmissionAPIView.as_view(),
          name='change_final_submission'),
+    path('games', views.GamesListAPIView.as_view(), name='games_list'),
     path('game/<int:game_id>', views.GameDetailAPIView.as_view(), name='game_detail'),
     path('game/report', views.report, name='infrastructure_report'),
     path('game/friendly', views.FriendlyGameAPIView.as_view(), name='friendly_match_request'),

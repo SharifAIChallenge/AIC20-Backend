@@ -11,11 +11,11 @@ from ..participation import serializers as participation_serializers
 
 
 class GameTeamSerializer(ModelSerializer):
-    team = participation_serializers.TeamSerializer(many=True, read_only=True)
+    team = participation_serializers.GameLimitedTeamSerializer(read_only=True)
 
     class Meta:
         model = challenge_models.GameTeam
-        fields = ['game_sid', 'team', 'log', 'score']
+        fields = ['team', 'log', 'score']
 
 
 class GameSideSerializer(ModelSerializer):
@@ -23,15 +23,20 @@ class GameSideSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.GameSide
-        fields = ['game_id', 'has_won', 'game_teams']
+        fields = ['has_won', 'game_teams']
 
 
 class GameSerializer(ModelSerializer):
     game_sides = GameSideSerializer(many=True, read_only=True)
+    winner_side = serializers.SerializerMethodField('_winner_side')
+
+    @staticmethod
+    def _winner_side(game: challenge_models.Game):
+        return game.winner_side
 
     class Meta:
         model = challenge_models.Game
-        fields = ['match', 'infra_game_message', 'game_sides', 'status', 'time', 'log']
+        fields = ['match', 'infra_game_message', 'game_sides', 'status', 'time', 'log', 'winner_side']
 
 
 class MatchTeamSerializer(ModelSerializer):
