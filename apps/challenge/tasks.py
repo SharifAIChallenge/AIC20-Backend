@@ -41,6 +41,7 @@ def run_single_game(game_id):
     from .functions import run_games
     single_game = Game.objects.get(id=game_id)
     response = run_games(single_games=[single_game])[0]
+    single_game = Game.objects.get(id=game_id)
     if response['success']:
         single_game.infra_token = response['run_id']
         single_game.status = SingleGameStatusTypes.RUNNING
