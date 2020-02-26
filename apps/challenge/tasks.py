@@ -39,7 +39,7 @@ def hourly_tournament(tournament_id):
 def run_single_game(game_id):
     from .models import Game, SingleGameStatusTypes
     from .functions import run_games
-    single_game = Game.objects.get(game_id)
+    single_game = Game.objects.get(id=game_id)
     response = run_games(single_games=[single_game])[0]
     if response['success']:
         single_game.infra_token = response['run_id']
