@@ -164,9 +164,8 @@ class FriendlyGameAPIView(GenericAPIView):
             return Response(data={'errors': errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
         if friendly_game:
             from apps.challenge.tasks import run_single_game
-            run_single_game(game_id=friendly_game.id)
             try:
-                pass
+                run_single_game(game_id=friendly_game.id)
             except Exception as e:
                 friendly_game.status = SingleGameStatusTypes.FAILED
                 friendly_game.save()
