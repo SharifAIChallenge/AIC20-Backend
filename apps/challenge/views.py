@@ -91,7 +91,7 @@ class GamesListAPIView(GenericAPIView):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
         game_ids = challenge_models.GameTeam.objects.filter(team=self.request.user.participant.team).values_list(
-            'game_side__game_id')
+            'game_side__game_id', flat=True)
         data = self.get_serializer(self.get_queryset().filter(id__in=game_ids), many=True).data
         return Response(data={'games': data}, status=status.HTTP_200_OK)
 
