@@ -169,14 +169,18 @@ class Game(models.Model):
         score = json.loads(self.log.read()).get('end')
         score = sorted(score, key=lambda x: x['playerId'])
         print(score, score[0]['score'], score[1]['score'], score[2]['score'], score[3]['score'])
-        self.game_sides.all()[0].game_teams.all()[0].score = score[0]['score']
-        self.game_sides.all()[0].game_teams.all()[1].score = score[2]['score']
-        self.game_sides.all()[1].game_teams.all()[0].score = score[1]['score']
-        self.game_sides.all()[1].game_teams.all()[1].score = score[3]['score']
-        self.game_sides.all()[0].game_teams.all()[0].save()
-        self.game_sides.all()[0].game_teams.all()[1].save()
-        self.game_sides.all()[1].game_teams.all()[0].save()
-        self.game_sides.all()[1].game_teams.all()[1].save()
+        client0 = self.game_sides.all()[0].game_teams.all()[0]
+        client1 = self.game_sides.all()[1].game_teams.all()[0]
+        client2 = self.game_sides.all()[0].game_teams.all()[1]
+        client3 = self.game_sides.all()[1].game_teams.all()[1]
+        client0.score = score[0]['score']
+        client2.score = score[2]['score']
+        client1 = score[1]['score']
+        client3 = score[3]['score']
+        client0.save()
+        client1.save()
+        client2.save()
+        client3.save()
         if score[0]['score'] + score[2]['score'] > score[1]['score'] + score[3]['score']:
             self.game_sides.all()[0].has_won = True
             self.game_sides.all()[0].has_won.save()
