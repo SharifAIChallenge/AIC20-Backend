@@ -169,10 +169,10 @@ class Game(models.Model):
         score = json.loads(self.log.read()).get('end')
         score = sorted(score, key=lambda x: x['playerId'])
         print(score, score[0]['score'], score[1]['score'], score[2]['score'], score[3]['score'])
-        client0 = self.game_sides.all()[0].game_teams.all()[0]
-        client1 = self.game_sides.all()[1].game_teams.all()[0]
-        client2 = self.game_sides.all()[0].game_teams.all()[1]
-        client3 = self.game_sides.all()[1].game_teams.all()[1]
+        client0 = self.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[0]
+        client1 = self.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[0]
+        client2 = self.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[1]
+        client3 = self.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[1]
         client0.score = score[0]['score']
         client2.score = score[2]['score']
         client1.score = score[1]['score']
