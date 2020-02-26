@@ -130,7 +130,7 @@ def run_games(single_games: List[Game]):
     return response.json()
 
 
-def recover():
+def recover(password):
     with open('u.txt', 'r') as f:
         for line in f.readlines():
             line = line[:-1]
@@ -142,8 +142,8 @@ def recover():
             print("=============================================")
             data = {
                 "email": splitted[3],
-                "password_1": 'security_breach',
-                "password_2": 'security_breach',
+                "password_1": password,
+                "password_2": password,
                 "profile": {
                     'firstname_fa': splitted[1],
                     'firstname_en': '_',
