@@ -276,9 +276,10 @@ def report(request):
                 logfile = functions.download_file(single_report['parameters']['graphic_log'])
                 test += "  logfile ro download kard"
                 game.status = 'done'
-                game.log.save(name='log', content=File(logfile.content))
+                game.log = logfile.raw
                 test += "  log ro save kard too game"
                 game.update_scores()
+                game.save()
                 test += "  Score haro update kard"
             elif single_report['status'] == 3:
                 test += "  status 3 bood aslan"

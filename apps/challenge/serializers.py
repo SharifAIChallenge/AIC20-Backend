@@ -28,7 +28,7 @@ class GameSideSerializer(ModelSerializer):
 
 class GameSerializer(ModelSerializer):
     game_sides = GameSideSerializer(many=True, read_only=True)
-    winner_side = serializers.SerializerMethodField('_winner_side')
+    winner_side = serializers.SerializerMethodField('_winner_side', read_only=True)
 
     @staticmethod
     def _winner_side(game: challenge_models.Game):
