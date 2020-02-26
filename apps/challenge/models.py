@@ -157,7 +157,7 @@ class Game(models.Model):
     time = models.DateTimeField(auto_now_add=True, null=True)
 
     def get_log_file_directory(self, filename):
-        return os.path.join('logs', 'single_game', str(self.id), filename)
+        return os.path.join('logs', 'single_game', self.infra_token if self.infra_token else str(self.id), filename)
 
     log = models.FileField(upload_to=get_log_file_directory, blank=True, null=True)
 
