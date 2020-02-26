@@ -172,6 +172,10 @@ class Game(models.Model):
         self.game_sides.all()[0].game_teams.all()[1].score = score[2]['score']
         self.game_sides.all()[1].game_teams.all()[0].score = score[1]['score']
         self.game_sides.all()[1].game_teams.all()[1].score = score[3]['score']
+        self.game_sides.all()[0].game_teams.all()[0].save()
+        self.game_sides.all()[0].game_teams.all()[1].save()
+        self.game_sides.all()[1].game_teams.all()[0].save()
+        self.game_sides.all()[1].game_teams.all()[1].save()
         if score[0]['score'] + score[2]['score'] > score[1]['score'] + score[3]['score']:
             self.game_sides.all()[0].has_won = True
             self.game_sides.all()[0].has_won.save()

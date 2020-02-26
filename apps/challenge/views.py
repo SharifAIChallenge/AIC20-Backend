@@ -277,10 +277,8 @@ def report(request):
             test += "  logfile ro download kard"
             game.status = 'done'
             game.log = ContentFile(name=single_report['parameters']['graphic_log'], content=response.text)
-            test += "  log ro save kard too game"
-            game.update_scores()
-            test += "  Score haro update kard"
             game.save()
+            game.update_scores()
         elif single_report['status'] == 3:
             test += "  status 3 bood aslan"
             game.status = 'failed'
