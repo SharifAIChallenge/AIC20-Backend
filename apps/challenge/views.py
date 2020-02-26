@@ -282,6 +282,7 @@ def report(request):
             else:
                 return JsonResponse({'success': False, 'error': 'Invalid Status.'})
         except BaseException as error:
+            print(error)
             logger.exception(error)
             game.status = 'failed'
             game.save()
