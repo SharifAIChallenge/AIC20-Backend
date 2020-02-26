@@ -165,7 +165,8 @@ class FriendlyGameAPIView(GenericAPIView):
         if friendly_game:
             from apps.challenge.tasks import run_single_game
             try:
-                run_single_game(game_id=friendly_game.id)
+                # run_single_game(game_id=friendly_game.id)
+                run_single_game.delay(friendly_game.id)
             except Exception as e:
                 friendly_game.status = SingleGameStatusTypes.FAILED
                 friendly_game.save()
