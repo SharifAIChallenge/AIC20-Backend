@@ -276,7 +276,7 @@ def report(request):
                 logfile = functions.download_file(single_report['parameters']['graphic_log'])
                 test += "  logfile ro download kard"
                 game.status = 'done'
-                with open(game.get_log_file_directory(game.infra_token + "log"), 'wb').write(logfile.content) as f:
+                with open(game.get_log_file_directory(game.infra_token + "log"), 'wb') as f:
                     for chunk in logfile:
                         f.write(chunk)
                     game.log = File(file=f)
