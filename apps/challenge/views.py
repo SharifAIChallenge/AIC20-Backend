@@ -284,6 +284,7 @@ def report(request):
         except BaseException as error:
             print(error)
             logger.exception(error)
+            game.infra_game_message = str(error)
             game.status = 'failed'
             game.save()
             return JsonResponse({'success': False})
