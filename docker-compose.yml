@@ -18,6 +18,8 @@ services:
     build: .
     container_name: thebackend_web
     restart: always
+    depends_on:
+      - rabbitmq
     environment:
       DJANGO_SETTINGS_MODULE: "thebackend.settings.production"
     command: >
@@ -31,16 +33,18 @@ services:
       - ./static/:/static/
       - ./media/:/media/
       - /var/log/thebackend:/var/log/thebackend
-    depends_on:
-      - thebackend_db
     ports:
       - 172.17.0.1:8787:8000
       - 8000:8000
-  thebackend_db:
-    image: postgres:latest
-    container_name: thebackend_db
-    restart: always
-    volumes:
-      - ./init.sh:/docker-entrypoint-initdb.d/init.sh
-    expose:
-      - 5432
+  rabbitmq:
+    container_name: thebackend_rabbitmq
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=aic
+      - RABBITMQ_DEFAULT_PASS=shitWasHereBe4me
+  celery:
+    container_name: thebackend_celery
+    build: .
+    command: ["celery", "-A", "thebackend", "worker", "-l", "info", "-E"]
+    depends_on:
+      - rabbitmq

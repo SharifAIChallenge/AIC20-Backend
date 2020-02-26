@@ -107,4 +107,4 @@ INFRA_IP = config("INFRA_IP")
 INFRA_AUTH_TOKEN = config("INFRA_AUTH_TOKEN")
 INFRA_API_SCHEMA_ADDRESS = config("INFRA_API_SCHEMA_ADDRESS")
 
-CELERY_BROKER_URL = 'amqp://rabbitmq:5672'
+CELERY_BROKER_URL = "ampq://aic:shitWasHereBeforeMe@rabbitmq:5672//"
