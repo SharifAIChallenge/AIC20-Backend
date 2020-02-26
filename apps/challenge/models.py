@@ -174,7 +174,7 @@ class Game(models.Model):
         return self.match is None
 
     def update_scores(self):
-        score = json.loads(self.log.read).get('end')
+        score = json.loads(self.log.read()).get('end')
         score = score.sorted(key=lambda x: x['playerId'])
         self.game_sides.all()[0].game_teams.all()[0].score = score[0]['score']
         self.game_sides.all()[0].game_teams.all()[1].score = score[2]['score']
