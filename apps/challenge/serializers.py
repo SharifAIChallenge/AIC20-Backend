@@ -28,15 +28,10 @@ class GameSideSerializer(ModelSerializer):
 
 class GameSerializer(ModelSerializer):
     game_sides = GameSideSerializer(many=True, read_only=True)
-    winner_side = serializers.SerializerMethodField('_winner_side', read_only=True)
-
-    @staticmethod
-    def _winner_side(game: challenge_models.Game):
-        return game.winner_side
 
     class Meta:
         model = challenge_models.Game
-        fields = ['match', 'infra_game_message', 'game_sides', 'status', 'time', 'log', 'winner_side']
+        fields = ['match', 'infra_game_message', 'game_sides', 'status', 'time', 'log']
 
 
 class MatchTeamSerializer(ModelSerializer):
