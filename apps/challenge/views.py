@@ -4,6 +4,7 @@ import logging
 
 from django.conf import settings
 from django.core.files import File
+from django.core.files.base import ContentFile
 from django.http import HttpResponseBadRequest, JsonResponse, HttpResponseServerError
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -281,6 +282,7 @@ def report(request):
                 game.log = File(file=f)
             # game.log = File(
             #     file=open(game.get_log_file_directory(game.infra_token + "log"), 'wb').write(logfile.content))
+            game.log = ContentFile(content=logfile.content)
             test += "  log ro save kard too game"
             game.save()
             game.update_scores()
