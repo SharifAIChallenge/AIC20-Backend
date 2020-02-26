@@ -67,7 +67,6 @@ class LobbyHandler:
         self.errors = []
         self.friendly_game = None
         self.valid = True
-        self.test = ''
 
     def __call__(self):
         self._validate_friendly_delay()
@@ -83,7 +82,7 @@ class LobbyHandler:
         if self.valid and self.lobby.completed:
             self.friendly_game = FriendlyGameCreator(lobby=self.lobby)()
 
-        return self.errors, self.friendly_game, self.test
+        return self.errors, self.friendly_game
 
     def _validate_friendly_delay(self):
         challenge = Challenge.objects.get(type=ChallengeTypes.PRIMARY)

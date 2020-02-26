@@ -160,20 +160,19 @@ class FriendlyGameAPIView(GenericAPIView):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']})
 
-        errors, friendly_game, test = LobbyHandler(request=request)()
+        errors, friendly_game = LobbyHandler(request=request)()
         if errors:
             return Response(data={'errors': errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
         if friendly_game:
             from apps.challenge.tasks import run_single_game
-            run_single_game(game_id=friendly_game.id)
             try:
-                pass
+                run_single_game(game_id=friendly_game.id)
             except Exception as e:
                 friendly_game.status = SingleGameStatusTypes.FAILED
                 friendly_game.save()
                 return Response(data={'errors': [str(e)]}, status=status.HTTP_406_NOT_ACCEPTABLE)
             return Response(data={'details': 'gameRunned'})
-        return Response(data={'details': 'your request submitted', 'test': test})
+        return Response(data={'details': 'your request submitted'})
 
 
 class FriendlyMatchLobbyAPIView(GenericAPIView):
@@ -213,6 +212,7 @@ class RunGameTest(GenericAPIView):
         game = Game.objects.get(id=game_id)
         run_games([game])
         return Response(data={'ok'})
+
 
 @csrf_exempt
 def report(request):

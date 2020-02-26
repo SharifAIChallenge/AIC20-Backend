@@ -47,7 +47,7 @@ class MatchTeamAdmin(admin.ModelAdmin):
 
 @admin.register(challenge_models.Game)
 class GameAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ['status']
 
 
 @admin.register(challenge_models.GameSide)
