@@ -175,8 +175,8 @@ class Game(models.Model):
         client3 = self.game_sides.all()[1].game_teams.all()[1]
         client0.score = score[0]['score']
         client2.score = score[2]['score']
-        client1 = score[1]['score']
-        client3 = score[3]['score']
+        client1.score = score[1]['score']
+        client3.score = score[3]['score']
         client0.save()
         client1.save()
         client2.save()
