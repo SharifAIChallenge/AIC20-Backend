@@ -276,8 +276,12 @@ def report(request):
                 logfile = functions.download_file(single_report['parameters']['graphic_log'])
                 test += "  logfile ro download kard"
                 game.status = 'done'
-                game.log = File(
-                    file=open(game.get_log_file_directory(game.infra_token + "log"), 'wb').write(logfile.content))
+                with open(game.get_log_file_directory(game.infra_token + "log"), 'wb').write(logfile.content) as f:
+                    for chunk in logfile:
+                        f.write(chunk)
+                    game.log = File(file=f)
+                # game.log = File(
+                #     file=open(game.get_log_file_directory(game.infra_token + "log"), 'wb').write(logfile.content))
                 test += "  log ro save kard too game"
                 game.save()
                 game.update_scores()
