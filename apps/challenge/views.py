@@ -90,7 +90,7 @@ class GamesListAPIView(GenericAPIView):
     def get(self, request):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
-        game_ids = challenge_models.GameTeam.objects.filter(team=self.request.user.participant.team).values_list(
+        game_ids = challenge_models.GameTeam.objects.filter(team=request.user.participant.team).values_list(
             'game_side__game_id', flat=True)
         data = self.get_serializer(self.get_queryset().filter(id__in=game_ids), many=True).data
         return Response(data={'games': data}, status=status.HTTP_200_OK)
@@ -268,15 +268,20 @@ def report(request):
         except Exception as exception:
             logger.exception(exception)
             return JsonResponse({'success': False})
-
+        test = ''
         try:
             if single_report['status'] == 2:
                 logger.debug("Report status is OK")
+                test += "oomad too status 2"
                 logfile = functions.download_file(single_report['parameters']['graphic_log'])
+                test += "  logfile ro download kard"
                 game.status = 'done'
                 game.log.save(name='log', content=File(logfile.content))
+                test += "  log ro save kard too game"
                 game.update_scores()
+                test += "  Score haro update kard"
             elif single_report['status'] == 3:
+                test += "  status 3 bood aslan"
                 game.status = 'failed'
                 game.infra_game_message = single_report['log']
             else:
@@ -284,7 +289,7 @@ def report(request):
         except BaseException as error:
             print(error)
             logger.exception(error)
-            game.infra_game_message = str(error)
+            game.infra_game_message = str(error) + "  " + test
             game.status = 'failed'
             game.save()
             return JsonResponse({'success': False})
