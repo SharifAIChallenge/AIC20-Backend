@@ -269,36 +269,28 @@ def report(request):
             logger.exception(exception)
             return JsonResponse({'success': False})
         test = ''
-        try:
-            if single_report['status'] == 2:
-                logger.debug("Report status is OK")
-                test += "oomad too status 2"
-                logfile = functions.download_file(single_report['parameters']['graphic_log'])
-                test += "  logfile ro download kard"
-                game.status = 'done'
-                with open(game.get_log_file_directory(game.infra_token + "log"), 'wb') as f:
-                    for chunk in logfile:
-                        f.write(chunk)
-                    game.log = File(file=f)
-                # game.log = File(
-                #     file=open(game.get_log_file_directory(game.infra_token + "log"), 'wb').write(logfile.content))
-                test += "  log ro save kard too game"
-                game.save()
-                game.update_scores()
-                test += "  Score haro update kard"
-            elif single_report['status'] == 3:
-                test += "  status 3 bood aslan"
-                game.status = 'failed'
-                game.infra_game_message = single_report['log']
-            else:
-                return JsonResponse({'success': False, 'error': 'Invalid Status.'})
-        except BaseException as error:
-            print(error)
-            logger.exception(error)
-            game.infra_game_message = str(error) + "  " + test
-            game.status = 'failed'
+        if single_report['status'] == 2:
+            logger.debug("Report status is OK")
+            test += "oomad too status 2"
+            logfile = functions.download_file(single_report['parameters']['graphic_log'])
+            test += "  logfile ro download kard"
+            game.status = 'done'
+            with open(game.get_log_file_directory(game.infra_token + "log"), 'wb') as f:
+                for chunk in logfile:
+                    f.write(chunk)
+                game.log = File(file=f)
+            # game.log = File(
+            #     file=open(game.get_log_file_directory(game.infra_token + "log"), 'wb').write(logfile.content))
+            test += "  log ro save kard too game"
             game.save()
-            return JsonResponse({'success': False})
+            game.update_scores()
+            test += "  Score haro update kard"
+        elif single_report['status'] == 3:
+            test += "  status 3 bood aslan"
+            game.status = 'failed'
+            game.infra_game_message = single_report['log']
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid Status.'})
 
         game.save()
         return JsonResponse({'success': True})
