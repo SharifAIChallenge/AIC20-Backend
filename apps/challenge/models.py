@@ -102,7 +102,8 @@ class Challenge(models.Model):
     code_submit_delay = models.IntegerField(default=5)
 
     def pre_save(self):
-        ChallengeScoreBoard.objects.create(challenge=self)
+        if not hasattr(self, 'scoreboard'):
+            ChallengeScoreBoard.objects.create(challenge=self)
 
     def save(self, *args, **kwargs):
         self.pre_save()
