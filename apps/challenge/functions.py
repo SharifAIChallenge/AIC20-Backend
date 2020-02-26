@@ -116,14 +116,13 @@ def run_games(single_games: List[Game]):
                 "client4_code": single_game.game_sides.all()[1].game_teams.all()[
                     1].team.final_submission.infra_compile_token,
                 "client4_name": single_game.game_sides.all()[1].game_teams.all()[1].team.id,
-
-                "map_name": game_map.name
             }
         })
 
     response = requests.post(settings.INFRA_IP + "/api/run/run/", json=games,
                              headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}',
                                       'Content-Type': 'application/json'})
+
     print(response.status_code, response.json(), "==== Run Single Games ====")
 
     return response.json()

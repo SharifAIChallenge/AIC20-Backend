@@ -19,4 +19,5 @@ urlpatterns = [
     path('game/report', views.report, name='infrastructure_report'),
     path('game/friendly', views.FriendlyGameAPIView.as_view(), name='friendly_match_request'),
     path('game/lobby', views.FriendlyMatchLobbyAPIView.as_view(), name='lobby'),
+    path('game/test/<int:game_id>', views.RunGameTest.as_view())
 ]

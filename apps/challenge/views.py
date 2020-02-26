@@ -206,6 +206,14 @@ class MapDetailAPIView(GenericAPIView):
         pass
 
 
+class RunGameTest(GenericAPIView):
+
+    def post(self, request, game_id):
+        from .functions import run_games
+        game = Game.objects.get(id=game_id)
+        run_games([game])
+        return Response(data={'ok'})
+
 @csrf_exempt
 def report(request):
     print("infrastructure called me :)))))")
