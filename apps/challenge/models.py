@@ -157,10 +157,7 @@ class Game(models.Model):
     time = models.DateTimeField(auto_now_add=True, null=True)
 
     def get_log_file_directory(self, filename):
-        teams = []
-        for game_side in self.game_sides:
-            teams.extend(game_side.game_teams.values_list('team', flat=True))
-        return os.path.join('logs', 'single_game', ','.join([team.name for team in teams]), self.infra_token, filename)
+        return os.path.join('logs', 'single_game', str(self.id), filename)
 
     log = models.FileField(upload_to=get_log_file_directory, blank=True, null=True)
 
@@ -170,7 +167,7 @@ class Game(models.Model):
 
     def update_scores(self):
         score = json.loads(self.log.read()).get('end')
-        score = score.sorted(key=lambda x: x['playerId'])
+        score = sorted(score, key=lambda x: x['playerId'])
         self.game_sides.all()[0].game_teams.all()[0].score = score[0]['score']
         self.game_sides.all()[0].game_teams.all()[1].score = score[2]['score']
         self.game_sides.all()[1].game_teams.all()[0].score = score[1]['score']

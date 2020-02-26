@@ -170,28 +170,18 @@ def download_file_test(file_token):
     response = requests.get(settings.INFRA_IP + f"/api/storage/get_file/{file_token}/", allow_redirects=True,
                             headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
     # print(response.status_code, "==== Download File ====")
-    # file = ContentFile(content=response.content)
     print(response.text)
-    print(response, response.headers, response.raw.readlines())
-    print(response.apparent_encoding)
-    # open('test.txt', 'wb').write(response.content)
+    game = Game.objects.all().last()
     # with open('test.txt', 'wb') as f:
-    #     for chunk in response.content:
+    #     for chunk in response:
     #         f.write(chunk)
+    #     game.log = f
+    #     game.save()
+    file = ContentFile(name=file_token, content=response.text)
+
+    game.log = file
     # print(response.content)
     # print(response.text)
-    game = Game.objects.all().last()
     # game.log = file
     # print(file.readlines())
     game.save()
-
-# def download_file_test(file_token):
-#     """
-#     Downloads file from infrastructure synchronously
-#     :param file_token: the file token obtained already from infra.
-#     :return: sth that TeamSubmission file field can be assigned to
-#     """
-#     client, schema = create_infra_client()
-#     return client.action(schema,
-#                          ['storage', 'get_file', 'read'],
-#                          params={'token': file_token})

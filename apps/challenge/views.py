@@ -234,13 +234,13 @@ def report(request):
                 submit.infra_compile_token = single_report['parameters'].get('code_compiled_zip', None)
                 if submit.status == 'compiling':
                     try:
-                        logfile = functions.download_file(single_report['parameters']['code_log'])
+                        response = functions.download_file(single_report['parameters']['code_log'])
                         print("infrastructure code log file downloaded")
                     except Exception as e:
                         logger.error('Error while download log of compile: %s' % e)
                         return HttpResponseServerError()
 
-                    log = json.loads(logfile.text, strict=False)
+                    log = json.loads(response.text, strict=False)
                     if len(log["errors"]) == 0:
                         print("infrastructure compiled successfully")
                         submit.status = 'compiled'
@@ -273,20 +273,14 @@ def report(request):
         if single_report['status'] == 2:
             logger.debug("Report status is OK")
             test += "oomad too status 2"
-            logfile = functions.download_file(single_report['parameters']['graphic_log'])
+            response = functions.download_file(single_report['parameters']['graphic_log'])
             test += "  logfile ro download kard"
             game.status = 'done'
-            with open(game.get_log_file_directory(game.infra_token + "log"), 'wb') as f:
-                for chunk in logfile:
-                    f.write(chunk)
-                game.log = File(file=f)
-            # game.log = File(
-            #     file=open(game.get_log_file_directory(game.infra_token + "log"), 'wb').write(logfile.content))
-            game.log = ContentFile(content=logfile.content)
+            game.log = ContentFile(name=single_report['parameters']['graphic_log'], content=response.text)
             test += "  log ro save kard too game"
-            game.save()
             game.update_scores()
             test += "  Score haro update kard"
+            game.save()
         elif single_report['status'] == 3:
             test += "  status 3 bood aslan"
             game.status = 'failed'
