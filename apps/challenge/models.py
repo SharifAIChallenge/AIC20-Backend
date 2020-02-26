@@ -168,6 +168,7 @@ class Game(models.Model):
     def update_scores(self):
         score = json.loads(self.log.read()).get('end')
         score = sorted(score, key=lambda x: x['playerId'])
+        print(score, score[0]['score'], score[1]['score'], score[2]['score'], score[3]['score'])
         self.game_sides.all()[0].game_teams.all()[0].score = score[0]['score']
         self.game_sides.all()[0].game_teams.all()[1].score = score[2]['score']
         self.game_sides.all()[1].game_teams.all()[0].score = score[1]['score']
