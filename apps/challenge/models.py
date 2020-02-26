@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import uuid
@@ -171,6 +172,29 @@ class Game(models.Model):
     @property
     def is_friendly(self):
         return self.match is None
+
+    def update_scores(self):
+        score = json.loads(self.log.read).get('end')
+        score = score.sorted(key=lambda x: x['playerId'])
+        self.game_sides.all()[0].game_teams.all()[0].score = score[0]['score']
+        self.game_sides.all()[0].game_teams.all()[1].score = score[2]['score']
+        self.game_sides.all()[1].game_teams.all()[0].score = score[1]['score']
+        self.game_sides.all()[1].game_teams.all()[1].score = score[3]['score']
+        if score[0]['score'] + score[2]['score'] > score[1]['score'] + score[3]['score']:
+            self.game_sides.all()[0].has_won = True
+            self.game_sides.all()[0].has_won.save()
+        elif score[0]['score'] + score[2]['score'] < score[1]['score'] + score[3]['score']:
+            self.game_sides.all()[1].has_won = True
+            self.game_sides.all()[1].has_won.save()
+
+    @property
+    def winner_side(self):
+        if self.game_sides.all()[0].has_won:
+            return 1
+        elif self.game_sides.all()[1].has_won:
+            return 2
+        else:
+            return 0
 
 
 class GameSide(models.Model):

@@ -275,19 +275,12 @@ def report(request):
             if single_report['status'] == 2:
                 logger.debug("Report status is OK")
                 logfile = functions.download_file(single_report['parameters']['graphic_log'])
-                client1_log_token = single_report['parameters']['client1_log']
-                client2_log_token = single_report['parameters']['client2_log']
-                client1_log_file = functions.download_file(client1_log_token)
-                client2_log_file = functions.download_file(client2_log_token)
-
                 game.status = 'done'
-                game.log.save(name='log', content=File(logfile.raw))
-                game.part1_log.save(name='client.zip', content=File(client1_log_file.file))
-                game.part2_log.save(name='client.zip', content=File(client2_log_file.file))
-                game.update_scores_from_log()
+                game.log.save(name='log', content=File(logfile.content))
+                game.update_scores()
             elif single_report['status'] == 3:
                 game.status = 'failed'
-                game.infra_match_message = single_report['log']
+                game.infra_game_message = single_report['log']
             else:
                 return JsonResponse({'success': False, 'error': 'Invalid Status.'})
         except BaseException as error:
