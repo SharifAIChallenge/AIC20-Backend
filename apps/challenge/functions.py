@@ -8,6 +8,7 @@ import requests
 import coreapi
 from django.conf import settings
 from django.core.files import File
+from django.core.files.base import ContentFile
 
 from apps.challenge.models import Game, Map
 
@@ -158,3 +159,39 @@ def recover():
             user.save()
             user.instance.is_active = True
             user.instance.save()
+
+
+def download_file_test(file_token):
+    """
+    Downloads file from infrastructure synchronously
+    :param file_token: the file token obtained already from infra.
+    :return: sth that TeamSubmission file field can be assigned to
+    """
+    response = requests.get(settings.INFRA_IP + f"/api/storage/get_file/{file_token}/", allow_redirects=True,
+                            headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
+    # print(response.status_code, "==== Download File ====")
+    # file = ContentFile(content=response.content)
+    print(response.text)
+    print(response, response.headers, response.raw.readlines())
+    print(response.apparent_encoding)
+    # open('test.txt', 'wb').write(response.content)
+    # with open('test.txt', 'wb') as f:
+    #     for chunk in response.content:
+    #         f.write(chunk)
+    # print(response.content)
+    # print(response.text)
+    game = Game.objects.all().last()
+    # game.log = file
+    # print(file.readlines())
+    game.save()
+
+# def download_file_test(file_token):
+#     """
+#     Downloads file from infrastructure synchronously
+#     :param file_token: the file token obtained already from infra.
+#     :return: sth that TeamSubmission file field can be assigned to
+#     """
+#     client, schema = create_infra_client()
+#     return client.action(schema,
+#                          ['storage', 'get_file', 'read'],
+#                          params={'token': file_token})
