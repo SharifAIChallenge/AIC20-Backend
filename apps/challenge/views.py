@@ -20,6 +20,7 @@ from apps.challenge import functions
 from apps.challenge.models import Submission, Lobby, Game, SingleGameStatusTypes
 
 from apps.challenge.services.lobby_handler import LobbyHandler
+from apps.challenge.services.stats import Stats
 from . import models as challenge_models
 from . import tasks
 from . import serializers as challenge_serializers
@@ -97,12 +98,14 @@ class GamesListAPIView(GenericAPIView):
         return Response(data={'games': data}, status=status.HTTP_200_OK)
 
 
-class GameDetailAPIView(GenericAPIView):
-    serializer_class = challenge_serializers.GameSerializer
+class StatsAPIView(GenericAPIView):
+    queryset = challenge_models.GameTeam.objects.all()
 
-    def get(self, request, game_id):
-        game = get_object_or_404(challenge_models.Game, id=game_id)
-        return
+    def get(self, request):
+        if not hasattr(request.user, 'participant'):
+            return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        wins, draws, loss = Stats(request=request)()
+        return Response(data={'wins': wins, 'draws': draws, 'loss': loss}, status=status.HTTP_200_OK)
 
 
 class SubmissionSubmitAPIView(GenericAPIView):
@@ -235,7 +238,6 @@ def report(request):
                     except Exception as e:
                         logger.error('Error while download log of compile: %s' % e)
                         return HttpResponseServerError()
-
                     log = json.loads(graphic_log.text, strict=False)
                     if len(log["errors"]) == 0:
                         print("infrastructure compiled successfully")
