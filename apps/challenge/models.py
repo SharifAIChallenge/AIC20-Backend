@@ -182,17 +182,19 @@ class Game(models.Model):
         client2.save()
         client3.save()
         if score[0]['score'] + score[2]['score'] > score[1]['score'] + score[3]['score']:
-            self.game_sides.all()[0].has_won = True
-            self.game_sides.all()[0].has_won.save()
+            game_side = self.game_sides.all().order_by('id')[0]
+            game_side.has_won = True
+            game_side.save()
         elif score[0]['score'] + score[2]['score'] < score[1]['score'] + score[3]['score']:
-            self.game_sides.all()[1].has_won = True
-            self.game_sides.all()[1].has_won.save()
+            game_side = self.game_sides.all().order_by('id')[1]
+            game_side.has_won = True
+            game_side.save()
 
     @property
     def winner_side(self):
-        if self.game_sides.all()[0].has_won:
+        if self.game_sides.all().order_by('id')[0].has_won:
             return 1
-        elif self.game_sides.all()[1].has_won:
+        elif self.game_sides.all().order_by('id')[1].has_won:
             return 2
         else:
             return 0
