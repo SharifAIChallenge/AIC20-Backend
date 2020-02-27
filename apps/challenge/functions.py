@@ -100,28 +100,32 @@ def run_games(single_games: List[Game]):
                 "client1_token": random_token(),
                 "client1_code": single_game.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[
                     0].team.final_submission.infra_compile_token,
-                "client1_name": 'Team0',
+                "client1_name": single_game.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[
+                    0].team.name,
 
                 "client2_id": single_game.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[
                     0].team.final_submission.id,
                 "client2_token": random_token(),
                 "client2_code": single_game.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[
                     0].team.final_submission.infra_compile_token,
-                "client2_name": 'Team1',
+                "client2_name": single_game.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[
+                    0].team.name,
 
                 "client3_id": single_game.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[
                     1].team.final_submission.id,
                 "client3_token": random_token(),
                 "client3_code": single_game.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[
                     1].team.final_submission.infra_compile_token,
-                "client3_name": 'Team2',
+                "client3_name": single_game.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[
+                    1].team.name,
 
                 "client4_id": single_game.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[
                     1].team.final_submission.id,
                 "client4_token": random_token(),
                 "client4_code": single_game.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[
                     1].team.final_submission.infra_compile_token,
-                "client4_name": 'Team3',
+                "client4_name": single_game.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[
+                    1].team.name,
             }
         })
 
