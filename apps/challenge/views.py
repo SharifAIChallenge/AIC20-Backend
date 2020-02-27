@@ -110,6 +110,8 @@ class SubmissionSubmitAPIView(GenericAPIView):
     parser_classes = (parsers.MultiPartParser,)
 
     def post(self, request):
+        if not hasattr(request.user, 'participant'):
+            return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
         submission = self.get_serializer(data=request.data, context={'request': request})
         if submission.is_valid(raise_exception=True):
             submission = submission.save()
@@ -134,6 +136,8 @@ class SubmissionsListAPIView(GenericAPIView):
 class ChangeFinalSubmissionAPIView(GenericAPIView):
 
     def put(self, request, submission_id):
+        if not hasattr(request.user, 'participant'):
+            return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
         submission = get_object_or_404(Submission, id=submission_id)
         try:
             submission.set_final()
@@ -149,7 +153,7 @@ class FriendlyGameAPIView(GenericAPIView):
 
     def get(self, request):
         if not hasattr(request.user, 'participant'):
-            return Response(data={'errors': ['Sorry! you dont have a team']})
+            return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
         data = self.get_serializer(
             self.get_queryset().filter(team=self.request.user.participant.team).filter(game_side__game__match=None)
                 .values_list('game_side__game', flat=True), many=True).data
@@ -157,7 +161,7 @@ class FriendlyGameAPIView(GenericAPIView):
 
     def post(self, request):
         if not hasattr(request.user, 'participant'):
-            return Response(data={'errors': ['Sorry! you dont have a team']})
+            return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         errors, friendly_game = LobbyHandler(request=request)()
         if errors:
@@ -181,7 +185,7 @@ class FriendlyMatchLobbyAPIView(GenericAPIView):
 
     def get(self, request):
         if not hasattr(request.user, 'participant'):
-            return Response(data={'errors': ['Sorry! you dont have a team']})
+            return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
         queryset = list(request.user.participant.team.lobbies1.filter(
             completed=False)) + list(request.user.participant.team.lobbies2.filter(completed=False))
 
@@ -204,14 +208,6 @@ class MapDetailAPIView(GenericAPIView):
     def get(self, request):
         pass
 
-
-class RunGameTest(GenericAPIView):
-
-    def post(self, request, game_id):
-        from .functions import run_games
-        game = Game.objects.get(id=game_id)
-        run_games([game])
-        return Response(data={'ok'})
 
 
 @csrf_exempt
