@@ -5,6 +5,7 @@ import uuid
 
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, ugettext
 
@@ -165,7 +166,8 @@ class Game(models.Model):
     def is_friendly(self):
         return self.match is None
 
-    def update_scores(self):
+    def update_scores_and_client_logs(self, client0_log, client0_log_name, client1_log, client1_log_name, client2_log,
+                                      client2_log_name, client3_log, client3_log_name):
         score = json.loads(self.log.read()).get('end')
         score = sorted(score, key=lambda x: x['playerId'])
         print(score, score[0]['score'], score[1]['score'], score[2]['score'], score[3]['score'])
@@ -173,6 +175,11 @@ class Game(models.Model):
         client1 = self.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[0]
         client2 = self.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[1]
         client3 = self.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[1]
+        client0.log = ContentFile(name=client0_log_name + ".zip", content=client0_log.text)
+        client1.log = ContentFile(name=client1_log_name + ".zip", content=client1_log.text)
+        client2.log = ContentFile(name=client2_log_name + ".zip", content=client2_log.text)
+        client3.log = ContentFile(name=client3_log_name + ".zip", content=client3_log.text)
+
         client0.score = score[0]['score']
         client2.score = score[2]['score']
         client1.score = score[1]['score']

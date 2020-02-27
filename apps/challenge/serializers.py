@@ -119,9 +119,9 @@ class SubmissionPostSerializer(ModelSerializer):
         if not attrs['team'].is_valid:
             raise serializers.ValidationError('Please complete your team first')
         submissions = attrs['team'].submissions
-
+        challenge = challenge_models.Challenge.objects.get(type=challenge_models.ChallengeTypes.PRIMARY)
         if submissions.exists() and datetime.now(utc) - submissions.order_by('-submit_time')[0].submit_time < timedelta(
-                minutes=settings.TEAM_SUBMISSION_TIME_DELTA):
+                minutes=challenge.code_submit_delay):
             raise serializers.ValidationError(
                 f"You have to wait at least {settings.TEAM_SUBMISSION_TIME_DELTA} minute between each submission!")
 

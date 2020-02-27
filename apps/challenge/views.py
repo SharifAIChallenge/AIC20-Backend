@@ -209,7 +209,6 @@ class MapDetailAPIView(GenericAPIView):
         pass
 
 
-
 @csrf_exempt
 def report(request):
     print("infrastructure called me :)))))")
@@ -231,13 +230,13 @@ def report(request):
                 submit.infra_compile_token = single_report['parameters'].get('code_compiled_zip', None)
                 if submit.status == 'compiling':
                     try:
-                        response = functions.download_file(single_report['parameters']['code_log'])
+                        graphic_log = functions.download_file(single_report['parameters']['code_log'])
                         print("infrastructure code log file downloaded")
                     except Exception as e:
                         logger.error('Error while download log of compile: %s' % e)
                         return HttpResponseServerError()
 
-                    log = json.loads(response.text, strict=False)
+                    log = json.loads(graphic_log.text, strict=False)
                     if len(log["errors"]) == 0:
                         print("infrastructure compiled successfully")
                         submit.status = 'compiled'
@@ -266,18 +265,22 @@ def report(request):
         except Exception as exception:
             logger.exception(exception)
             return JsonResponse({'success': False})
-        test = ''
         if single_report['status'] == 2:
             logger.debug("Report status is OK")
-            test += "oomad too status 2"
-            response = functions.download_file(single_report['parameters']['graphic_log'])
-            test += "  logfile ro download kard"
+            graphic_log = functions.download_file(single_report['parameters']['graphic_log'])
+            client0_log = functions.download_file(single_report['parameters']['client1_log'])
+            client1_log = functions.download_file(single_report['parameters']['client2_log'])
+            client2_log = functions.download_file(single_report['parameters']['client3_log'])
+            client3_log = functions.download_file(single_report['parameters']['client4_log'])
+
             game.status = 'done'
-            game.log = ContentFile(name=single_report['parameters']['graphic_log'] + ".json", content=response.text)
+            game.log = ContentFile(name=single_report['parameters']['graphic_log'] + ".json", content=graphic_log.text)
             game.save()
-            game.update_scores()
+            game.update_scores_and_client_logs(client0_log, single_report['parameters']['client1_log'],
+                                               client1_log, single_report['parameters']['client2_log'],
+                                               client2_log, single_report['parameters']['client3_log'],
+                                               client3_log, single_report['parameters']['client4_log'])
         elif single_report['status'] == 3:
-            test += "  status 3 bood aslan"
             game.status = 'failed'
             game.infra_game_message = single_report['log']
         else:
