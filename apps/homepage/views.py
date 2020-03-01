@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 
 from apps.accounts.models import Profile
+from apps.challenge.models import Game, Submission
 from apps.participation.models import Team
 from apps.staff.models import Staff
 from apps.staff.serializers import StaffSerializer
@@ -26,7 +27,9 @@ class HomepageView(GenericAPIView):
 
             'teams': Team.objects.count(),
             'registers': Profile.objects.count(),
-            'staffs': StaffSerializer(Staff.objects.all().order_by('?')[:5], many=True).data
+            'staffs': StaffSerializer(Staff.objects.all().order_by('?')[:5], many=True).data,
+            'games': Game.objects.count(),
+            'submissions': Submission.objects.count(),
         }
         return Response(data)
 
