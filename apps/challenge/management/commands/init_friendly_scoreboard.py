@@ -30,5 +30,6 @@ class Command(BaseCommand):
         challenge = Challenge.objects.get(type=ChallengeTypes.PRIMARY)
         for team in challenge.teams.all():
             if not friendly_scoreboard.rows.filter(team=team).exists():
+                team
                 Row.objects.create(team=team, scoreboard=friendly_scoreboard)
 

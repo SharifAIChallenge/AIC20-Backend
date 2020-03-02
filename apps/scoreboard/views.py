@@ -27,12 +27,3 @@ class FriendlyScoreBoardAPIView(GenericAPIView):
         rows = scoreboard.rows.all().order_by('-score')
         data = self.get_serializer(rows, many=True).data
         return Response(data={'scoreboard': data}, status=status.HTTP_200_OK)
-
-# class GroupScoreBoardAPIView(GenericAPIView):
-#     serializer_class = ScoreBoardSerializer
-#     permission_classes = [IsAuthenticated]
-#
-#     def get(self, request, group_id):
-#         group = get_object_or_404(Group, id=group_id)
-#         data = self.get_serializer(GroupScoreBoard.objects.get(group=group)).data
-#         return Response(data={'scoreboard': data}, status=status.HTTP_200_OK)
