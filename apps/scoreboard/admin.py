@@ -38,4 +38,5 @@ class GroupScoreBoardAdmin(PolymorphicChildModelAdmin):
 
 @admin.register(scoreboard_models.Row)
 class RowAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'team', 'scoreboard', 'score', 'wins', 'loss', 'draws']
+    list_display_links = ['id', 'team']
