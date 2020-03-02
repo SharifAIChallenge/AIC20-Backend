@@ -41,12 +41,15 @@ class Command(BaseCommand):
                 return
             main_scoreboard = scoreboard.group.stage.tournament.challenge.scoreboard
             bet_percentage = scoreboard.group.stage.tournament.match_bet_percentage
-            if main_scoreboard:
-                for row in scoreboard.rows.all():
-                    main_row = main_scoreboard.rows.filter(team=row.team).last()
-                    if main_row:
-                        main_row.score = main_row.score - (main_row.score * bet_percentage / 100) + main_row.score
+            if main_scoreboard and not scoreboard.calculated:
+                for main_row in main_scoreboard.rows.all():
+                    main_row.score -= (main_row.score * bet_percentage / 100)
+                    row = scoreboard.rows.filter(team=main_row.team).last()
+                    if row:
+                        main_row.score += row.score
                         main_row.wins += row.wins
                         main_row.loss += row.loss
                         main_row.draws += row.draws
                         main_row.save()
+                scoreboard.calculated = True
+                scoreboard.save()
