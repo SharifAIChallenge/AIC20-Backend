@@ -111,6 +111,7 @@ class Challenge(models.Model):
 
 
 class Tournament(PolymorphicModel):
+    name = models.CharField(max_length=256)
     challenge = models.ForeignKey('challenge.Challenge', related_name='tournaments', on_delete=models.CASCADE)
     type = models.CharField(max_length=20, choices=TournamentTypes.TYPES, default=TournamentTypes.HOURLY)
     start_time = models.DateTimeField(auto_now_add=True)
@@ -124,7 +125,15 @@ class Tournament(PolymorphicModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return "challenge: " + self.challenge.__str__() + "\n" + " type: " + self.type + " id: " + str(self.id)
+        return "challenge: " + self.challenge.__str__() + "\n" + "name: " \
+               + self.name + " type: " + self.type + " id: " + str(
+            self.id)
+
+    @property
+    def finished(self):
+        for stage in self.stages.filter(finished=False):
+            stage.check_finished()
+        return self.stages.count() == self.stages.filter(finished=True).count()
 
 
 class Stage(models.Model):
@@ -132,10 +141,22 @@ class Stage(models.Model):
     finished = models.BooleanField(default=False)
     time = models.DateTimeField(auto_now_add=True)
 
+    def check_finished(self):
+        for group in self.groups.all():
+            if not group.finished:
+                return False
+        self.finished = True
+        self.save()
+        return True
+
 
 class Group(models.Model):
     stage = models.ForeignKey('challenge.Stage', related_name='groups', on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def finished(self):
+        return self.matches.count() == self.matches.filter(finished=True).count()
 
 
 class GroupTeam(models.Model):
@@ -153,6 +174,9 @@ class Match(models.Model):
     def update_match_team_score(self, team, value):
         match_team = self.match_teams.get(team=team)
         games_done = self.games.filter(status=SingleGameStatusTypes.DONE).count()
+        if games_done >= 3:
+            self.finished = True
+            self.save()
         previous_score = match_team.score
         match_team.score = (match_team.score * (games_done - 1) + value) // games_done
         match_team.save()

@@ -34,10 +34,15 @@ class GameSideSerializer(ModelSerializer):
 
 class GameSerializer(ModelSerializer):
     game_sides = GameSideSerializer(many=True, read_only=True)
+    tournament = serializers.SerializerMethodField('_get_tournament')
+
+    @staticmethod
+    def _get_tournament(instance: challenge_models.Game):
+        return 'friendly' if instance.match == None else instance.match.group.stage.tournament.name
 
     class Meta:
         model = challenge_models.Game
-        fields = ['match', 'infra_game_message', 'game_sides', 'status', 'time', 'log']
+        fields = ['tournament', 'match', 'infra_game_message', 'game_sides', 'status', 'time', 'log']
 
 
 class MatchTeamSerializer(ModelSerializer):

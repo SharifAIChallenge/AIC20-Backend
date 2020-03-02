@@ -152,15 +152,15 @@ class ChangeFinalSubmissionAPIView(GenericAPIView):
 class FriendlyGameAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = challenge_serializers.GameSerializer
-    queryset = challenge_models.GameTeam.objects.all()
+    queryset = challenge_models.Game.objects.all()
 
     def get(self, request):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
-        data = self.get_serializer(
-            self.get_queryset().filter(team=self.request.user.participant.team).filter(game_side__game__match=None)
-                .values_list('game_side__game', flat=True), many=True).data
-        return Response(data={'friendlies': data}, status=status.HTTP_200_OK)
+        game_ids = challenge_models.GameTeam.objects.filter(team=self.request.user.participant.team).filter(
+            game_side__game__match=None).values_list('game_side__game', flat=True)
+        data = self.get_serializer(self.get_queryset().filter(id__in=game_ids), many=True).data
+        return Response(data={'games': data}, status=status.HTTP_200_OK)
 
     def post(self, request):
         if not hasattr(request.user, 'participant'):
@@ -172,7 +172,6 @@ class FriendlyGameAPIView(GenericAPIView):
         if friendly_game:
             from apps.challenge.tasks import run_single_game
             try:
-                # run_single_game(game_id=friendly_game.id)
                 run_single_game.delay(friendly_game.id)
             except Exception as e:
                 friendly_game.status = SingleGameStatusTypes.FAILED

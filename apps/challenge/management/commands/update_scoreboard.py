@@ -42,7 +42,6 @@ class Command(BaseCommand):
                 return
             if main_scoreboard:
 
-
-            for team in challenge.teams.all():
-                if team.is_valid:
-                    Row.objects.create(team=team, scoreboard=challenge.scoreboard)
+                for team in challenge.teams.all():
+                    if team.is_valid:
+                        Row.objects.create(team=team, scoreboard=challenge.scoreboard)
