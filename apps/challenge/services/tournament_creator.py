@@ -69,15 +69,14 @@ class TournamentCreator:
         segmentation = []
         for i in range(4 - len(self.teams) % 4):
             self.teams.insert(-1 * (8 * i + 1), self.bot_teams[i])
-        while len(self.teams) > 4:
+        while len(self.teams) > 0:
             first_eight_teams = self.teams[:8]
             shuffle(first_eight_teams)
             selection = first_eight_teams[:4]
             self.teams = [team for team in self.teams if team not in selection]
             segmentation.append(selection)
         selection = self.teams
-        for i in range(4 - len(selection)):
-            selection.append(None)
+
         return segmentation
 
     def _create_match_teams(self, match, teams_of_a_match):
