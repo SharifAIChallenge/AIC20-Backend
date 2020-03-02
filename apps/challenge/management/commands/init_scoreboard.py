@@ -41,5 +41,5 @@ class Command(BaseCommand):
                 return
 
             for team in challenge.teams.all():
-                if team.is_valid:
+                if team.is_valid and not Row.objects.filter(team=team, scoreboard=challenge.scoreboard).exists():
                     Row.objects.create(team=team, scoreboard=challenge.scoreboard)

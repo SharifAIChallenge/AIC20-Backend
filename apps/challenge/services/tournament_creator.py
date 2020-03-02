@@ -11,7 +11,9 @@ from ..models import Challenge, Tournament, TournamentTypes, Stage, Group, Group
 class TournamentCreator:
 
     def __init__(self, tournament):
-        self.score_board_rows = ChallengeScoreBoard.get_scoreboard_sorted_rows(tournament.challenge)
+        self.rows = ChallengeScoreBoard.get_scoreboard_sorted_rows(tournament.challenge)
+        self.teams = []
+        self.bot_teams = []
         self.tournament = tournament
         self.stage = ''
         self.group = ''
@@ -19,18 +21,25 @@ class TournamentCreator:
         pass
 
     def __call__(self):
+        self._get_bot_teams()
         self._filter_teams()
         self._create_stages()
         self._create_groups()
         self.run_six_hour_tournament(match_map=self.tournament.tournament_map)
         return self.games_ids
 
+    def _get_bot_teams(self):
+        self.bot_teams.append(Team.objects.get(name='ufo1'))
+        self.bot_teams.append(Team.objects.get(name='ufo2'))
+        self.bot_teams.append(Team.objects.get(Team='ufo3'))
+
     def _filter_teams(self):
-        filtered_rows = []
-        for row in self.score_board_rows:
-            if Submission.objects.filter(team=row.team).filter(is_final=True).exists():
-                filtered_rows.append(row.team)
-        self.score_board_rows = filtered_rows
+        filtered_teams = []
+        for row in self.rows:
+            if Submission.objects.filter(team=row.team).filter(
+                    is_final=True).exists() and row.team not in self.bot_teams:
+                filtered_teams.append(row.team)
+        self.teams = filtered_teams
 
     def _create_stages(self):
         self.stage = Stage.objects.create(tournament=self.tournament)
@@ -38,44 +47,48 @@ class TournamentCreator:
     def _create_groups(self):
         self.group = Group.objects.create(stage=self.stage)
         group_scoreboard = GroupScoreBoard.objects.create(group=self.group)
-        for row in self.score_board_rows:
-            Row.objects.create(team=row.team, scoreboard=group_scoreboard)
+        for team in self.teams:
+            Row.objects.create(team=team, scoreboard=group_scoreboard)
+        for bot_team in self.bot_teams:
+            Row.objects.create(team=bot_team, scoreboard=group_scoreboard)
 
     def run_six_hour_tournament(self, match_map):
         segmentation = self._get_segmentation()
-        for rows_of_a_match in segmentation:
+        for teams_of_a_match in segmentation:
             match = Match(type=MatchTypes.DIFFERENT, group=self.group, map=match_map)
-            self._create_match_teams(match, rows_of_a_match)
-            self._create_games(match, rows_of_a_match)
+            self._create_match_teams(match, teams_of_a_match)
+            self._create_games(match, teams_of_a_match)
 
-    def permutations_for_single_match(self, rows, match_type=MatchTypes.DIFFERENT):
+    def permutations_for_single_match(self, teams, match_type=MatchTypes.DIFFERENT):
         if match_type == MatchTypes.SIMILAR:
-            return [[rows[0], rows[0]], [rows[1], rows[1]]]
-        return [[[rows[0], rows[1]], [rows[2], rows[3]]], [[rows[0], rows[2]], [rows[1], rows[3]]],
-                [[rows[0], rows[3]], [rows[1], rows[2]]]]
+            return [[teams[0], teams[0]], [teams[1], teams[1]]]
+        return [[[teams[0], teams[1]], [teams[2], teams[3]]], [[teams[0], teams[2]], [teams[1], teams[3]]],
+                [[teams[0], teams[3]], [teams[1], teams[2]]]]
 
     def _get_segmentation(self):
         segmentation = []
-        while len(self.score_board_rows) > 4:
-            first_eight_rows = self.score_board_rows[:8]
-            shuffle(first_eight_rows)
-            selection = first_eight_rows[:4]
-            self.score_board_rows = [row for row in self.score_board_rows if row not in selection]
+        for i in range(4 - len(self.teams) % 4):
+            self.teams.insert(-1 * (8 * i + 1), self.bot_teams[i])
+        while len(self.teams) > 4:
+            first_eight_teams = self.teams[:8]
+            shuffle(first_eight_teams)
+            selection = first_eight_teams[:4]
+            self.teams = [team for team in self.teams if team not in selection]
             segmentation.append(selection)
-        selection = self.score_board_rows
+        selection = self.teams
         for i in range(4 - len(selection)):
             selection.append(None)
         return segmentation
 
-    def _create_match_teams(self, match, rows_of_a_match):
+    def _create_match_teams(self, match, teams_of_a_match):
         match_teams = []
-        for row in rows_of_a_match:
-            match_teams.append(MatchTeam(team=row.team, match=match))
+        for team in teams_of_a_match:
+            match_teams.append(MatchTeam(team=team, match=match))
         MatchTeam.objects.bulk_create(match_teams)
         match.save()
 
-    def _create_games(self, match, rows):
-        permutations_of_match = self.permutations_for_single_match(rows)
+    def _create_games(self, match, teams):
+        permutations_of_match = self.permutations_for_single_match(teams)
         for permutation in permutations_of_match:
             game = Game(match=match)
             self._create_game_side(game, permutation)
@@ -86,7 +99,7 @@ class TournamentCreator:
         game_sides = []
         for side in permutation:
             game_side = GameSide(game=game)
-            for row_of_side in side:
-                GameTeam.objects.create(team=row_of_side.team, game_side=game_side)
+            for team_of_side in side:
+                GameTeam.objects.create(team=team_of_side, game_side=game_side)
             game_sides.append(game_side)
         GameSide.objects.bulk_create(game_sides)

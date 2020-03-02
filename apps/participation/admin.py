@@ -34,7 +34,8 @@ class TeamAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'challenge', 'allow_multi_friendly']
     list_display_links = ['id', 'name']
     list_editable = ['allow_multi_friendly']
-
+    search_fields = ['name']
+    list_filter = ['allow_multi_friendly']
     inlines = [ParticipantInline]
 
 
