@@ -15,15 +15,20 @@ class Stats:
     def _wins(self):
         from apps.challenge.models import GameTeam
 
-        self.wins = GameTeam.objects.filter(team=self.team).filter(
-            game_side__has_won=True).count()
+        game_teams = GameTeam.objects.filter(team=self.team).filter(
+            game_side__has_won=True)
         if self.friendly_only:
-            
+            game_teams = game_teams.filter(game_side__game__match=None)
+        self.wins = game_teams.count()
 
     def _loss_and_draws(self):
         from apps.challenge.models import GameTeam, Game
         other_games = GameTeam.objects.filter(team=self.team).filter(
-            game_side__has_won=False).values_list('game_side__game_id', flat=True)
+            game_side__has_won=False)
+        if self.friendly_only:
+            other_games = other_games.filter(game_side__game__match=None)
+        other_games = other_games.values_list('game_side__game_id', flat=True)
+
         other_games = Game.objects.filter(id__in=other_games)
         for game in other_games:
             if game.game_sides.filter(has_won=False).count() >= 2:
