@@ -35,5 +35,6 @@ class Command(BaseCommand):
                 total_score = GameTeam.objects.filter(team=team).filter(game_side__game__match=None).aggregate(
                     total_score=Sum('score'))['total_score']
                 wins, draws, loss = Stats(team=team, friendly_only=True)()
-                Row.objects.create(team=team, scoreboard=friendly_scoreboard, score=total_score, wins=wins, loss=loss,
+                Row.objects.create(team=team, scoreboard=friendly_scoreboard, score=total_score if total_score else 0,
+                                   wins=wins, loss=loss,
                                    draws=draws)
