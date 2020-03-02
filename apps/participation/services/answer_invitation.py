@@ -63,4 +63,9 @@ class AnswerInvitation:
             self._handle_accept_invitation()
 
     def _handle_accept_invitation(self):
-        Participant.objects.create(user=self.request.user, team=self.invitation.source.participant.team)
+        from apps.scoreboard.models import Row
+        team = self.invitation.source.participant.team
+        Participant.objects.create(user=self.request.user, team=team)
+        if team.is_valid and not Row.objects.filter(team=team).filter(
+                scoreboard=team.challenge.scoreboard).exists():
+            Row.objects.create(team=team, scoreboard=team.challenge.scoreboard)

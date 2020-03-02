@@ -6,7 +6,7 @@ from ....scoreboard.models import ScoreBoard, Row
 
 class Command(BaseCommand):
     """ This command initializes the scoreboard
-        by created milestones.
+        for given challenge for valid teams.
     """
     help = 'Initialize Scoreboard'
 
@@ -22,12 +22,11 @@ class Command(BaseCommand):
             'id',
             nargs=1,
             type=int,
-            help='Task or milestone ids',
+            help='challenge id',
         )
 
     def handle(self, *args, **options):
         if options.get('init'):
-            print("aaaaaaaaaaaac")
             self._handle_init_all(options)
 
     def _handle_init_all(self, options):
@@ -42,4 +41,5 @@ class Command(BaseCommand):
                 return
 
             for team in challenge.teams.all():
-                Row.objects.create(team=team, scoreboard=challenge.scoreboard)
+                if team.is_valid:
+                    Row.objects.create(team=team, scoreboard=challenge.scoreboard)

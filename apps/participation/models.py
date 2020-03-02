@@ -41,7 +41,7 @@ class Team(models.Model):
 
     @property
     def is_valid(self):
-        return True if self.participants.count() >= 2 else False
+        return self.participants.count() >= 2
 
     @property
     def final_submission(self):

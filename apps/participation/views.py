@@ -98,7 +98,6 @@ class TeamAPIView(GenericAPIView):
         if team.is_valid(raise_exception=True):
             team = team.save()
         Participant.objects.create(user=request.user, team=team)
-        Row.objects.create(team=team, scoreboard=team.challenge.scoreboard)
         return Response(data={'details': _('Team Created Successfully')}, status=status.HTTP_200_OK)
 
     def put(self, request):
