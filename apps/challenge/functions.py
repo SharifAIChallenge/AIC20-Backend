@@ -33,7 +33,7 @@ def upload_file(file):
     :param file: File field from TeamSubmission model
     :return: file token or raises error with error message
     """
-    print("ommad upload kone")
+    print("ommad upload kone", file.size)
     response = requests.put(settings.INFRA_IP + "/api/storage/new_file/", files={'file': file},
                             headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
     print(response.status_code, response.json(), "==== Upload File ====")

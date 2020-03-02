@@ -32,7 +32,7 @@ def hourly_tournament(tournament_id):
     for match in group.matches.all():
         for game in match.games.all():
             game_ids.append(game)
-    run_single_game.delay(game_ids)
+    run_multi_games.delay(game_ids)
 
 
 @app.task(name='run_single_game')
