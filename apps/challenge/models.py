@@ -12,7 +12,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from polymorphic.models import PolymorphicModel
 
 from apps.scoreboard.models import ChallengeScoreBoard
-from .tasks import handle_submission, hourly_tournament
+from .tasks import handle_submission
 
 logger = logging.getLogger(__name__)
 
@@ -106,6 +106,9 @@ class Challenge(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name + " type: " + self.type + " id: " + str(self.id)
+
 
 class Tournament(PolymorphicModel):
     challenge = models.ForeignKey('challenge.Challenge', related_name='tournaments', on_delete=models.CASCADE)
@@ -119,7 +122,9 @@ class Tournament(PolymorphicModel):
     def save(self, *args, **kwargs):
         self.queued = True
         super().save(*args, **kwargs)
-        hourly_tournament.delay(self.id)
+
+    def __str__(self):
+        return "challenge: " + self.challenge.__str__() + "\n" + " type: " + self.type + " id: " + str(self.id)
 
 
 class Stage(models.Model):
@@ -143,11 +148,24 @@ class Match(models.Model):
     map = models.ForeignKey('challenge.Map', related_name='matches', on_delete=None)
     type = models.CharField(max_length=64, choices=MatchTypes.TYPES)
     time = models.DateTimeField(auto_now_add=True, null=True)
+    finished = models.BooleanField(default=False)
+
+    def update_match_team_score(self, team, value):
+        match_team = self.match_teams.get(team=team)
+        games_done = self.games.filter(status=SingleGameStatusTypes.DONE).count()
+        previous_score = match_team.score
+        match_team.score = (match_team.score * (games_done - 1) + value) // games_done
+        match_team.save()
+        scoreboard = self.group.scoreboard
+        row = scoreboard.rows.get(team=team)
+        row.score = row.score - previous_score + match_team.score
+        row.save()
 
 
 class MatchTeam(models.Model):
     team = models.ForeignKey('participation.Team', related_name='game_team', on_delete=models.CASCADE)
     match = models.ForeignKey('challenge.Match', related_name='match_teams', on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
 
 
 class Game(models.Model):
@@ -194,6 +212,11 @@ class Game(models.Model):
             game_side = self.game_sides.all().order_by('id')[1]
             game_side.has_won = True
             game_side.save()
+        if self.match:
+            self.match.update_match_team_score(client0.team, client0.score)
+            self.match.update_match_team_score(client1.team, client1.score)
+            self.match.update_match_team_score(client2.team, client2.score)
+            self.match.update_match_team_score(client3.team, client3.score)
 
     @property
     def winner_side(self):
@@ -204,10 +227,16 @@ class Game(models.Model):
         else:
             return 0
 
+    def __str__(self):
+        return "infra_token: " + self.infra_token + " status: " + self.status + " id: " + str(self.id)
+
 
 class GameSide(models.Model):
     game = models.ForeignKey('challenge.Game', related_name='game_sides', on_delete=models.CASCADE)
     has_won = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "id: " + str(self.id)
 
 
 class GameTeam(models.Model):
@@ -228,6 +257,9 @@ class GameTeam(models.Model):
         self.log.save(name=filename, content=File(f))
         f.close()
         os.remove(filename)
+
+    def __str__(self):
+        return "team: " + self.team.__str__() + "\n" + " id: " + str(self.id)
 
 
 def get_submission_file_directory(instance, filename):
@@ -251,7 +283,7 @@ class Submission(models.Model):
     infra_compile_token = models.CharField(max_length=256, null=True, blank=True, unique=True)
 
     def __str__(self):
-        return str(self.id) + ' team: ' + str(self.team) + ' is final: ' + str(self.is_final)
+        return "id: " + str(self.id) + ' team: ' + self.team.name + " user: " + self.user.username
 
     def set_final(self):
         """

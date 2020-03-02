@@ -29,6 +29,7 @@ class ChallengeScoreBoard(ScoreBoard):
 
 class GroupScoreBoard(ScoreBoard):
     group = models.OneToOneField('challenge.Group', related_name='scoreboard', on_delete=models.CASCADE)
+    calculated = models.BooleanField(default=False)
 
     @staticmethod
     def get_scoreboard_sorted_rows(group):

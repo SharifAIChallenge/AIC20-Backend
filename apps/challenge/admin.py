@@ -5,6 +5,9 @@ from . import models as challenge_models
 
 # Register your models here.
 
+class GameTeamInline(admin.StackedInline):
+    model = challenge_models.GameTeam
+
 
 @admin.register(challenge_models.Challenge)
 class ChallengeAdmin(admin.ModelAdmin):
@@ -47,22 +50,44 @@ class MatchTeamAdmin(admin.ModelAdmin):
 
 @admin.register(challenge_models.Game)
 class GameAdmin(admin.ModelAdmin):
-    list_filter = ['status']
+    list_display = ['__str__', 'status', 'time']
+    list_display_links = ['__str__']
+    list_filter = ['status', 'time']
 
 
 @admin.register(challenge_models.GameSide)
 class GameSideAdmin(admin.ModelAdmin):
     list_display = ['id', 'has_won']
+    list_display_links = ['id']
+    list_filter = ['has_won']
+
+    inlines = [GameTeamInline]
 
 
 @admin.register(challenge_models.GameTeam)
 class GameTeamAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__str__', 'game_side', 'score']
+    list_display_links = ['__str__']
+    sortable_by = ['score']
 
 
 @admin.register(challenge_models.Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__str__', 'language', 'submit_time', 'is_final', 'status']
+    list_display_links = ['__str__']
+    list_filter = ['language', 'submit_time', 'status', 'is_final']
+
+    search_fields = ['get_team_name', 'get_user_username']
+
+    def get_team_name(self, instance: challenge_models.Submission):
+        return instance.team.name
+
+    get_team_name.short_description = 'Team name'
+
+    def get_user_username(self, instance: challenge_models.Submission):
+        return instance.user.username
+
+    get_user_username.short_description = 'User username'
 
 
 @admin.register(challenge_models.Map)
@@ -72,4 +97,5 @@ class MapAdmin(admin.ModelAdmin):
 
 @admin.register(challenge_models.Lobby)
 class LobbyAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'match', 'completed', 'multi_play', 'with_friend']
+    list_display_links = ['id']

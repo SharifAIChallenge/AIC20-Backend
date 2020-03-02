@@ -3,7 +3,7 @@ from random import random, shuffle
 from django.utils import timezone
 
 from apps.participation.models import Team
-from apps.scoreboard.models import ChallengeScoreBoard, GroupScoreBoard
+from apps.scoreboard.models import ChallengeScoreBoard, GroupScoreBoard, Row
 from ..models import Challenge, Tournament, TournamentTypes, Stage, Group, GroupTeam, Match, MatchTeam, MatchTypes, \
     Game, GameSide, GameTeam, Submission
 
@@ -37,7 +37,9 @@ class TournamentCreator:
 
     def _create_groups(self):
         self.group = Group.objects.create(stage=self.stage)
-        GroupScoreBoard.objects.create(group=self.group)
+        group_scoreboard = GroupScoreBoard.objects.create(group=self.group)
+        for row in self.score_board_rows:
+            Row.objects.create(team=row.team, scoreboard=group_scoreboard)
 
     def run_six_hour_tournament(self, match_map):
         segmentation = self._get_segmentation()

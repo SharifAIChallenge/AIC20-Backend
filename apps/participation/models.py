@@ -56,9 +56,15 @@ class Participant(models.Model):
     user = models.OneToOneField(User, related_name='participant', on_delete=models.CASCADE)
     team = models.ForeignKey('participation.Team', related_name='participants', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return 'user: ' + self.user.username + " team: " + self.team.name + " id: " + str(self.id)
+
 
 class Invitation(models.Model):
     target = models.ForeignKey(User, related_name='invitations', on_delete=models.CASCADE)
     source = models.ForeignKey(User, related_name='invites', on_delete=models.CASCADE)
     status = models.CharField(max_length=50, choices=InvitationStatusTypes.TYPES,
                               default=InvitationStatusTypes.NOT_ANSWERED)
+
+    def __str__(self):
+        return "source: " + self.source.username + " target: " + self.target.username + " id: " + str(self.id)
