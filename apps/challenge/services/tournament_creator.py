@@ -55,7 +55,7 @@ class TournamentCreator:
     def run_six_hour_tournament(self, match_map):
         segmentation = self._get_segmentation()
         for teams_of_a_match in segmentation:
-            match = Match(type=MatchTypes.DIFFERENT, group=self.group, map=match_map)
+            match = Match.objects.create(type=MatchTypes.DIFFERENT, group=self.group, map=match_map)
             self._create_match_teams(match, teams_of_a_match)
             self._create_games(match, teams_of_a_match)
 

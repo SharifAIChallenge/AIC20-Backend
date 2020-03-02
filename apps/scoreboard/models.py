@@ -35,3 +35,7 @@ class GroupScoreBoard(ScoreBoard):
     @staticmethod
     def get_scoreboard_sorted_rows(group):
         return GroupScoreBoard.objects.get(group=group).rows.all().order_by('-score')
+
+
+class FriendlyScoreBoard(ScoreBoard):
+    pass
