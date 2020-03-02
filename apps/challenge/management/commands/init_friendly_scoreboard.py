@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
+from django.db.models import Sum
 
-from ...models import Challenge, ChallengeTypes
+from ...models import Challenge, ChallengeTypes, GameTeam
 from ....scoreboard.models import FriendlyScoreBoard, Row
 
 
@@ -30,6 +31,7 @@ class Command(BaseCommand):
         challenge = Challenge.objects.get(type=ChallengeTypes.PRIMARY)
         for team in challenge.teams.all():
             if not friendly_scoreboard.rows.filter(team=team).exists():
-                team
+                total_score = GameTeam.objects.filter(team=team).filter(game_side__game__match=None).aggregate(
+                    total_score=Sum('score'))['total_score']
+                wins, draws, loss = Stats
                 Row.objects.create(team=team, scoreboard=friendly_scoreboard)
-

@@ -255,8 +255,8 @@ class Game(models.Model):
             game_side.save()
         if self.match:
             self.match.update_match_team_score([client0, client1, client2, client3])
-        # else:
-        #     self._update_friendly_scoreboard([client0, client1, client2, client3])
+        else:
+            self._update_friendly_scoreboard([client0, client1, client2, client3])
 
     @property
     def winner_side(self):
@@ -266,20 +266,20 @@ class Game(models.Model):
             return 2
         else:
             return 0
-    #
-    # def _update_friendly_scoreboard(self, game_teams):
-    #     from apps.scoreboard.models import FriendlyScoreBoard
-    #     friendly_scoreboard = FriendlyScoreBoard.objects.get(id=1)
-    #     for game_team in game_teams:
-    #         row = friendly_scoreboard.rows.get(team=game_team.team)
-    #         row.score += game_team.score
-    #         if game_team.game_side.has_won:
-    #             row.wins += 1
-    #         elif game_team.game_side.game.game_sides.filter(has_won=False).count() >= 2:
-    #             row.draws += 1
-    #         else:
-    #             row.loss += 1
-    #         row.save()
+
+    def _update_friendly_scoreboard(self, game_teams):
+        from apps.scoreboard.models import FriendlyScoreBoard
+        friendly_scoreboard = FriendlyScoreBoard.objects.get_or_create(id=1)
+        for game_team in game_teams:
+            row = friendly_scoreboard.rows.get(team=game_team.team)
+            row.score += game_team.score
+            if game_team.game_side.has_won:
+                row.wins += 1
+            elif game_team.game_side.game.game_sides.filter(has_won=False).count() >= 2:
+                row.draws += 1
+            else:
+                row.loss += 1
+            row.save()
 
     def __str__(self):
         return "infra_token: " + self.infra_token + " status: " + self.status + " id: " + str(self.id)

@@ -105,7 +105,7 @@ class StatsAPIView(GenericAPIView):
     def get(self, request):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
-        wins, draws, loss = Stats(request=request)()
+        wins, draws, loss = Stats(team=request.user.participant.team)()
         return Response(data={'wins': wins, 'draws': draws, 'loss': loss}, status=status.HTTP_200_OK)
 
 
