@@ -31,7 +31,7 @@ class TournamentCreator:
     def _get_bot_teams(self):
         self.bot_teams.append(Team.objects.get(name='ufo1'))
         self.bot_teams.append(Team.objects.get(name='ufo2'))
-        self.bot_teams.append(Team.objects.get(Team='ufo3'))
+        self.bot_teams.append(Team.objects.get(name='ufo3'))
 
     def _filter_teams(self):
         filtered_teams = []
@@ -75,7 +75,6 @@ class TournamentCreator:
             selection = first_eight_teams[:4]
             self.teams = [team for team in self.teams if team not in selection]
             segmentation.append(selection)
-        selection = self.teams
 
         return segmentation
 
