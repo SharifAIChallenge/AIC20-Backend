@@ -37,7 +37,7 @@ class TournamentCreator:
         filtered_teams = []
         for row in self.rows:
             if Submission.objects.filter(team=row.team).filter(
-                    is_final=True).exists() and row.team not in self.bot_teams:
+                    is_final=True).exists() and row.team.name not in ['ufo1', 'ufo2', 'ufo3']:
                 filtered_teams.append(row.team)
         self.teams = filtered_teams
 
@@ -67,8 +67,9 @@ class TournamentCreator:
 
     def _get_segmentation(self):
         segmentation = []
-        for i in range(4 - len(self.teams) % 4):
-            self.teams.insert(-1 * (8 * i + 1), self.bot_teams[i])
+        if len(self.teams) % 4 != 0:
+            for i in range(0, 4 - len(self.teams) % 4):
+                self.teams.insert(-1 * (8 * i + 1), self.bot_teams[i])
         while len(self.teams) > 0:
             first_eight_teams = self.teams[:8]
             shuffle(first_eight_teams)
