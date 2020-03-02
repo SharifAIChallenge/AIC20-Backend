@@ -119,6 +119,7 @@ class Tournament(PolymorphicModel):
     submit_deadline = models.DateTimeField(null=True, blank=True)
     queued = models.BooleanField(default=False)
     tournament_map = models.ForeignKey('challenge.Map', related_name='tournaments', on_delete=models.DO_NOTHING)
+    match_bet_percentage = models.PositiveSmallIntegerField(default=5)
 
     def save(self, *args, **kwargs):
         self.queued = True
@@ -171,19 +172,35 @@ class Match(models.Model):
     time = models.DateTimeField(auto_now_add=True, null=True)
     finished = models.BooleanField(default=False)
 
-    def update_match_team_score(self, team, value):
-        match_team = self.match_teams.get(team=team)
+    def update_match_team_score(self, game_teams):
         games_done = self.games.filter(status=SingleGameStatusTypes.DONE).count()
+        for game_team in game_teams:
+            row = self.group.scoreboard.rows.get(team=game_team.team)
+            if game_team.game_side.has_won:
+                row.wins += 1
+            elif game_team.game_side.game.game_sides.filter(has_won=False).count() == 2:
+                row.draws += 1
+            else:
+                row.loss += 1
+            row.save()
+            match_team = self.match_teams.get(team=game_team.team)
+            match_team.score += game_team.score
+            match_team.save()
         if games_done >= 3:
             self.finished = True
             self.save()
-        previous_score = match_team.score
-        match_team.score = (match_team.score * (games_done - 1) + value) // games_done
-        match_team.save()
-        scoreboard = self.group.scoreboard
-        row = scoreboard.rows.get(team=team)
-        row.score = row.score - previous_score + match_team.score
-        row.save()
+            match_teams = list(self.match_teams.all())
+            scoreboard = self.group.scoreboard
+            total_score = sum([mt.score for mt in match_teams])
+            total_bet = 0
+            for mt in match_teams:
+                row = self.group.stage.tournament.challenge.scoreboard.rows.get(team=mt.team)
+                total_bet += row.score * self.group.stage.tournament.match_bet_percentage / 100
+
+            for mt in match_teams:
+                row = scoreboard.rows.get(team=mt.team)
+                row.score = (mt.score / total_score) * total_bet
+                row.save()
 
 
 class MatchTeam(models.Model):
@@ -237,10 +254,7 @@ class Game(models.Model):
             game_side.has_won = True
             game_side.save()
         if self.match:
-            self.match.update_match_team_score(client0.team, client0.score)
-            self.match.update_match_team_score(client1.team, client1.score)
-            self.match.update_match_team_score(client2.team, client2.score)
-            self.match.update_match_team_score(client3.team, client3.score)
+            self.match.update_match_team_score([client0, client1, client2, client3])
 
     @property
     def winner_side(self):

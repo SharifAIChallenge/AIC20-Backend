@@ -6,10 +6,11 @@ from polymorphic.models import PolymorphicModel
 class Row(models.Model):
     team = models.ForeignKey('participation.Team', related_name='rows', on_delete=models.CASCADE)
     scoreboard = models.ForeignKey('ScoreBoard', related_name='rows', on_delete=models.CASCADE)
-    score = models.IntegerField(default=1000)
+    score = models.FloatField(default=1000.0)
     rank = models.IntegerField(default=1)
     wins = models.IntegerField(default=0)
     loss = models.IntegerField(default=0)
+    draws = models.IntegerField(default=0)
 
     def __str__(self):
         return self.team.name
