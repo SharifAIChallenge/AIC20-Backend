@@ -18,11 +18,3 @@ class RowSerializer(ModelSerializer):
     class Meta:
         model = scoreboard_models.Row
         fields = ['team', 'score', 'wins', 'loss']
-
-
-class ScoreBoardSerializer(ModelSerializer):
-    rows = RowSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = scoreboard_models.ScoreBoard
-        fields = ['rows', 'freeze']

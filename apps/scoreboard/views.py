@@ -3,26 +3,36 @@ from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import ChallengeScoreBoard, GroupScoreBoard
+from .models import ChallengeScoreBoard, GroupScoreBoard, FriendlyScoreBoard
 from ..challenge.models import Challenge, ChallengeTypes, Group
-from .serializers import ScoreBoardSerializer
+from .serializers import RowSerializer
 
 
 class ChallengeScoreBoardAPIView(GenericAPIView):
-    serializer_class = ScoreBoardSerializer
+    serializer_class = RowSerializer
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         challenge = get_object_or_404(Challenge, type=ChallengeTypes.PRIMARY)
-        data = self.get_serializer(ChallengeScoreBoard.objects.get(challenge=challenge)).data
+        data = self.get_serializer(ChallengeScoreBoard.get_scoreboard_sorted_rows(challenge=challenge), many=True).data
         return Response(data={'scoreboard': data}, status=status.HTTP_200_OK)
 
 
-class GroupScoreBoardAPIView(GenericAPIView):
-    serializer_class = ScoreBoardSerializer
+class FriendlyScoreBoardAPIView(GenericAPIView):
+    serializer_class = RowSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, group_id):
-        group = get_object_or_404(Group, id=group_id)
-        data = self.get_serializer(GroupScoreBoard.objects.get(group=group)).data
+    def get(self, request):
+        scoreboard = get_object_or_404(FriendlyScoreBoard, id=1)
+        rows = scoreboard.rows.all().order_by('-score')
+        data = self.get_serializer(rows, many=True).data
         return Response(data={'scoreboard': data}, status=status.HTTP_200_OK)
+
+# class GroupScoreBoardAPIView(GenericAPIView):
+#     serializer_class = ScoreBoardSerializer
+#     permission_classes = [IsAuthenticated]
+#
+#     def get(self, request, group_id):
+#         group = get_object_or_404(Group, id=group_id)
+#         data = self.get_serializer(GroupScoreBoard.objects.get(group=group)).data
+#         return Response(data={'scoreboard': data}, status=status.HTTP_200_OK)
