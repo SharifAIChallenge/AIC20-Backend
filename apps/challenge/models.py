@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 
 from polymorphic.models import PolymorphicModel
 
-from apps.scoreboard.models import ChallengeScoreBoard
+from apps.scoreboard.models import ChallengeScoreBoard, ScoreBoardTypes
 from .tasks import handle_submission
 
 logger = logging.getLogger(__name__)
@@ -269,7 +269,7 @@ class Game(models.Model):
 
     def _update_friendly_scoreboard(self, game_teams):
         from apps.scoreboard.models import FriendlyScoreBoard
-        friendly_scoreboard = FriendlyScoreBoard.objects.get_or_create(id=1)
+        friendly_scoreboard = FriendlyScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
         for game_team in game_teams:
             row = friendly_scoreboard.rows.get(team=game_team.team)
             row.score += game_team.score

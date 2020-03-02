@@ -3,6 +3,12 @@ from django.db import models
 from polymorphic.models import PolymorphicModel
 
 
+class ScoreBoardTypes:
+    CHALLENGE = 'challenge'
+    GROUP = 'group'
+    FRIENDLY = 'friendly'
+
+
 class Row(models.Model):
     team = models.ForeignKey('participation.Team', related_name='rows', on_delete=models.CASCADE)
     scoreboard = models.ForeignKey('ScoreBoard', related_name='rows', on_delete=models.CASCADE)
@@ -18,6 +24,7 @@ class Row(models.Model):
 
 class ScoreBoard(PolymorphicModel):
     freeze = models.BooleanField(default=False)
+    type = models.CharField(max_length=20, default=ScoreBoardTypes.CHALLENGE)
 
 
 class ChallengeScoreBoard(ScoreBoard):
@@ -26,6 +33,13 @@ class ChallengeScoreBoard(ScoreBoard):
     @staticmethod
     def get_scoreboard_sorted_rows(challenge):
         return ChallengeScoreBoard.objects.get(challenge=challenge).rows.all().order_by('-score')
+
+    def pre_save(self):
+        self.type = ScoreBoardTypes.CHALLENGE
+
+    def save(self, *args, **kwargs):
+        self.pre_save()
+        super().save(*args, **kwargs)
 
 
 class GroupScoreBoard(ScoreBoard):
@@ -36,6 +50,20 @@ class GroupScoreBoard(ScoreBoard):
     def get_scoreboard_sorted_rows(group):
         return GroupScoreBoard.objects.get(group=group).rows.all().order_by('-score')
 
+    def pre_save(self):
+        self.type = ScoreBoardTypes.GROUP
+
+    def save(self, *args, **kwargs):
+        self.pre_save()
+        super().save(*args, **kwargs)
+
 
 class FriendlyScoreBoard(ScoreBoard):
     pass
+
+    def pre_save(self):
+        self.type = ScoreBoardTypes.FRIENDLY
+
+    def save(self, *args, **kwargs):
+        self.pre_save()
+        super().save(*args, **kwargs)
