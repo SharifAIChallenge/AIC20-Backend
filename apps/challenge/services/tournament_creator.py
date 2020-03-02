@@ -17,6 +17,7 @@ class TournamentCreator:
         self.tournament = tournament
         self.stage = ''
         self.group = ''
+        self.games_ids = []
         pass
 
     def __call__(self):
@@ -24,7 +25,7 @@ class TournamentCreator:
         self._create_stages()
         self._create_groups()
         self.run_six_hour_tournament(match_map=self.tournament.tournament_map)
-        return self.group
+        return self.games_ids
 
     def _filter_teams(self):
         filtered_teams = []
@@ -87,6 +88,7 @@ class TournamentCreator:
             game = Game(match=match)
             self._create_game_side(game, permutation)
             game.save()
+            self.games_ids.append(game.id)
 
     def _create_game_side(self, game, permutation):
         game_sides = []

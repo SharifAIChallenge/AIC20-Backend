@@ -20,21 +20,6 @@ def handle_submission(submission_id):
         logger.error(error)
 
 
-@app.task(name='hourly_tournament')
-def hourly_tournament(tournament_id):
-    from .services.tournament_creator import TournamentCreator
-    from .models import TournamentTypes, Tournament
-    tournament = Tournament.objects.get(id=tournament_id)
-    tournament_creator = TournamentCreator(tournament=tournament)
-    group = tournament_creator()
-
-    game_ids = []
-    for match in group.matches.all():
-        for game in match.games.all():
-            game_ids.append(game)
-    run_multi_games.delay(game_ids)
-
-
 @app.task(name='run_single_game')
 def run_single_game(game_id):
     from .models import Game, SingleGameStatusTypes
