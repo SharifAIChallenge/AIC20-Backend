@@ -55,9 +55,9 @@ class Command(BaseCommand):
             friendly_scoreboard = FriendlyScoreBoard.objects.create()
         games = Game.objects.filter(status='done').filter(match=None).order_by(
             'time')
-        friendly_scoreboard.rows.all().update(score=1000.0)
+        friendly_scoreboard.rows.all().update(score=2000.0)
         for game in games:
             update_game_team_scoreboard_score(game, friendly_scoreboard)
-        for row in friendly_scoreboard.rows:
-            row.wins, row.draws, row.loss = Stats(team=row.team, friendly_only=True)
+        for row in friendly_scoreboard.rows.all():
+            row.wins, row.draws, row.loss = Stats(team=row.team, friendly_only=True)()
             row.save()

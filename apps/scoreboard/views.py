@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import ChallengeScoreBoard, GroupScoreBoard, FriendlyScoreBoard, ScoreBoardTypes, ScoreBoard
-from ..challenge.models import Challenge, ChallengeTypes, Group
+from ..challenge.models import Challenge, ChallengeTypes, Group, GameTeam
 from .serializers import RowSerializer
 
 
@@ -14,7 +14,10 @@ class ChallengeScoreBoardAPIView(GenericAPIView):
 
     def get(self, request):
         challenge = get_object_or_404(Challenge, type=ChallengeTypes.PRIMARY)
-        data = self.get_serializer(ChallengeScoreBoard.get_scoreboard_sorted_rows(challenge=challenge), many=True).data
+        teams_with_game_ids = GameTeam.objects.distinct('team_id').values_list('team_id')
+        data = self.get_serializer(
+            ChallengeScoreBoard.get_scoreboard_sorted_rows(challenge=challenge).filter(team_id__in=teams_with_game_ids),
+            many=True).data
         return Response(data={'scoreboard': data}, status=status.HTTP_200_OK)
 
 
@@ -24,6 +27,8 @@ class FriendlyScoreBoardAPIView(GenericAPIView):
 
     def get(self, request):
         scoreboard = get_object_or_404(ScoreBoard, type=ScoreBoardTypes.FRIENDLY)
-        rows = scoreboard.rows.all().order_by('-score')
+        teams_with_game_ids = GameTeam.objects.filter(game_side__game__match=None).distinct('team_id').values_list(
+            'team_id')
+        rows = scoreboard.rows.all().order_by('-score').filter(team_id__in=teams_with_game_ids)
         data = self.get_serializer(rows, many=True).data
         return Response(data={'scoreboard': data}, status=status.HTTP_200_OK)
