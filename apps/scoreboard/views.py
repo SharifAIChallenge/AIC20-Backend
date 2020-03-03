@@ -3,7 +3,7 @@ from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import ChallengeScoreBoard, GroupScoreBoard, ScoreBoardTypes
+from .models import ChallengeScoreBoard, GroupScoreBoard, FriendlyScoreBoard, ScoreBoardTypes
 from ..challenge.models import Challenge, ChallengeTypes, Group
 from .serializers import RowSerializer
 
