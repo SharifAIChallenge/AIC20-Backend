@@ -3,7 +3,7 @@ from django.db.models import Sum
 
 from apps.challenge.services.stats import Stats
 from ...models import Challenge, ChallengeTypes, GameTeam
-from ....scoreboard.models import FriendlyScoreBoard, Row, ScoreBoardTypes
+from ....scoreboard.models import FriendlyScoreBoard, Row, ScoreBoardTypes, ScoreBoard
 
 
 class Command(BaseCommand):
@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
     def _handle_init_all(self, options):
         try:
-            friendly_scoreboard = FriendlyScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
+            friendly_scoreboard = ScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
         except FriendlyScoreBoard.DoesNotExist:
             friendly_scoreboard = FriendlyScoreBoard.objects.create()
         challenge = Challenge.objects.get(type=ChallengeTypes.PRIMARY)

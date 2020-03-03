@@ -268,8 +268,8 @@ class Game(models.Model):
             return 0
 
     def _update_friendly_scoreboard(self, game_teams):
-        from apps.scoreboard.models import FriendlyScoreBoard
-        friendly_scoreboard = FriendlyScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
+        from apps.scoreboard.models import ScoreBoard
+        friendly_scoreboard = ScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
         for game_team in game_teams:
             row = friendly_scoreboard.rows.get(team=game_team.team)
             row.score += game_team.score

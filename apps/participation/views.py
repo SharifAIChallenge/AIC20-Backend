@@ -10,7 +10,7 @@ from apps.participation.models import Team, Participant
 from apps.participation.services.answer_invitation import AnswerInvitation
 from apps.participation.services.leave_team import LeaveTeam
 from apps.participation.services.send_invitation import SendInvitation
-from apps.scoreboard.models import Row, FriendlyScoreBoard, ScoreBoardTypes
+from apps.scoreboard.models import Row, FriendlyScoreBoard, ScoreBoardTypes, ScoreBoard
 from . import models as participation_models
 from . import serializers as participation_serializers
 from django.shortcuts import get_object_or_404
@@ -98,7 +98,7 @@ class TeamAPIView(GenericAPIView):
         if team.is_valid(raise_exception=True):
             team = team.save()
         Participant.objects.create(user=request.user, team=team)
-        friendly_scoreboard = FriendlyScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
+        friendly_scoreboard = ScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
         Row.objects.create(team=team, scoreboard=friendly_scoreboard)
         return Response(data={'details': _('Team Created Successfully')}, status=status.HTTP_200_OK)
 
