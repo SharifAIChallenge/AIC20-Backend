@@ -273,7 +273,7 @@ class Game(models.Model):
             row.save()
 
     def __str__(self):
-        return "infra_token: " + self.infra_token + " status: " + self.status + " id: " + str(self.id)
+        return "infra_token: " + (self.infra_token or 'None') + " status: " + self.status + " id: " + str(self.id)
 
 
 class GameSide(models.Model):
