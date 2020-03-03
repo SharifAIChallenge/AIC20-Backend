@@ -87,7 +87,7 @@ def run_games(single_games: List[Game]):
     print("oomad run kokne")
     games = []
     for single_game in single_games:
-        random_map = Map.objects.all().order_by('?').last()
+        random_map = Map.objects.filter(verified=True).order_by('?').last()
         game_map = single_game.match.map if single_game.match else random_map
         games.append({
             "game": 'AI2020',
