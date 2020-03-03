@@ -89,7 +89,7 @@ class TournamentCreator:
     def _create_games(self, match, teams):
         permutations_of_match = self.permutations_for_single_match(teams)
         for permutation in permutations_of_match:
-            game = Game(match=match)
+            game = Game.objects.create(match=match)
             self._create_game_side(game, permutation)
             game.save()
             self.games_ids.append(game.id)
