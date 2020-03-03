@@ -22,9 +22,4 @@ class Migration(migrations.Migration):
             },
             bases=('scoreboard.scoreboard',),
         ),
-        migrations.AddField(
-            model_name='scoreboard',
-            name='type',
-            field=models.CharField(default='challenge', max_length=20),
-        ),
     ]
