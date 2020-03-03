@@ -88,11 +88,9 @@ class StageSerializer(ModelSerializer):
 
 
 class TournamentSerializer(ModelSerializer):
-    stages = StageSerializer(many=True, read_only=True)
-
     class Meta:
         model = challenge_models.Tournament
-        fields = ['name', 'challenge', 'type', 'start_time', 'end_time', 'stages']
+        fields = ['name', 'type', 'start_time', 'end_time']
 
 
 class ChallengeSerializer(ModelSerializer):
