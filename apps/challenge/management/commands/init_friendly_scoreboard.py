@@ -53,7 +53,8 @@ class Command(BaseCommand):
             friendly_scoreboard = ScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
         except FriendlyScoreBoard.DoesNotExist:
             friendly_scoreboard = FriendlyScoreBoard.objects.create()
-        games = Game.objects.filter(match=None).order_by('time')
+        games = Game.objects.filter(game_sides__game__status='done').exclude(score=None).filter(match=None).order_by(
+            'time')
         friendly_scoreboard.rows.all().update(score=1000.0)
         for game in games:
             update_game_team_scoreboard_score(game, friendly_scoreboard)
