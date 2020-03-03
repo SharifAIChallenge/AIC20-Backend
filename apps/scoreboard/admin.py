@@ -17,7 +17,8 @@ class ScoreBoardAdmin(PolymorphicParentModelAdmin):
     base_model = scoreboard_models.ScoreBoard
 
     child_models = [scoreboard_models.ChallengeScoreBoard, scoreboard_models.GroupScoreBoard,
-                    scoreboard_models.FriendlyScoreBoard]
+                    # scoreboard_models.FriendlyScoreBoard
+                    ]
 
     def has_add_permission(self, request):
         return False
@@ -37,12 +38,12 @@ class GroupScoreBoardAdmin(PolymorphicChildModelAdmin):
     show_in_index = True
 
 
-@admin.register(scoreboard_models.FriendlyScoreBoard)
-class FriendlyScoreBoardAdmin(PolymorphicChildModelAdmin):
-    inlines = [RowInline]
-    base_model = scoreboard_models.ScoreBoard
-    show_in_index = True
-
+# @admin.register(scoreboard_models.FriendlyScoreBoard)
+# class FriendlyScoreBoardAdmin(PolymorphicChildModelAdmin):
+#     inlines = [RowInline]
+#     base_model = scoreboard_models.ScoreBoard
+#     show_in_index = True
+#
 
 @admin.register(scoreboard_models.Row)
 class RowAdmin(admin.ModelAdmin):

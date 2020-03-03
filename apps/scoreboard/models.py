@@ -58,12 +58,12 @@ class GroupScoreBoard(ScoreBoard):
         super().save(*args, **kwargs)
 
 
-class FriendlyScoreBoard(ScoreBoard):
-    pass
-
-    def pre_save(self):
-        self.type = ScoreBoardTypes.FRIENDLY
-
-    def save(self, *args, **kwargs):
-        self.pre_save()
-        super().save(*args, **kwargs)
+# class FriendlyScoreBoard(ScoreBoard):
+#     pass
+#
+#     def pre_save(self):
+#         self.type = ScoreBoardTypes.FRIENDLY
+#
+#     def save(self, *args, **kwargs):
+#         self.pre_save()
+#         super().save(*args, **kwargs)
