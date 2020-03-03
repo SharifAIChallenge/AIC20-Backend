@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
         parser.add_argument(
             'id',
-            nargs='1',
+            nargs=1,
             type=int,
             help='scoreboards',
         )
