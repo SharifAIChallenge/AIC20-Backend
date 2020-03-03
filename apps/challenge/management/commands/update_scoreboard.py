@@ -42,9 +42,10 @@ class Command(BaseCommand):
             main_scoreboard = scoreboard.group.stage.tournament.challenge.scoreboard
             if main_scoreboard and not scoreboard.calculated:
                 for main_row in main_scoreboard.rows.all():
+                    main_row.score -= 30
                     row = scoreboard.rows.filter(team=main_row.team).last()
                     if row:
-                        main_row.score += (row.score - 2000)
+                        main_row.score = row.score
                         main_row.wins += row.wins
                         main_row.loss += row.loss
                         main_row.draws += row.draws
