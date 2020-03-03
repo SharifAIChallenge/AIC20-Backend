@@ -28,8 +28,7 @@ class LeaveTeam:
         self.errors.append(_("You're Not in any team"))
 
     def _check_leave_conditions(self):
-        if self.request.user.participant.team.participants.all().count() != 1 and \
-                Submission.objects.filter(user=self.request.user, team=self.request.user.participant.team).exists():
+        if Submission.objects.filter(user=self.request.user, team=self.request.user.participant.team).exists():
             self.valid = False
             self.errors.append(_("You can't leave this team, because you have a submission right now"))
 
