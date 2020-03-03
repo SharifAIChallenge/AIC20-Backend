@@ -27,10 +27,18 @@ def update_game_team_scoreboard_score(game, friendly_scoreboard):
             actual_score1, actual_score2 = 0, 1
         added_score1 = 30 * (actual_score1 - P1)
         added_score2 = 30 * (actual_score2 - P2)
-        client0.scoreboard_score = added_score1 * (client0.score / R1)
-        client2.scoreboard_score = added_score1 * (client2.score / R1)
-        client1.scoreboard_score = added_score2 * (client1.score / R2)
-        client3.scoreboard_score = added_score2 * (client3.score / R2)
+        if added_score1 > 0:
+            client0.scoreboard_score = added_score1 * (client0.score / R1)
+            client2.scoreboard_score = added_score1 * (client2.score / R1)
+        else:
+            client0.scoreboard_score = added_score1 * (client2.score / R1)
+            client2.scoreboard_score = added_score1 * (client0.score / R1)
+        if added_score2 > 0:
+            client1.scoreboard_score = added_score2 * (client1.score / R2)
+            client3.scoreboard_score = added_score2 * (client3.score / R2)
+        else:
+            client1.scoreboard_score = added_score2 * (client3.score / R2)
+            client3.scoreboard_score = added_score2 * (client1.score / R2)
         client0.save()
         client1.save()
         client2.save()

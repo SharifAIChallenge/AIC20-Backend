@@ -12,7 +12,7 @@ class ScoreBoardTypes:
 class Row(models.Model):
     team = models.ForeignKey('participation.Team', related_name='rows', on_delete=models.CASCADE)
     scoreboard = models.ForeignKey('ScoreBoard', related_name='rows', on_delete=models.CASCADE)
-    score = models.FloatField(default=1000.0)
+    score = models.FloatField(default=2000.0, db_index=True)
     rank = models.IntegerField(default=1)
     wins = models.IntegerField(default=0)
     loss = models.IntegerField(default=0)
