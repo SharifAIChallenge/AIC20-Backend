@@ -17,4 +17,4 @@ class RowSerializer(ModelSerializer):
 
     class Meta:
         model = scoreboard_models.Row
-        fields = ['team', 'score', 'wins', 'loss']
+        fields = ['team', 'score', 'wins', 'loss', 'draws']
