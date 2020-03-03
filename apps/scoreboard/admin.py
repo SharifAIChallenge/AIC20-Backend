@@ -38,12 +38,12 @@ class GroupScoreBoardAdmin(PolymorphicChildModelAdmin):
     show_in_index = True
 
 
-# @admin.register(scoreboard_models.FriendlyScoreBoard)
-# class FriendlyScoreBoardAdmin(PolymorphicChildModelAdmin):
-#     inlines = [RowInline]
-#     base_model = scoreboard_models.ScoreBoard
-#     show_in_index = True
-#
+@admin.register(scoreboard_models.FriendlyScoreBoard)
+class FriendlyScoreBoardAdmin(PolymorphicChildModelAdmin):
+    inlines = [RowInline]
+    base_model = scoreboard_models.ScoreBoard
+    show_in_index = True
+
 
 @admin.register(scoreboard_models.Row)
 class RowAdmin(admin.ModelAdmin):
