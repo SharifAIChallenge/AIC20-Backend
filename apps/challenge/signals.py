@@ -7,8 +7,9 @@ from .models import Tournament
 @receiver(post_save, sender=Tournament)
 def create_hourly_tournament(sender, instance: Tournament, created: bool, **kwargs):
     from .services.tournament_creator import TournamentCreator
-    from .tasks import run_multi_games
+    from .tasks import run_single_game
 
     if created:
         games_ids = TournamentCreator(instance)()
-        run_multi_games.delay(games_ids)
+        for game_id in games_ids:
+            run_single_game(game_id)
