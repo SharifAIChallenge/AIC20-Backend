@@ -103,4 +103,3 @@ class TournamentCreator:
             for team_of_side in side:
                 GameTeam.objects.create(team=team_of_side, game_side=game_side)
             game_sides.append(game_side)
-        GameSide.objects.bulk_create(game_sides)
