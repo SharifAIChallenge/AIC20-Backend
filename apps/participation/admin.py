@@ -16,7 +16,6 @@ class BadgeAdmin(admin.ModelAdmin):
 class ParticipantAdmin(admin.ModelAdmin):
     list_display = ['__str__']
     list_display_links = ['__str__']
-    search_fields = ['get_username', 'get_team_name']
 
     def get_username(self, instance: Participant):
         return instance.user.username

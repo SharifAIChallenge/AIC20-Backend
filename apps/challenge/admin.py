@@ -17,7 +17,7 @@ class ChallengeAdmin(admin.ModelAdmin):
 
 @admin.register(challenge_models.Tournament)
 class TournamentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'type', 'start_time', 'submit_deadline']
+    list_display = ['id', 'name', 'type', 'start_time', 'submit_deadline']
     list_editable = ['type']
 
 
