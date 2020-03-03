@@ -48,9 +48,9 @@ class TournamentCreator:
         self.group = Group.objects.create(stage=self.stage)
         group_scoreboard = GroupScoreBoard.objects.create(group=self.group)
         for team in self.teams:
-            Row.objects.create(team=team, scoreboard=group_scoreboard)
+            Row.objects.create(team=team, scoreboard=group_scoreboard, score=self.rows.get(team=team).score)
         for bot_team in self.bot_teams:
-            Row.objects.create(team=bot_team, scoreboard=group_scoreboard)
+            Row.objects.create(team=bot_team, scoreboard=group_scoreboard, score=self.rows.get(team=bot_team).score)
 
     def run_six_hour_tournament(self, match_map):
         segmentation = self._get_segmentation()

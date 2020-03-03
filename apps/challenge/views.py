@@ -275,13 +275,14 @@ def report(request):
             client2_log = functions.download_file(single_report['parameters']['client3_log'])
             client3_log = functions.download_file(single_report['parameters']['client4_log'])
 
-            game.status = 'done'
             game.log = ContentFile(name=single_report['parameters']['graphic_log'] + ".json", content=graphic_log.text)
-            game.save()
+
             game.update_scores_and_client_logs(client0_log, single_report['parameters']['client1_log'],
                                                client1_log, single_report['parameters']['client2_log'],
                                                client2_log, single_report['parameters']['client3_log'],
                                                client3_log, single_report['parameters']['client4_log'])
+            game.status = 'done'
+            game.save()
         elif single_report['status'] == 3:
             game.status = 'failed'
             game.infra_game_message = single_report['log']

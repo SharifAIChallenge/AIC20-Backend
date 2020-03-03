@@ -35,18 +35,16 @@ class Command(BaseCommand):
         else:
             scoreboard_id = options.get('id')[0]
             try:
-                scoreboard = GroupScoreBoard.objects.get(id=scoreboard_id)
+                scoreboard = ScoreBoard.objects.get(id=scoreboard_id)
             except (ScoreBoard.MultipleObjectsReturned, ScoreBoard.DoesNotExist) as e:
                 print(e)
                 return
             main_scoreboard = scoreboard.group.stage.tournament.challenge.scoreboard
-            bet_percentage = scoreboard.group.stage.tournament.match_bet_percentage
             if main_scoreboard and not scoreboard.calculated:
                 for main_row in main_scoreboard.rows.all():
-                    main_row.score -= (main_row.score * bet_percentage / 100)
                     row = scoreboard.rows.filter(team=main_row.team).last()
                     if row:
-                        main_row.score += row.score
+                        main_row.score += (row.score - 2000)
                         main_row.wins += row.wins
                         main_row.loss += row.loss
                         main_row.draws += row.draws

@@ -186,23 +186,11 @@ class Match(models.Model):
                 row.loss += 1
             row.save()
             match_team = self.match_teams.get(team=game_team.team)
-            match_team.score += game_team.score
+            match_team.score += game_team.scoreboard_score
             match_team.save()
         if games_done >= 3:
             self.finished = True
             self.save()
-            match_teams = list(self.match_teams.all())
-            scoreboard = self.group.scoreboard
-            total_score = sum([mt.score for mt in match_teams])
-            total_bet = 0
-            for mt in match_teams:
-                row = self.group.stage.tournament.challenge.scoreboard.rows.get(team=mt.team)
-                total_bet += row.score * self.group.stage.tournament.match_bet_percentage / 100
-
-            for mt in match_teams:
-                row = scoreboard.rows.get(team=mt.team)
-                row.score = (mt.score / total_score) * total_bet
-                row.save()
 
 
 class MatchTeam(models.Model):
@@ -229,6 +217,8 @@ class Game(models.Model):
 
     def update_scores_and_client_logs(self, client0_log, client0_log_name, client1_log, client1_log_name, client2_log,
                                       client2_log_name, client3_log, client3_log_name):
+        from apps.challenge.services.utils import update_game_team_scoreboard_score
+
         score = json.loads(self.log.read()).get('end')
         score = sorted(score, key=lambda x: x['playerId'])
         client0 = self.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[0]
@@ -256,6 +246,7 @@ class Game(models.Model):
         client2.save()
         client3.save()
         if self.match:
+            update_game_team_scoreboard_score(self, self.match.group.scoreboard)
             self.match.update_match_team_score([client0, client1, client2, client3])
         else:
             self._update_friendly_scoreboard([client0, client1, client2, client3])
@@ -274,7 +265,7 @@ class Game(models.Model):
         from apps.challenge.services.stats import Stats
         from apps.challenge.services.utils import update_game_team_scoreboard_score
         friendly_scoreboard = ScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
-        update_game_team_scoreboard_score(game=self, friendly_scoreboard=friendly_scoreboard)
+        update_game_team_scoreboard_score(game=self, scoreboard=friendly_scoreboard)
         for game_team in game_teams:
             row = friendly_scoreboard.rows.get(team=game_team.team)
             row.score += game_team.score

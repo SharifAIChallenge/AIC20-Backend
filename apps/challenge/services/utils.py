@@ -1,16 +1,16 @@
 from apps.challenge.models import GameTeam, GameSide
 
 
-def update_game_team_scoreboard_score(game, friendly_scoreboard):
+def update_game_team_scoreboard_score(game, scoreboard):
     client0 = game.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[0]
     client1 = game.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[0]
     client2 = game.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[1]
     client3 = game.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[1]
     if client0.score and client1.score and client2.score and client3.score:
-        row0 = friendly_scoreboard.rows.get(team=client0.team)
-        row1 = friendly_scoreboard.rows.get(team=client1.team)
-        row2 = friendly_scoreboard.rows.get(team=client2.team)
-        row3 = friendly_scoreboard.rows.get(team=client3.team)
+        row0 = scoreboard.rows.get(team=client0.team)
+        row1 = scoreboard.rows.get(team=client1.team)
+        row2 = scoreboard.rows.get(team=client2.team)
+        row3 = scoreboard.rows.get(team=client3.team)
         S1 = row0.score + row2.score
         S2 = row1.score + row3.score
         R1 = client0.score + client2.score
