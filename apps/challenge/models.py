@@ -123,6 +123,8 @@ class Tournament(PolymorphicModel):
 
     def save(self, *args, **kwargs):
         self.queued = True
+        if not self.tournament_map.verified:
+            raise ValueError("Selected map not verified")
         super().save(*args, **kwargs)
 
     def __str__(self):
