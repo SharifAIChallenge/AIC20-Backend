@@ -50,9 +50,14 @@ class MatchTeamAdmin(admin.ModelAdmin):
 
 @admin.register(challenge_models.Game)
 class GameAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'status', 'time']
+    list_display = ['__str__', 'status', 'time', 'tournament']
     list_display_links = ['__str__']
-    list_filter = ['status', 'time']
+    list_filter = ['status', 'time', 'tournament']
+
+    def tournament(self, instance):
+        return 'friendly' if not instance.match else instance.match.group.stage.tournament.name
+
+    tournament.short_description = 'Tournament Name'
 
 
 @admin.register(challenge_models.GameSide)
