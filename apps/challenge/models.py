@@ -241,10 +241,6 @@ class Game(models.Model):
         client2.score = score[2]['score']
         client1.score = score[1]['score']
         client3.score = score[3]['score']
-        client0.save()
-        client1.save()
-        client2.save()
-        client3.save()
         if score[0]['score'] + score[2]['score'] > score[1]['score'] + score[3]['score']:
             game_side = self.game_sides.all().order_by('id')[0]
             game_side.has_won = True
@@ -253,6 +249,10 @@ class Game(models.Model):
             game_side = self.game_sides.all().order_by('id')[1]
             game_side.has_won = True
             game_side.save()
+        client0.save()
+        client1.save()
+        client2.save()
+        client3.save()
         if self.match:
             self.match.update_match_team_score([client0, client1, client2, client3])
         else:
@@ -275,7 +275,7 @@ class Game(models.Model):
         for game_team in game_teams:
             row = friendly_scoreboard.rows.get(team=game_team.team)
             row.score += game_team.score
-            row.wins, row.draws, row.loss = Stats(team=game_team.team)()
+            row.wins, row.draws, row.loss = Stats(team=game_team.team, friendly_only=True)()
             row.save()
 
     def __str__(self):
