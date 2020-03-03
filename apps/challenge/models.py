@@ -270,8 +270,9 @@ class Game(models.Model):
     def _update_friendly_scoreboard(self, game_teams):
         from apps.scoreboard.models import ScoreBoard
         from apps.challenge.services.stats import Stats
-
+        from apps.challenge.services.utils import update_game_team_scoreboard_score
         friendly_scoreboard = ScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
+        update_game_team_scoreboard_score(game=self, friendly_scoreboard=friendly_scoreboard)
         for game_team in game_teams:
             row = friendly_scoreboard.rows.get(team=game_team.team)
             row.score += game_team.score
@@ -299,6 +300,7 @@ class GameTeam(models.Model):
 
     log = models.FileField(upload_to=team_single_game_log, null=True, blank=True)
     score = models.IntegerField(null=True, blank=True)
+    scoreboard_score = models.FloatField(default=0.0)
 
     def save_client_log(self, filename, response):
         with open(filename, 'wb') as f:
