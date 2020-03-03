@@ -269,16 +269,13 @@ class Game(models.Model):
 
     def _update_friendly_scoreboard(self, game_teams):
         from apps.scoreboard.models import ScoreBoard
+        from apps.challenge.services.stats import Stats
+
         friendly_scoreboard = ScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
         for game_team in game_teams:
             row = friendly_scoreboard.rows.get(team=game_team.team)
             row.score += game_team.score
-            if game_team.game_side.has_won:
-                row.wins += 1
-            elif game_team.game_side.game.game_sides.filter(has_won=False).count() >= 2:
-                row.draws += 1
-            else:
-                row.loss += 1
+            row.wins, row.draws, row.loss = Stats(team=game_team.team)()
             row.save()
 
     def __str__(self):
