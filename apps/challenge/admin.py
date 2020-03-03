@@ -53,9 +53,8 @@ class GameAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'status', 'time', 'get_tournament_name']
     list_display_links = ['__str__']
     list_filter = ['status', 'time']
-    search_fields = ['get_tournament_name']
 
-    def get_tournament_name(self, instance:challenge_models.Game):
+    def get_tournament_name(self, instance: challenge_models.Game):
         return 'friendly' if not instance.match else instance.match.group.stage.tournament.name
 
     get_tournament_name.short_description = 'Tournament Name'
