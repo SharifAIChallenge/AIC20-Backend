@@ -160,7 +160,8 @@ class FriendlyGameAPIView(GenericAPIView):
             return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
         game_ids = challenge_models.GameTeam.objects.filter(team=self.request.user.participant.team).filter(
             game_side__game__match=None).values_list('game_side__game', flat=True)
-        data = self.get_serializer(self.get_queryset().filter(id__in=game_ids).order_by('-time')[:50], many=True).data
+        data = self.get_serializer(self.get_queryset().filter(id__in=game_ids).order_by('-time')[:50], many=True,
+                                   context={'request': request}).data
         return Response(data={'games': data}, status=status.HTTP_200_OK)
 
     def post(self, request):

@@ -213,7 +213,7 @@ class Game(models.Model):
 
     @property
     def is_friendly(self):
-        return self.match is None
+        return self.match is Noneلا
 
     def update_scores_and_client_logs(self, client0_log, client0_log_name, client1_log, client1_log_name, client2_log,
                                       client2_log_name, client3_log, client3_log_name):

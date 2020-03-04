@@ -17,11 +17,12 @@ class GameTeamSerializer(ModelSerializer):
         model = challenge_models.GameTeam
         fields = ['team', 'log', 'score']
 
-    # def to_representation(self, instance: challenge_models.GameTeam):
-    #     data = super().to_representation(instance)
-    #     if self.context['request'].user.participant.team_id != instance.team_id:
-    #         data['log'] = None
-    #     return data
+    def to_representation(self, instance: challenge_models.GameTeam):
+        data = super().to_representation(instance)
+        if hasattr(self.context['request'].user, 'participant') and self.context[
+            'request'].user.participant.team_id != instance.team_id:
+            data['log'] = None
+        return data
 
 
 class GameSideSerializer(ModelSerializer):
