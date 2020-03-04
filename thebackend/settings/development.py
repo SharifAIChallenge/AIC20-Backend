@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'martor',
     'django_rest_passwordreset',
     'django_extensions',
+    'djcelery',
     'corsheaders',
     'djcelery_email',
 
