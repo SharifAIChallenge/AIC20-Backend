@@ -38,7 +38,7 @@ def read_in_chunks(file: FieldFile, chunk_size=65536):
 def upload1(file):
     index = 0
     headers = {}
-
+    print("=======================================")
     for chunk in read_in_chunks(file=file):
         offset = index + len(chunk)
         headers['Content-Type'] = 'application/octet-stream'
@@ -49,9 +49,25 @@ def upload1(file):
         try:
             r = requests.put(settings.INFRA_IP + "/api/storage/new_file/", data=chunk, headers=headers)
             print("r: %s, Content-Range: %s" % (r, headers['Content-Range']))
+            print(r)
         except Exception as e:
             print(e)
         print(r.json())
+    print("==========================================")
+
+
+def upload2(file):
+    from requests_toolbelt import MultipartEncoder
+    import requests
+
+    payload = MultipartEncoder({'file': file})
+
+    r = requests.post(
+        settings.INFRA_IP + "/api/storage/new_file/",
+        data=payload,
+        headers={"Content-Type": payload.content_type, 'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
+
+    print(r.json())
 
 
 def upload_file(file):
