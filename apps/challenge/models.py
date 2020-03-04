@@ -178,9 +178,14 @@ class Match(models.Model):
         games_done = self.games.filter(status=SingleGameStatusTypes.DONE).count()
         for game_team in game_teams:
             row = self.group.scoreboard.rows.get(team=game_team.team)
-            if game_team.game_side.has_won:
+            game_side = GameTeam.objects.filter(team=game_team.team).filter(
+                game_side__game=game_team.game_side.game).filter(
+                game_side__game__match=self).last()
+            print("Oomad match ro update koneeeeeeeeee :D\n ****************************************")
+            print(game_side.game_teams.all().values_list('team__name', 'score', 'game_side__has_won'))
+            if game_side.has_won:
                 row.wins += 1
-            elif game_team.game_side.game.game_sides.filter(has_won=False).count() == 2:
+            elif game_side.game.game_sides.filter(has_won=False).count() == 2:
                 row.draws += 1
             else:
                 row.loss += 1
