@@ -184,26 +184,20 @@ class Match(models.Model):
     finished = models.BooleanField(default=False)
 
     def update_match_team_score(self, game_teams):
+        from apps.challenge.services.match_stats import MatchStats
         games_done = self.games.filter(status=SingleGameStatusTypes.DONE).count()
         for game_team in game_teams:
-            row = self.group.scoreboard.rows.get(team=game_team.team)
-            game_side_id = GameTeam.objects.filter(team=game_team.team).filter(
-                game_side__game=game_team.game_side.game).values_list('game_side_id', flat=True).get(
-                game_side__game__match=self)
-            game_side = GameSide.objects.get(id=game_side_id)
-            print("Oomad match ro update koneeeeeeeeee :D\n ****************************************")
-            print(game_side.game_teams.all().values_list('team__name', 'score', 'game_side__has_won'))
-            if game_side.has_won:
-                row.wins += 1
-            elif game_side.game.game_sides.filter(has_won=False).count() == 2:
-                row.draws += 1
-            else:
-                row.loss += 1
-            row.save()
+            print("Oomad emtiazaye matcho ro update koneeeeeeeeee :D\n ****************************************")
+
             match_team = self.match_teams.get(team=game_team.team)
             match_team.score += game_team.scoreboard_score
             match_team.save()
         if games_done >= 3:
+            print("OOmad tedade bordo bakhtaro reval kone too match \n =========================================")
+            for match_team in self.match_teams.all():
+                row = self.group.scoreboard.rows.get(team=match_team.team)
+                row.wins, row.loss, row.draws = MatchStats(match=self, team=match_team.team)
+                row.save()
             self.finished = True
             self.save()
 
@@ -279,6 +273,7 @@ class Game(models.Model):
         from apps.scoreboard.models import ScoreBoard
         from apps.challenge.services.stats import Stats
         from apps.challenge.services.utils import update_game_team_scoreboard_score
+
         friendly_scoreboard = ScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
         update_game_team_scoreboard_score(game=self, scoreboard=friendly_scoreboard)
         for game_team in game_teams:
