@@ -274,7 +274,7 @@ class Game(models.Model):
         update_game_team_scoreboard_score(game=self, scoreboard=friendly_scoreboard)
         for game_team in game_teams:
             row = friendly_scoreboard.rows.get(team=game_team.team)
-            row.score += game_team.score
+            # row.score += game_team.score
             row.wins, row.draws, row.loss = Stats(team=game_team.team, friendly_only=True)()
             row.save()
 
