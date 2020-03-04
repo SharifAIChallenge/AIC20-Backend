@@ -279,10 +279,15 @@ def report(request):
 
             game.log = ContentFile(name=single_report['parameters']['graphic_log'] + ".json", content=graphic_log.text)
 
-            game.update_scores_and_client_logs(client0_log, single_report['parameters']['client1_log'],
-                                               client1_log, single_report['parameters']['client2_log'],
-                                               client2_log, single_report['parameters']['client3_log'],
-                                               client3_log, single_report['parameters']['client4_log'])
+            try:
+                game.update_scores_and_client_logs(client0_log, single_report['parameters']['client1_log'],
+                                                   client1_log, single_report['parameters']['client2_log'],
+                                                   client2_log, single_report['parameters']['client3_log'],
+                                                   client3_log, single_report['parameters']['client4_log'])
+            except Exception as e:
+                game.infra_game_message = str(e)
+                game.save()
+                return JsonResponse({'success': False, 'error': 'Maybe log file Error.'})
             game.status = 'done'
             game.save()
         elif single_report['status'] == 3:
