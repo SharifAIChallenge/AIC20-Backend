@@ -102,6 +102,8 @@ class Challenge(models.Model):
     end_time = models.DateTimeField()
     friendly_game_delay = models.IntegerField(default=5)
     code_submit_delay = models.IntegerField(default=5)
+    can_submit = models.BooleanField(default=True)
+    can_change_submission = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -126,6 +128,13 @@ class Tournament(PolymorphicModel):
         if not self.tournament_map.verified:
             raise ValueError("Selected map not verified")
         super().save(*args, **kwargs)
+
+    def run(self):
+        from apps.challenge.services.tournament_creator import TournamentCreator
+        from apps.challenge.tasks import run_single_game
+        games_ids = TournamentCreator(self)()
+        for game_id in games_ids:
+            run_single_game(game_id)
 
     def __str__(self):
         return "challenge: " + self.challenge.__str__() + "\n" + "name: " \

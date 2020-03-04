@@ -142,7 +142,8 @@ class ChangeFinalSubmissionAPIView(GenericAPIView):
     def put(self, request, submission_id):
         if not hasattr(request.user, 'participant'):
             return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
-        if settings.CHANGE_SUBMISSION != "on":
+        challenge = challenge_models.Challenge.objects.filter(type=challenge_models.ChallengeTypes.PRIMARY).last()
+        if not challenge.can_change_submission:
             return Response(data={'errors': ['Submission change is closed!']})
         submission = get_object_or_404(Submission, id=submission_id)
         try:

@@ -118,8 +118,7 @@ class SubmissionPostSerializer(ModelSerializer):
 
     def validate(self, attrs):
         user = self.context['request'].user
-        if settings.SUBMIT != 'on':
-            raise serializers.ValidationError('Submission is closed')
+
         if not hasattr(user, 'participant'):
             raise serializers.ValidationError('You cant submit, because you dont have a team')
         attrs['user'] = user
@@ -130,6 +129,9 @@ class SubmissionPostSerializer(ModelSerializer):
             raise serializers.ValidationError('Please complete your team first')
         submissions = attrs['team'].submissions
         challenge = challenge_models.Challenge.objects.get(type=challenge_models.ChallengeTypes.PRIMARY)
+        if not challenge.can_submit:
+            raise serializers.ValidationError('Submission is closed')
+
         if submissions.exists() and datetime.now(utc) - submissions.order_by('-submit_time')[0].submit_time < timedelta(
                 minutes=challenge.code_submit_delay):
             raise serializers.ValidationError(
