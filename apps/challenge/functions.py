@@ -7,8 +7,8 @@ import requests
 
 import coreapi
 from django.conf import settings
-from django.core.files import File
-from django.core.files.base import ContentFile
+from django.db.models import FileField
+from django.db.models.fields.files import FieldFile
 
 from apps.challenge.models import Game, Map
 
@@ -25,6 +25,33 @@ def create_infra_client():
     client = coreapi.Client(transports=transports)
     schema = client.get(settings.INFRA_API_SCHEMA_ADDRESS)
     return client, schema
+
+
+def read_in_chunks(file: FieldFile, chunk_size=65536):
+    while True:
+        data = file.read(chunk_size)
+        if not data:
+            break
+        yield data
+
+
+def upload1(file):
+    index = 0
+    headers = {}
+
+    for chunk in read_in_chunks(file=file):
+        offset = index + len(chunk)
+        headers['Content-Type'] = 'application/octet-stream'
+        headers['Content-length'] = file.size
+        headers['Content-Range'] = 'bytes %s-%s/%s' % (index, offset, file.size)
+        headers['Authorization'] = f'Token {settings.INFRA_AUTH_TOKEN}'
+        index = offset
+        try:
+            r = requests.put(settings.INFRA_IP + "/api/storage/new_file/", data=chunk, headers=headers)
+            print("r: %s, Content-Range: %s" % (r, headers['Content-Range']))
+        except Exception as e:
+            print(e)
+        print(r.json())
 
 
 def upload_file(file):
