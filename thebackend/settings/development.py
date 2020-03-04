@@ -163,7 +163,6 @@ REST_FRAMEWORK = {
 
 from .martor import *
 
-ENABLE_SUBMISSION = True
 os.environ['HTTPS'] = "on"
 
 TEAM_SUBMISSION_TIME_DELTA = 1

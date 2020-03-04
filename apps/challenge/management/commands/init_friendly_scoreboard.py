@@ -3,7 +3,7 @@ from django.db.models import Sum
 
 from apps.challenge.services.stats import Stats
 from apps.challenge.services.utils import update_game_team_scoreboard_score
-from ...models import Challenge, ChallengeTypes, GameTeam, Game
+from ...models import Challenge, ChallengeTypes, GameTeam, Game, GameSide
 from ....scoreboard.models import FriendlyScoreBoard, Row, ScoreBoardTypes, ScoreBoard
 
 

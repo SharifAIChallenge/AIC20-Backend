@@ -15,8 +15,8 @@ def update_game_team_scoreboard_score(game, scoreboard):
         S2 = row1.score + row3.score
         R1 = client0.score + client2.score
         R2 = client1.score + client3.score
-        P1 = (1.0 / (1.0 + 10 ** ((S1 - S2) / 400)))
-        P2 = (1.0 / (1.0 + 10 ** ((S2 - S1) / 400)))
+        P1 = (1.0 / (1.0 + 10 ** ((S2 - S1) / 400)))
+        P2 = (1.0 / (1.0 + 10 ** ((S1 - S2) / 400)))
         game_side1 = GameTeam.objects.filter(team=client0.team).get(game_side__game=game).game_side
         game_side2 = GameTeam.objects.filter(team=client1.team).get(game_side__game=game).game_side
         if game_side1.has_won:

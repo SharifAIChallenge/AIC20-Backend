@@ -118,8 +118,8 @@ class SubmissionPostSerializer(ModelSerializer):
 
     def validate(self, attrs):
         user = self.context['request'].user
-        if not settings.ENABLE_SUBMISSION:
-            raise serializers.ValidationError('Submission is closes')
+        if settings.SUBMIT != 'on':
+            raise serializers.ValidationError('Submission is closed')
         if not hasattr(user, 'participant'):
             raise serializers.ValidationError('You cant submit, because you dont have a team')
         attrs['user'] = user
