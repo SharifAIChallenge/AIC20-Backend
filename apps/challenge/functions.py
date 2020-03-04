@@ -62,7 +62,7 @@ def upload2(file):
 
     payload = MultipartEncoder({'file': file})
 
-    r = requests.post(
+    r = requests.put(
         settings.INFRA_IP + "/api/storage/new_file/",
         data=payload,
         headers={"Content-Type": payload.content_type, 'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})

@@ -287,6 +287,7 @@ def report(request):
                                                    client3_log, single_report['parameters']['client4_log'])
             except Exception as e:
                 game.infra_game_message = str(e)
+                game.status = 'failed'
                 game.save()
                 return JsonResponse({'success': False, 'error': 'Maybe log file Error.'})
             game.status = 'done'
