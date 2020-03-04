@@ -179,8 +179,8 @@ class Match(models.Model):
         for game_team in game_teams:
             row = self.group.scoreboard.rows.get(team=game_team.team)
             game_side_id = GameTeam.objects.filter(team=game_team.team).filter(
-                game_side__game=game_team.game_side.game).filter(
-                game_side__game__match=self).values_list('game_side_id').last()
+                game_side__game=game_team.game_side.game).values_list('game_side_id', flat=True).get(
+                game_side__game__match=self)
             game_side = GameSide.objects.get(id=game_side_id)
             print("Oomad match ro update koneeeeeeeeee :D\n ****************************************")
             print(game_side.game_teams.all().values_list('team__name', 'score', 'game_side__has_won'))
