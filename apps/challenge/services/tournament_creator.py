@@ -15,6 +15,7 @@ class TournamentCreator:
         self.teams = []
         self.bot_teams = []
         self.tournament = tournament
+        self.group_scoreboard = ''
         self.stage = ''
         self.group = ''
         self.games_ids = []
@@ -46,13 +47,10 @@ class TournamentCreator:
 
     def _create_groups(self):
         self.group = Group.objects.create(stage=self.stage)
-        group_scoreboard = GroupScoreBoard.objects.create(group=self.group)
+        self.group_scoreboard = group_scoreboard = GroupScoreBoard.objects.create(group=self.group)
         for team in self.teams:
             initial_score = self.rows.get(team=team)
             Row.objects.create(team=team, scoreboard=group_scoreboard, score=initial_score.score)
-        for bot_team in self.bot_teams:
-            initial_score = self.rows.get(team=bot_team)
-            Row.objects.create(team=bot_team, scoreboard=group_scoreboard, score=initial_score.score    )
 
     def run_six_hour_tournament(self, match_map):
         segmentation = self._get_segmentation()
@@ -72,6 +70,8 @@ class TournamentCreator:
         if len(self.teams) % 4 != 0:
             for i in range(0, 4 - len(self.teams) % 4):
                 self.teams.insert(-1 * (8 * i + 1), self.bot_teams[i])
+                initial_score = self.rows.get(team=self.bot_teams[i])
+                Row.objects.create(team=self.bot_teams[i], scoreboard=self.group_scoreboard, score=initial_score.score)
         while len(self.teams) > 0:
             first_eight_teams = self.teams[:8]
             shuffle(first_eight_teams)
