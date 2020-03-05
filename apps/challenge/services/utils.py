@@ -72,12 +72,12 @@ def update_game_team_scoreboard_score_using_match(match, scoreboard):
 
             team_scores[client0.team.name] = {'score': row0.score, 'row': row0}
             team_scores[client1.team.name] = {'score': row1.score, 'row': row1}
-            team_scores[client2.tean.name] = {'score': row2.score, 'row': row2}
+            team_scores[client2.team.name] = {'score': row2.score, 'row': row2}
             team_scores[client3.team.name] = {'score': row3.score, 'row': row3}
             got_team_scores = True
 
         if client0.score and client1.score and client2.score and client3.score:
-            S1 = team_scores[client0.team.name]['score'] + team_scores[client2.tean.name]['score']
+            S1 = team_scores[client0.team.name]['score'] + team_scores[client2.team.name]['score']
             S2 = team_scores[client1.team.name]['score'] + team_scores[client3.team.name]['score']
             R1 = client0.score + client2.score
             R2 = client1.score + client3.score

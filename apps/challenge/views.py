@@ -289,8 +289,6 @@ def report(request):
                 game.status = 'failed'
                 game.save()
                 return JsonResponse({'success': False, 'error': 'Maybe log file Error.'})
-            game.status = 'done'
-            game.save()
         elif single_report['status'] == 3:
             game.status = 'failed'
             game.infra_game_message = single_report['log']

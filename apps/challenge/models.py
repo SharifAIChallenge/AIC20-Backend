@@ -183,7 +183,7 @@ class Match(models.Model):
     time = models.DateTimeField(auto_now_add=True, null=True)
     finished = models.BooleanField(default=False)
 
-    def update_match_team_score(self, game_teams):
+    def update_match_team_score(self):
         from apps.challenge.services.match_stats import MatchStats
         games_done = self.games.filter(status=SingleGameStatusTypes.DONE).count()
         if games_done >= 3:
@@ -191,7 +191,7 @@ class Match(models.Model):
             update_game_team_scoreboard_score_using_match(match=self, scoreboard=self.group.scoreboard)
             for match_team in self.match_teams.all():
                 row = self.group.scoreboard.rows.get(team=match_team.team)
-                row.wins, row.loss, row.draws = MatchStats(match=self, team=match_team.team)()
+                row.wins, row.draws, row.loss = MatchStats(match=self, team=match_team.team)()
                 row.save()
             self.finished = True
             self.save()
@@ -200,7 +200,7 @@ class Match(models.Model):
 class MatchTeam(models.Model):
     team = models.ForeignKey('participation.Team', related_name='game_team', on_delete=models.CASCADE)
     match = models.ForeignKey('challenge.Match', related_name='match_teams', on_delete=models.CASCADE)
-    score = models.IntegerField(default=0)
+    score = models.FloatField(default=0.0)
 
 
 class Game(models.Model):
@@ -249,8 +249,10 @@ class Game(models.Model):
         client1.save()
         client2.save()
         client3.save()
+        self.status = 'done'
+        self.save()
         if self.match:
-            self.match.update_match_team_score([client0, client1, client2, client3])
+            self.match.update_match_team_score()
         else:
             self._update_friendly_scoreboard([client0, client1, client2, client3])
 
