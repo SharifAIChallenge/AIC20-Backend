@@ -187,16 +187,14 @@ class Match(models.Model):
         from apps.challenge.services.match_stats import MatchStats
         games_done = self.games.filter(status=SingleGameStatusTypes.DONE).count()
         for game_team in game_teams:
-            print("Oomad emtiazaye matcho ro update koneeeeeeeeee :D\n ****************************************")
 
             match_team = self.match_teams.get(team=game_team.team)
             match_team.score += game_team.scoreboard_score
             match_team.save()
         if games_done >= 3:
-            print("OOmad tedade bordo bakhtaro reval kone too match \n =========================================")
             for match_team in self.match_teams.all():
                 row = self.group.scoreboard.rows.get(team=match_team.team)
-                row.wins, row.loss, row.draws = MatchStats(match=self, team=match_team.team)
+                row.wins, row.loss, row.draws = MatchStats(match=self, team=match_team.team)()
                 row.save()
             self.finished = True
             self.save()

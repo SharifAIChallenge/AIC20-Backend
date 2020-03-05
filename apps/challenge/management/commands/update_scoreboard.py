@@ -49,6 +49,8 @@ class Command(BaseCommand):
                         main_row.wins += row.wins
                         main_row.loss += row.loss
                         main_row.draws += row.draws
-                        main_row.save()
+                    main_row.save()
                 scoreboard.calculated = True
                 scoreboard.save()
+            elif not scoreboard.calculated:
+                print("entered scoreboard already calculated")
