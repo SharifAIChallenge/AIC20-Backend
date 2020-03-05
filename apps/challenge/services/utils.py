@@ -109,6 +109,18 @@ def update_game_team_scoreboard_score_using_match(match, scoreboard):
             client1.save()
             client2.save()
             client3.save()
+            match_team0 = match.match_teams.get(team=client0.team)
+            match_team1 = match.match_teams.get(team=client1.team)
+            match_team2 = match.match_teams.get(team=client2.team)
+            match_team3 = match.match_teams.get(team=client3.team)
+            match_team0.score += client0.scoreboard_score
+            match_team1.score += client1.scoreboard_score
+            match_team2.score += client2.scoreboard_score
+            match_team3.score += client3.scoreboard_score
+            match_team0.save()
+            match_team1.save()
+            match_team2.save()
+            match_team3.save()
             team_scores[client0.team.name]['row'].score += client0.scoreboard_score
             team_scores[client1.team.name]['row'].score += client1.scoreboard_score
             team_scores[client2.team.name]['row'].score += client2.scoreboard_score

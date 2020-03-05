@@ -186,12 +186,9 @@ class Match(models.Model):
     def update_match_team_score(self, game_teams):
         from apps.challenge.services.match_stats import MatchStats
         games_done = self.games.filter(status=SingleGameStatusTypes.DONE).count()
-        for game_team in game_teams:
-
-            match_team = self.match_teams.get(team=game_team.team)
-            match_team.score += game_team.scoreboard_score
-            match_team.save()
         if games_done >= 3:
+            from apps.challenge.services.utils import update_game_team_scoreboard_score_using_match
+            update_game_team_scoreboard_score_using_match(match=self, scoreboard=self.group.scoreboard)
             for match_team in self.match_teams.all():
                 row = self.group.scoreboard.rows.get(team=match_team.team)
                 row.wins, row.loss, row.draws = MatchStats(match=self, team=match_team.team)()
@@ -253,7 +250,6 @@ class Game(models.Model):
         client2.save()
         client3.save()
         if self.match:
-            update_game_team_scoreboard_score(self, self.match.group.scoreboard)
             self.match.update_match_team_score([client0, client1, client2, client3])
         else:
             self._update_friendly_scoreboard([client0, client1, client2, client3])
