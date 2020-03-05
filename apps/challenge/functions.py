@@ -77,7 +77,7 @@ def upload_file(file):
     :return: file token or raises error with error message
     """
     print("ommad upload kone", file.size)
-    response = requests.post(settings.INFRA_IP + "/api/storage/new_file/", files={'file': file},
+    response = requests.put(settings.INFRA_IP + "/api/storage/new_file/", files={'file': file},
                              headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
     print(response.status_code, response.json(), "==== Upload File ====")
 
