@@ -39,7 +39,7 @@ class GameSerializer(ModelSerializer):
 
     @staticmethod
     def _get_tournament(instance: challenge_models.Game):
-        return 'friendly' if instance.match else instance.match.group.stage.tournament.name
+        return 'friendly' if instance.match == None else instance.match.group.stage.tournament.name
 
     class Meta:
         model = challenge_models.Game
