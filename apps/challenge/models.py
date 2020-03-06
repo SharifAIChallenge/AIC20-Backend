@@ -148,6 +148,14 @@ class Tournament(PolymorphicModel):
         return self.stages.count() == self.stages.filter(finished=True).count()
 
 
+class RunTournament(models.Model):
+    tournament = models.ForeignKey('challenge.Tournament', related_name='runs', on_delete=models.DO_NOTHING)
+
+    def save(self, *args, **kwargs):
+        self.tournament.run()
+        super().save(*args, **kwargs)
+
+
 class Stage(models.Model):
     tournament = models.ForeignKey('challenge.Tournament', related_name='stages', on_delete=models.CASCADE)
     finished = models.BooleanField(default=False)

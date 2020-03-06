@@ -21,9 +21,6 @@ def handle_submission(submission_id):
         logger.error(error)
 
 
-
-
-
 @app.task(name='run_single_game')
 def run_single_game(game_id):
     from .models import Game, SingleGameStatusTypes
