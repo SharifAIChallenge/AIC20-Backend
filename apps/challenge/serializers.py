@@ -5,6 +5,7 @@ from django.utils.timezone import utc
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
+from apps.challenge.models import SubmissionStatusTypes
 from apps.participation.serializers import LimitedTeamSerializer
 from . import models as challenge_models
 from ..participation import serializers as participation_serializers
@@ -157,6 +158,7 @@ class SubmissionSecondMethodPostSerializer(ModelSerializer):
             raise serializers.ValidationError('You cant submit, because you dont have a team')
         attrs['user'] = user
         attrs['team'] = user.participant.team
+        attrs['status'] = SubmissionStatusTypes.UPLOADED
         if not attrs['team'].is_valid:
             raise serializers.ValidationError('Please complete your team first')
         submissions = attrs['team'].submissions

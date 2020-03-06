@@ -13,11 +13,15 @@ def handle_submission(submission_id):
     print("ommad too task")
     submission = Submission.objects.get(id=submission_id)
     try:
-        submission.upload()
+        if not submission.infra_token:
+            submission.upload()
         submission.compile()
 
     except Exception as error:
         logger.error(error)
+
+
+
 
 
 @app.task(name='run_single_game')

@@ -350,11 +350,11 @@ class Submission(models.Model):
         self.save()
 
     def handle(self):
-        # handle_submission(self.id)
         handle_submission.delay(self.id)
 
     def upload(self):
         from . import functions
+
         self.infra_token = functions.upload_file(self.file)
         self.status = SubmissionStatusTypes.UPLOADED
         self.save()
