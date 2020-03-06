@@ -13,7 +13,7 @@ def handle_submission(submission_id):
     print("ommad too task")
     submission = Submission.objects.get(id=submission_id)
     try:
-        submission.upload()
+        # submission.upload()
         submission.compile()
 
     except Exception as error:

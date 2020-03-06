@@ -52,7 +52,6 @@ def upload1(file):
             print(r)
         except Exception as e:
             print(e)
-        print(r.json())
     print("==========================================")
 
 

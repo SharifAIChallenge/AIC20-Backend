@@ -124,6 +124,19 @@ class SubmissionSubmitAPIView(GenericAPIView):
         return Response(data={'errors': [_('Something Went Wrong')]}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
+class SubmissionSubmitSecondMethodAPIView(GenericAPIView):
+    serializer_class = challenge_serializers.SubmissionSecondMethodPostSerializer
+
+    def post(self, request):
+        submission = self.get_serializer(data=request.data, context={'request': request})
+        if submission.is_valid(raise_exception=True):
+            submission = submission.save()
+            return Response(
+                data={'details': _('Submission information successfully submitted'), 'submission_id': submission.id},
+                status=status.HTTP_200_OK)
+        return Response(data={'errors': [_('Something Went Wrong')]}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
 class SubmissionsListAPIView(GenericAPIView):
     queryset = challenge_models.Submission.objects.all()
     serializer_class = challenge_serializers.SubmissionSerializer

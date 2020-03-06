@@ -146,6 +146,38 @@ class SubmissionPostSerializer(ModelSerializer):
         return instance
 
 
+class SubmissionSecondMethodPostSerializer(ModelSerializer):
+    class Meta:
+        model = challenge_models.Submission
+        fields = ['language', 'infra_token']
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+
+        if not hasattr(user, 'participant'):
+            raise serializers.ValidationError('You cant submit, because you dont have a team')
+        attrs['user'] = user
+        attrs['team'] = user.participant.team
+        if not attrs['team'].is_valid:
+            raise serializers.ValidationError('Please complete your team first')
+        submissions = attrs['team'].submissions
+        challenge = challenge_models.Challenge.objects.get(type=challenge_models.ChallengeTypes.PRIMARY)
+        if not challenge.can_submit:
+            raise serializers.ValidationError('Submission is closed')
+
+        if submissions.exists() and datetime.now(utc) - submissions.order_by('-submit_time')[0].submit_time < timedelta(
+                minutes=challenge.code_submit_delay):
+            raise serializers.ValidationError(
+                f"You have to wait at least {settings.TEAM_SUBMISSION_TIME_DELTA} minute between each submission!")
+
+        return attrs
+
+    def save(self, **kwargs):
+        instance = super().save(**kwargs)
+        instance.handle()
+        return instance
+
+
 class MapSerializer(ModelSerializer):
     class Meta:
         model = challenge_models.Map

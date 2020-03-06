@@ -325,7 +325,7 @@ class Submission(models.Model):
     user = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
     language = models.CharField(max_length=50, choices=SubmissionLanguagesTypes.TYPES,
                                 default=SubmissionLanguagesTypes.JAVA)
-    file = models.FileField(upload_to=get_submission_file_directory)
+    file = models.FileField(upload_to=get_submission_file_directory, null=True, blank=True)
     submit_time = models.DateTimeField(auto_now_add=True)
     is_final = models.BooleanField(default=False)
     status = models.CharField(max_length=50, choices=SubmissionStatusTypes.TYPES,

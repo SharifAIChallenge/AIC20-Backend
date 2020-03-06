@@ -8,3 +8,4 @@
 # CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 # CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 # djcelery.setup_loader()
+#
