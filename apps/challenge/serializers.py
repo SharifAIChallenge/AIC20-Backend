@@ -148,7 +148,7 @@ class SubmissionPostSerializer(ModelSerializer):
 class SubmissionSecondMethodPostSerializer(ModelSerializer):
     class Meta:
         model = challenge_models.Submission
-        fields = ['language', 'infra_token', 'address']
+        fields = ['language', 'infra_token', 'download_link']
 
     def validate(self, attrs):
         user = self.context['request'].user
