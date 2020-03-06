@@ -150,9 +150,12 @@ class Tournament(PolymorphicModel):
 
 class RunTournament(models.Model):
     tournament = models.ForeignKey('challenge.Tournament', related_name='runs', on_delete=models.DO_NOTHING)
+    finished = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        self.tournament.run()
+        if not self.finished:
+            self.tournament.run()
+        self.finished = True
         super().save(*args, **kwargs)
 
 

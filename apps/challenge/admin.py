@@ -104,3 +104,11 @@ class MapAdmin(admin.ModelAdmin):
 class LobbyAdmin(admin.ModelAdmin):
     list_display = ['id', 'match', 'completed', 'multi_play', 'with_friend']
     list_display_links = ['id']
+
+
+@admin.register(challenge_models.RunTournament)
+class RunTournamentAdmin(admin.ModelAdmin):
+    list_display = ['id', 'tournament', 'finished']
+    list_display_links = ['id', 'tournament']
+
+    readonly_fields = ['finished']
