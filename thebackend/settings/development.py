@@ -150,7 +150,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    'D  EFAULT_AUTHENTICATION_PERMISSIONS': [
+    'DEFAULT_AUTHENTICATION_PERMISSIONS': [
         'rest_framework.permissions.IsAuthenticated',
         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
