@@ -69,22 +69,6 @@ class TournamentDetailAPIView(GenericAPIView):
         return Response(data={'tournament': data}, status=status.HTTP_200_OK)
 
 
-class MatchesListAPIView(GenericAPIView):
-    queryset = challenge_models.Match
-    serializer_class = challenge_serializers.MatchSerializer
-
-    def get(self, request):
-        pass
-
-
-class MatchDetailAPIView(GenericAPIView):
-    queryset = challenge_models.Match
-    serializer_class = challenge_serializers.MatchSerializer
-
-    def get(self, request):
-        pass
-
-
 class GamesListAPIView(GenericAPIView):
     queryset = challenge_models.Game.objects.all()
     serializer_class = challenge_serializers.GameSerializer
@@ -209,22 +193,6 @@ class FriendlyMatchLobbyAPIView(GenericAPIView):
 
         data = self.get_serializer(queryset, many=True).data
         return Response(data={'lobbies': data}, status=status.HTTP_200_OK)
-
-
-class MapsListAPIView(GenericAPIView):
-    queryset = challenge_models.Map
-    serializer_class = challenge_serializers.MapSerializer
-
-    def get(self, request):
-        pass
-
-
-class MapDetailAPIView(GenericAPIView):
-    queryset = challenge_models.Map
-    serializer_class = challenge_serializers.MapSerializer
-
-    def get(self, request):
-        pass
 
 
 @csrf_exempt

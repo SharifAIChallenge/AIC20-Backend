@@ -82,7 +82,7 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_display_links = ['__str__']
     list_filter = ['language', 'submit_time', 'status', 'is_final']
 
-    search_fields = ['get_team_name', 'get_user_username']
+    search_fields = ['infra_token', 'infra_compile_token']
 
     def get_team_name(self, instance: challenge_models.Submission):
         return instance.team.name
