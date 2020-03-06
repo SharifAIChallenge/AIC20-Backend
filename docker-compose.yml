@@ -45,6 +45,9 @@ services:
   celery:
     container_name: thebackend_celery
     build: .
-    command: ["celery", "-A", "thebackend", "worker", "-l", "info", "-E"]
+    command: ["celery", "-A", "thebackend", "worker", "-l", "info", "-E", "--concurrency=10"]
     depends_on:
       - rabbitmq
+    volumes:
+      - ./static/:/static/
+      - ./media/:/media/
