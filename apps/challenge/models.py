@@ -333,6 +333,7 @@ class Submission(models.Model):
     infra_compile_message = models.CharField(max_length=1023, null=True, blank=True)
     infra_token = models.CharField(max_length=256, null=True, blank=True, unique=True)
     infra_compile_token = models.CharField(max_length=256, null=True, blank=True, unique=True)
+    download_link = models.URLField(max_length=512, null=True, blank=True)
 
     def __str__(self):
         return "id: " + str(self.id) + ' team: ' + self.team.name + " user: " + self.user.username

@@ -108,8 +108,7 @@ class SubmissionSerializer(ModelSerializer):
 
     class Meta:
         model = challenge_models.Submission
-        fields = ['id', 'language', 'is_final', 'submit_time', 'user', 'file', 'status',
-                  'infra_token']  # infra Token should be removed in production
+        fields = ['id', 'language', 'is_final', 'submit_time', 'user', 'file', 'download_link', 'status']
 
 
 class SubmissionPostSerializer(ModelSerializer):
@@ -149,7 +148,7 @@ class SubmissionPostSerializer(ModelSerializer):
 class SubmissionSecondMethodPostSerializer(ModelSerializer):
     class Meta:
         model = challenge_models.Submission
-        fields = ['language', 'infra_token']
+        fields = ['language', 'infra_token', 'address']
 
     def validate(self, attrs):
         user = self.context['request'].user
