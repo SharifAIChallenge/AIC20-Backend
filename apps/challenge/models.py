@@ -125,8 +125,6 @@ class Tournament(PolymorphicModel):
 
     def save(self, *args, **kwargs):
         self.queued = True
-        if self.tournament_maps.filter(verified=False).count() > 0:
-            raise ValueError("Selected map not verified")
         super().save(*args, **kwargs)
 
     def run(self):
