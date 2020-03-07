@@ -17,7 +17,7 @@ class ScoreBoardAdmin(PolymorphicParentModelAdmin):
     base_model = scoreboard_models.ScoreBoard
 
     child_models = [scoreboard_models.ChallengeScoreBoard, scoreboard_models.GroupScoreBoard,
-                    # scoreboard_models.FriendlyScoreBoard
+                    scoreboard_models.FriendlyScoreBoard
                     ]
 
     def has_add_permission(self, request):

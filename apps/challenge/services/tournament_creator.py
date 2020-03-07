@@ -62,8 +62,8 @@ class TournamentCreator:
     def permutations_for_single_match(self, teams, match_type=MatchTypes.DIFFERENT):
         if match_type == MatchTypes.SIMILAR:
             return [[teams[0], teams[0]], [teams[1], teams[1]]]
-        return [[[teams[0], teams[1]], [teams[2], teams[3]]], [[teams[0], teams[2]], [teams[1], teams[3]]],
-                [[teams[0], teams[3]], [teams[1], teams[2]]]]
+        return [[[teams[0], teams[1]], [teams[3], teams[2]]], [[teams[0], teams[2]], [teams[1], teams[3]]],
+                [[teams[0], teams[3]], [teams[2], teams[1]]]]
 
     def _get_segmentation(self):
         segmentation = []
