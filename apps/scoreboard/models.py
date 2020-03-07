@@ -58,7 +58,8 @@ class GroupScoreBoard(ScoreBoard):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return 'id: ' + str(self.id) + "  Tournament: " + self.group.stage.tournament.name + "  Group: " + str(self.group.id)
+        return 'id: ' + str(self.id) + "  Tournament: " + self.group.stage.tournament.name + "  Group: " + str(
+            self.group.id)
 
 
 class FriendlyScoreBoard(ScoreBoard):

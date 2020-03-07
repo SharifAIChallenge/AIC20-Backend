@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import ChallengeScoreBoard, GroupScoreBoard, FriendlyScoreBoard, ScoreBoardTypes, ScoreBoard
-from ..challenge.models import Challenge, ChallengeTypes, Group, GameTeam
-from .serializers import RowSerializer
+from ..challenge.models import Challenge, ChallengeTypes, Group, GameTeam, TournamentTypes
+from .serializers import RowSerializer, GroupScoreBoardSerializer
 
 
 class ChallengeScoreBoardAPIView(GenericAPIView):
@@ -32,3 +32,13 @@ class FriendlyScoreBoardAPIView(GenericAPIView):
         rows = scoreboard.rows.all().order_by('-score').filter(team_id__in=teams_with_game_ids)
         data = self.get_serializer(rows, many=True).data
         return Response(data={'scoreboard': data}, status=status.HTTP_200_OK)
+
+
+class GroupScoreBoardAPIView(GenericAPIView):
+    serializer_class = GroupScoreBoardSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        group_scoreboards = GroupScoreBoard.objects.filter(group__stage__tournamen__type=TournamentTypes.LEAGUE)
+        data = self.get_serializer(group_scoreboards, many=True).data
+        return Response(data={'scoreboards': data}, status=status.HTTP_200_OK)

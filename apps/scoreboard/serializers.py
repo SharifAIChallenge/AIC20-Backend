@@ -18,3 +18,14 @@ class RowSerializer(ModelSerializer):
     class Meta:
         model = scoreboard_models.Row
         fields = ['team', 'score', 'wins', 'loss', 'draws']
+
+
+class GroupScoreBoardSerializer(ModelSerializer):
+    class Meta:
+        model = scoreboard_models.GroupScoreBoard
+        fields = ['group']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['rows'] = RowSerializer(instance.rows.all().order_by('-score'), many=True).data
+        return data
