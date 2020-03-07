@@ -78,7 +78,9 @@ class GamesListAPIView(GenericAPIView):
             return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
         game_ids = challenge_models.GameTeam.objects.filter(team=request.user.participant.team).values_list(
             'game_side__game_id', flat=True)
-        data = self.get_serializer(self.get_queryset().filter(id__in=game_ids).order_by('-time')[:50], many=True).data
+        data = self.get_serializer(self.get_queryset().filter(id__in=game_ids).filter(
+            match__group__stage__tournament__type=challenge_models.TournamentTypes.LEAGUE).order_by('-time'),
+                                   many=True).data
         return Response(data={'games': data}, status=status.HTTP_200_OK)
 
 

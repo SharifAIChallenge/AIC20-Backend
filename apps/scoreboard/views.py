@@ -39,6 +39,6 @@ class GroupScoreBoardAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        group_scoreboards = GroupScoreBoard.objects.filter(group__stage__tournamen__type=TournamentTypes.LEAGUE)
+        group_scoreboards = GroupScoreBoard.objects.filter(group__stage__tournament__type=TournamentTypes.LEAGUE)
         data = self.get_serializer(group_scoreboards, many=True).data
         return Response(data={'scoreboards': data}, status=status.HTTP_200_OK)
