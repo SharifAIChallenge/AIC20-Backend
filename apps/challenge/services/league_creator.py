@@ -26,6 +26,7 @@ class LeagueCreator:
         self._create_seeds()
         self._create_groups()
         self._create_league(self.tournament.tournament_maps.all())
+        return self.games_ids
 
     def _get_bot_teams(self):
         self.bot_teams.extend(Team.objects.filter(name__in=['ufo1', 'ufo2', 'ufo3', 'ufo4']))

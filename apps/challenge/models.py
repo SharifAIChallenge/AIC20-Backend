@@ -125,7 +125,10 @@ class Tournament(PolymorphicModel):
 
     def save(self, *args, **kwargs):
         self.queued = True
-        if not self.tournament_map.verified:
+        if self.type == TournamentTypes.LEAGUE:
+            from apps.challenge.services.league_creator import LeagueCreator
+            LeagueCreator(tournament=self)()
+        if self.tournament_maps.filter(verified=False).count() > 0:
             raise ValueError("Selected map not verified")
         super().save(*args, **kwargs)
 
@@ -181,8 +184,25 @@ class Group(models.Model):
     def finished(self):
         return self.matches.count() == self.matches.filter(finished=True).count()
 
+    def run(self):
+        from apps.challenge.tasks import run_single_game
+        games = Game.objects.filter(match__group=self)
+        for game in games:
+            run_single_game.delay(game.id)
+
     def __str__(self):
         return f'id: {self.id} tournament_id: {self.stage.tournament_id}'
+
+
+class RunGroup(models.Model):
+    group = models.ForeignKey('challenge.Group', related_name='runs', on_delete=models.DO_NOTHING)
+    finished = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.finished:
+            self.group.run()
+        self.finished = True
+        super().save(*args, **kwargs)
 
 
 class GroupTeam(models.Model):
