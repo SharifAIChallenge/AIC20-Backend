@@ -1,6 +1,7 @@
 from itertools import combinations
 
-from apps.challenge.models import Submission, Group, Stage, GroupTeam, MatchTeam, MatchTypes, Match, Game, GameSide
+from apps.challenge.models import Submission, Group, Stage, GroupTeam, MatchTeam, MatchTypes, Match, Game, GameSide, \
+    GameTeam
 from apps.participation.models import Team
 from apps.scoreboard.models import ChallengeScoreBoard, GroupScoreBoard, Row
 
