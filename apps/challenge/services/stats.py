@@ -1,3 +1,6 @@
+from apps.challenge.models import SingleGameStatusTypes
+
+
 class Stats:
 
     def __init__(self, team, friendly_only=False, tournament_only=False):
@@ -16,7 +19,8 @@ class Stats:
     def _wins(self):
         from apps.challenge.models import GameTeam
 
-        game_teams = GameTeam.objects.filter(team=self.team).filter(
+        game_teams = GameTeam.objects.filter(game_side__game__status=SingleGameStatusTypes.DONE).filter(
+            team=self.team).filter(
             game_side__has_won=True)
         if self.friendly_only:
             game_teams = game_teams.filter(game_side__game__match=None)
@@ -26,7 +30,8 @@ class Stats:
 
     def _loss_and_draws(self):
         from apps.challenge.models import GameTeam, Game
-        other_games = GameTeam.objects.filter(team=self.team).filter(
+        other_games = GameTeam.objects.filter(game_side__game__status=SingleGameStatusTypes.DONE).filter(
+            team=self.team).filter(
             game_side__has_won=False)
         if self.friendly_only:
             other_games = other_games.filter(game_side__game__match=None)
