@@ -120,7 +120,7 @@ class Tournament(PolymorphicModel):
     end_time = models.DateTimeField(null=True, blank=True)
     submit_deadline = models.DateTimeField(null=True, blank=True)
     queued = models.BooleanField(default=False)
-    tournament_map = models.ForeignKey('challenge.Map', related_name='tournaments', on_delete=models.DO_NOTHING)
+    tournament_maps = models.ManyToManyField('challenge.Map', related_name='tournaments')
     match_bet_percentage = models.PositiveSmallIntegerField(default=5)
 
     def save(self, *args, **kwargs):
@@ -181,6 +181,9 @@ class Group(models.Model):
     def finished(self):
         return self.matches.count() == self.matches.filter(finished=True).count()
 
+    def __str__(self):
+        return f'id: {self.id} tournament_id: {self.stage.tournament_id}'
+
 
 class GroupTeam(models.Model):
     team = models.ForeignKey('participation.Team', related_name='team_group', on_delete=models.CASCADE)
@@ -240,10 +243,10 @@ class Game(models.Model):
         client1 = self.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[0]
         client2 = self.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[1]
         client3 = self.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[1]
-        client0.save_client_log(filename=client0_log_name + ".zip", response=client0_log)
-        client1.save_client_log(filename=client1_log_name + ".zip", response=client1_log)
-        client2.save_client_log(filename=client2_log_name + ".zip", response=client2_log)
-        client3.save_client_log(filename=client3_log_name + ".zip", response=client3_log)
+        # client0.save_client_log(filename=client0_log_name + ".zip", response=client0_log)
+        # client1.save_client_log(filename=client1_log_name + ".zip", response=client1_log)
+        # client2.save_client_log(filename=client2_log_name + ".zip", response=client2_log)
+        # client3.save_client_log(filename=client3_log_name + ".zip", response=client3_log)
         client0.score = score[0]['score']
         client2.score = score[2]['score']
         client1.score = score[1]['score']
