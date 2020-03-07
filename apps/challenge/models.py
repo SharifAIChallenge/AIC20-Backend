@@ -243,10 +243,10 @@ class Game(models.Model):
         client1 = self.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[0]
         client2 = self.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[1]
         client3 = self.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[1]
-        # client0.save_client_log(filename=client0_log_name + ".zip", response=client0_log)
-        # client1.save_client_log(filename=client1_log_name + ".zip", response=client1_log)
-        # client2.save_client_log(filename=client2_log_name + ".zip", response=client2_log)
-        # client3.save_client_log(filename=client3_log_name + ".zip", response=client3_log)
+        client0.save_client_log(filename=client0_log_name + ".zip", response=client0_log)
+        client1.save_client_log(filename=client1_log_name + ".zip", response=client1_log)
+        client2.save_client_log(filename=client2_log_name + ".zip", response=client2_log)
+        client3.save_client_log(filename=client3_log_name + ".zip", response=client3_log)
         client0.score = score[0]['score']
         client2.score = score[2]['score']
         client1.score = score[1]['score']
