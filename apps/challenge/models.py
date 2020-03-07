@@ -174,6 +174,7 @@ class Stage(models.Model):
 class Group(models.Model):
     stage = models.ForeignKey('challenge.Stage', related_name='groups', on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=128, blank=True, null=True)
 
     @property
     def finished(self):

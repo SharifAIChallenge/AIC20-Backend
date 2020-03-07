@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from . import models as scoreboard_models
 from ..participation import models as participation_models
@@ -21,9 +21,15 @@ class RowSerializer(ModelSerializer):
 
 
 class GroupScoreBoardSerializer(ModelSerializer):
+    group_name = SerializerMethodField('_group_name')
+
+    @staticmethod
+    def _group_name(instance: scoreboard_models.GroupScoreBoard):
+        return instance.group.name
+
     class Meta:
         model = scoreboard_models.GroupScoreBoard
-        fields = ['group']
+        fields = ['group_name']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
