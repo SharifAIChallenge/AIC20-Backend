@@ -26,7 +26,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        if options.get('init'):
+        if options.get('refresh'):
             self._handle_init_all(options)
 
     def _handle_init_all(self, options):
