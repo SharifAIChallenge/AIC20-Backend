@@ -250,6 +250,8 @@ def report(request):
     elif single_report['operation'] == 'run':
         try:
             game = Game.objects.get(infra_token=single_report['id'])
+            if game.status == SingleGameStatusTypes.DONE:
+                return JsonResponse({'success': True})
             logger.debug("Obtained relevant single match")
         except Exception as exception:
             logger.exception(exception)
