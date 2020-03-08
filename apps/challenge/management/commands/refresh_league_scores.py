@@ -43,5 +43,4 @@ class Command(BaseCommand):
             rows = Row.objects.filter(scoreboard_id=group_scoreboard.id)
             rows.update(score=2000.0, wins=0, loss=0, draws=0)
             for match in group.matches.all():
-                print(match)
                 match.update_match_team_score()
