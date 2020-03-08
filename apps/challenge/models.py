@@ -287,7 +287,8 @@ class Game(models.Model):
         self.status = 'done'
         self.save()
         if self.match:
-            self.match.update_match_team_score()
+            # self.match.update_match_team_score()
+            pass
         else:
             self._update_friendly_scoreboard([client0, client1, client2, client3])
 
