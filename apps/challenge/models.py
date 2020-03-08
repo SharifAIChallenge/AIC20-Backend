@@ -333,7 +333,7 @@ class GameTeam(models.Model):
     def team_single_game_log(self, filename):
         return os.path.join('logs', 'just_team', self.team.name, self.game_side.game.infra_token, filename)
 
-    log = models.FileField(upload_to=team_single_game_log, null=True, blank=True)
+    log = models.FileField(upload_to=team_single_game_log, null=True, blank=True, max_length=1024)
     score = models.IntegerField(null=True, blank=True)
     scoreboard_score = models.FloatField(default=0.0)
 
