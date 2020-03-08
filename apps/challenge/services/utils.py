@@ -129,3 +129,56 @@ def update_game_team_scoreboard_score_using_match(match, scoreboard):
             team_scores[client1.team.name]['row'].save()
             team_scores[client2.team.name]['row'].save()
             team_scores[client3.team.name]['row'].save()
+
+
+def update_league_scoreboard(match, scoreboard):
+    team_scores = {}
+    got_team_scores = False
+
+    for game in match.games.all():
+        client0 = game.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[0]
+        client1 = game.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[0]
+        client2 = game.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[1]
+        client3 = game.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[1]
+
+        if not got_team_scores:
+            row0 = scoreboard.rows.get(team=client0.team)
+            row1 = scoreboard.rows.get(team=client1.team)
+            row2 = scoreboard.rows.get(team=client2.team)
+            row3 = scoreboard.rows.get(team=client3.team)
+
+            team_scores[client0.team.name] = {'score': row0.score, 'row': row0}
+            team_scores[client1.team.name] = {'score': row1.score, 'row': row1}
+            team_scores[client2.team.name] = {'score': row2.score, 'row': row2}
+            team_scores[client3.team.name] = {'score': row3.score, 'row': row3}
+            got_team_scores = True
+
+        if client0.score and client1.score and client2.score and client3.score:
+            client0.scoreboard_score += client0.score
+            client2.scoreboard_score += client2.score
+            client1.scoreboard_score += client1.score
+            client3.scoreboard_score += client3.score
+            client0.save()
+            client1.save()
+            client2.save()
+            client3.save()
+            match_team0 = match.match_teams.get(team=client0.team)
+            match_team1 = match.match_teams.get(team=client1.team)
+            match_team2 = match.match_teams.get(team=client2.team)
+            match_team3 = match.match_teams.get(team=client3.team)
+            match_team0.score += client0.scoreboard_score
+            match_team1.score += client1.scoreboard_score
+            match_team2.score += client2.scoreboard_score
+            match_team3.score += client3.scoreboard_score
+            match_team0.save()
+            match_team1.save()
+            match_team2.save()
+            match_team3.save()
+            team_scores[client0.team.name]['row'].score += client0.score
+            team_scores[client1.team.name]['row'].score += client1.score
+            team_scores[client2.team.name]['row'].score += client2.score
+            team_scores[client3.team.name]['row'].score += client3.score
+            team_scores[client0.team.name]['row'].save()
+            team_scores[client1.team.name]['row'].save()
+            team_scores[client2.team.name]['row'].save()
+            team_scores[client3.team.name]['row'].save()

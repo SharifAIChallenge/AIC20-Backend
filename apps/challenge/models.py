@@ -215,13 +215,18 @@ class Match(models.Model):
 
     def update_match_team_score(self):
         from apps.challenge.services.match_stats import MatchStats
+        from apps.challenge.services.utils import update_league_scoreboard
         games_done = self.games.filter(status=SingleGameStatusTypes.DONE).count()
         if games_done >= 3:
             from apps.challenge.services.utils import update_game_team_scoreboard_score_using_match
-            update_game_team_scoreboard_score_using_match(match=self, scoreboard=self.group.scoreboard)
+            if self.group.stage.tournament.type == TournamentTypes.LEAGUE:
+                update_league_scoreboard(match=self, scoreboard=self.group.scoreboard)
+            else:
+                update_game_team_scoreboard_score_using_match(match=self, scoreboard=self.group.scoreboard)
             for match_team in self.match_teams.all():
                 row = self.group.scoreboard.rows.get(team=match_team.team)
-                row.wins, row.draws, row.loss = MatchStats(match=self, team=match_team.team)()
+                row.wins, row.draws, row.loss = MatchStats(match=self, team=match_team.team,
+                                                           just_group_scoreboard=True)()
                 row.save()
             self.finished = True
             self.save()
