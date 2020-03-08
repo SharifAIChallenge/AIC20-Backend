@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from ...models import Challenge, Group
+from apps.scoreboard.models import Row
 
 
 class Command(BaseCommand):
@@ -39,6 +40,8 @@ class Command(BaseCommand):
                 print(e)
                 return
             group_scoreboard = group.scoreboard
-            group_scoreboard.rows.all().update(score=2000.0, wins=0, loss=0, draws=0)
+            rows = Row.objects.filter(scoreboard_id=group_scoreboard.id)
+            rows.update(score=2000.0, wins=0, loss=0, draws=0)
             for match in group.matches.all():
+                print(match)
                 match.update_match_team_score()

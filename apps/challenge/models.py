@@ -219,11 +219,14 @@ class Match(models.Model):
         from apps.challenge.services.utils import update_game_team_scoreboard_score_using_match
         games_done = self.games.filter(status=SingleGameStatusTypes.DONE).count()
         if games_done >= 3:
+            print("oomad too if")
             if self.group.stage.tournament.type == TournamentTypes.LEAGUE:
+                print("ooomad emtiaz scoreboard update kone")
                 update_league_scoreboard(match=self, scoreboard=self.group.scoreboard)
             else:
                 update_game_team_scoreboard_score_using_match(match=self, scoreboard=self.group.scoreboard)
             for match_team in self.match_teams.all():
+                print("oomad bordo bakht reval kone")
                 row = self.group.scoreboard.rows.get(team=match_team.team)
                 row.wins, row.draws, row.loss = MatchStats(match=self, team=match_team.team,
                                                            just_group_scoreboard=True)()
