@@ -1,4 +1,4 @@
-from apps.challenge.models import GameTeam, Game
+from apps.challenge.models import GameTeam, Game, SingleGameStatusTypes
 
 
 class MatchStats:
@@ -22,7 +22,8 @@ class MatchStats:
             self.wins = self.wins.filter(game_side__game__match__group=self.match.group)
         else:
             self.wins = self.wins.filter(game_side__game__match=self.match)
-        self.wins = self.wins.filter(game_side__has_won=True).count()
+        self.wins = self.wins.filter(game_side__game__status=SingleGameStatusTypes.DONE).filter(
+            game_side__has_won=True).count()
 
     def _loss_and_draws(self):
         other_games = GameTeam.objects.filter(team=self.team)
@@ -30,7 +31,7 @@ class MatchStats:
             other_games = other_games.filter(game_side__game__match__group=self.match.group)
         else:
             other_games = other_games.filter(game_side__game__match=self.match)
-        other_games = other_games.filter(
+        other_games = other_games.filter(game_side__game__status=SingleGameStatusTypes.DONE).filter(
             game_side__has_won=False).values_list('game_side__game_id', flat=True)
 
         other_games = Game.objects.filter(id__in=other_games)

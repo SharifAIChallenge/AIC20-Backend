@@ -40,5 +40,5 @@ class Command(BaseCommand):
                 return
             group_scoreboard = group.scoreboard
             group_scoreboard.rows.all().update(score=2000.0, wins=0, loss=0, draws=0)
-            for match in group_scoreboard.group.matches.all():
+            for match in group.matches.all():
                 match.update_match_team_score()

@@ -216,9 +216,9 @@ class Match(models.Model):
     def update_match_team_score(self):
         from apps.challenge.services.match_stats import MatchStats
         from apps.challenge.services.utils import update_league_scoreboard
+        from apps.challenge.services.utils import update_game_team_scoreboard_score_using_match
         games_done = self.games.filter(status=SingleGameStatusTypes.DONE).count()
         if games_done >= 3:
-            from apps.challenge.services.utils import update_game_team_scoreboard_score_using_match
             if self.group.stage.tournament.type == TournamentTypes.LEAGUE:
                 update_league_scoreboard(match=self, scoreboard=self.group.scoreboard)
             else:
