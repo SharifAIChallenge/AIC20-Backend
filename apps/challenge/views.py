@@ -165,22 +165,24 @@ class FriendlyGameAPIView(GenericAPIView):
         return Response(data={'games': data}, status=status.HTTP_200_OK)
 
     def post(self, request):
-        if not hasattr(request.user, 'participant'):
-            return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
-
-        errors, friendly_game = LobbyHandler(request=request)()
-        if errors:
-            return Response(data={'errors': errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
-        if friendly_game:
-            from apps.challenge.tasks import run_single_game
-            try:
-                run_single_game.delay(friendly_game.id)
-            except Exception as e:
-                friendly_game.status = SingleGameStatusTypes.FAILED
-                friendly_game.save()
-                return Response(data={'errors': [str(e)]}, status=status.HTTP_406_NOT_ACCEPTABLE)
-            return Response(data={'details': 'gameRunned'})
-        return Response(data={'details': 'your request submitted'})
+        return Response(data={'details': 'friendly game closed'})
+        # 
+        # if not hasattr(request.user, 'participant'):
+        #     return Response(data={'errors': ['Sorry! you dont have a team']}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        # 
+        # errors, friendly_game = LobbyHandler(request=request)()
+        # if errors:
+        #     return Response(data={'errors': errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        # if friendly_game:
+        #     from apps.challenge.tasks import run_single_game
+        #     try:
+        #         run_single_game.delay(friendly_game.id)
+        #     except Exception as e:
+        #         friendly_game.status = SingleGameStatusTypes.FAILED
+        #         friendly_game.save()
+        #         return Response(data={'errors': [str(e)]}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        #     return Response(data={'details': 'gameRunned'})
+        # return Response(data={'details': 'your request submitted'})
 
 
 class FriendlyMatchLobbyAPIView(GenericAPIView):
