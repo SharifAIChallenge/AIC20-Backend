@@ -53,6 +53,7 @@ class GameAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'status', 'time', 'get_tournament_name']
     list_display_links = ['__str__']
     list_filter = ['status', 'time']
+    search_fields = ['infra_token']
 
     def get_tournament_name(self, instance: challenge_models.Game):
         return 'friendly' if not instance.match else instance.match.group.stage.tournament.name
@@ -65,7 +66,6 @@ class GameSideAdmin(admin.ModelAdmin):
     list_display = ['id', 'has_won']
     list_display_links = ['id']
     list_filter = ['has_won']
-
     inlines = [GameTeamInline]
 
 
