@@ -192,3 +192,12 @@ class LobbySerializer(ModelSerializer):
     class Meta:
         model = challenge_models.Lobby
         fields = ['teams1', 'teams2', 'multi_play', 'with_friend']
+
+    def to_representation(self, instance: challenge_models.Lobby):
+        data = super().to_representation(instance)
+        if instance.challenge.type == challenge_models.ChallengeTypes.FINAL:
+            team1 = instance.teams1.all().first()
+            team2 = instance.teams2.all().first()
+            data['teams1'] = [LimitedTeamSerializer(team1).data, LimitedTeamSerializer(team1).data]
+            data['teams2'] = [LimitedTeamSerializer(team2).data, LimitedTeamSerializer(team2).data]
+        return data
