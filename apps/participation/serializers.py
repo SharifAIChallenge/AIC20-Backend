@@ -44,7 +44,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ['name', 'badges', 'participants', 'image', 'is_valid', 'allow_multi_friendly']
+        fields = ['name', 'badges', 'challenge', 'participants', 'image', 'is_valid', 'allow_multi_friendly']
 
 
 class TeamPostSerializer(serializers.ModelSerializer):

@@ -129,7 +129,7 @@ class SubmissionPostSerializer(ModelSerializer):
         if not attrs['team'].is_valid:
             raise serializers.ValidationError('Please complete your team first')
         submissions = attrs['team'].submissions
-        challenge = challenge_models.Challenge.objects.get(type=challenge_models.ChallengeTypes.PRIMARY)
+        challenge = challenge_models.Challenge.objects.get(type=challenge_models.ChallengeTypes.FINAL)
         if not challenge.can_submit:
             raise serializers.ValidationError('Submission is closed')
 
@@ -162,7 +162,7 @@ class SubmissionSecondMethodPostSerializer(ModelSerializer):
         if not attrs['team'].is_valid:
             raise serializers.ValidationError('Please complete your team first')
         submissions = attrs['team'].submissions
-        challenge = challenge_models.Challenge.objects.get(type=challenge_models.ChallengeTypes.PRIMARY)
+        challenge = challenge_models.Challenge.objects.get(type=challenge_models.ChallengeTypes.FINAL)
         if not challenge.can_submit:
             raise serializers.ValidationError('Submission is closed')
 

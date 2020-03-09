@@ -38,7 +38,7 @@ class Command(BaseCommand):
             friendly_scoreboard = ScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
         except FriendlyScoreBoard.DoesNotExist:
             friendly_scoreboard = FriendlyScoreBoard.objects.create()
-        challenge = Challenge.objects.get(type=ChallengeTypes.PRIMARY)
+        challenge = Challenge.objects.get(type=ChallengeTypes.FINAL)
         for team in challenge.teams.all():
             if not friendly_scoreboard.rows.filter(team=team).exists():
                 total_score = GameTeam.objects.filter(team=team).filter(game_side__game__match=None).aggregate(

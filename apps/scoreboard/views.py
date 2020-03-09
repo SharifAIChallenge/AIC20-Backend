@@ -12,8 +12,8 @@ class ChallengeScoreBoardAPIView(GenericAPIView):
     serializer_class = RowSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        challenge = get_object_or_404(Challenge, type=ChallengeTypes.PRIMARY)
+    def get(self, request, challenge_id):
+        challenge = get_object_or_404(Challenge, id=challenge_id)
         teams_with_game_ids = GameTeam.objects.distinct('team_id').values_list('team_id')
         data = self.get_serializer(
             ChallengeScoreBoard.get_scoreboard_sorted_rows(challenge=challenge).filter(team_id__in=teams_with_game_ids),

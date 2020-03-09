@@ -427,9 +427,11 @@ class Map(models.Model):
 
 
 class Lobby(models.Model):
+    challenge = models.ForeignKey('challenge.Challenge', related_name='lobbies', null=True, blank=True,
+                                  on_delete=models.CASCADE)
     teams1 = models.ManyToManyField('participation.Team', related_name='lobbies1', null=True, blank=True)
     teams2 = models.ManyToManyField('participation.Team', related_name='lobbies2', null=True, blank=True)
-    match = models.ForeignKey('challenge.Match', related_name='friendly_matches', on_delete=models.CASCADE, null=True,
+    match = models.ForeignKey('challenge.Game', related_name='friendly_matches', on_delete=models.CASCADE, null=True,
                               blank=True)
     completed = models.BooleanField(default=False)
     multi_play = models.BooleanField(default=False)

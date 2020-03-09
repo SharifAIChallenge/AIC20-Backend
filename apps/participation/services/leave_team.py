@@ -1,4 +1,4 @@
-from apps.challenge.models import Submission
+from apps.challenge.models import Submission, ChallengeTypes
 from apps.participation.models import Team
 from django.utils.translation import ugettext_lazy as _
 
@@ -15,6 +15,8 @@ class LeaveTeam:
         if self.valid:
             self._validate_user_in_team()
         if self.valid:
+            self._validate_team_challenge_type()
+        if self.valid:
             self._check_leave_conditions()
         if self.valid:
             self._leave_team()
@@ -26,6 +28,11 @@ class LeaveTeam:
             return
         self.valid = False
         self.errors.append(_("You're Not in any team"))
+
+    def _validate_team_challenge_type(self):
+        if self.request.user.participant.team.challenge.type == ChallengeTypes.FINAL:
+            self.valid = False
+            self.errors.append(_("You can't leave your team in final challenge"))
 
     def _check_leave_conditions(self):
         if Submission.objects.filter(user=self.request.user, team=self.request.user.participant.team).exists():

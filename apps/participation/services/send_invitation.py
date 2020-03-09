@@ -4,6 +4,7 @@ from typing import Union
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
+from apps.challenge.models import ChallengeTypes
 from apps.participation.models import Invitation, Team, InvitationStatusTypes
 from apps.participation.serializers import InvitationSerializer
 
@@ -29,6 +30,8 @@ class SendInvitation:
             self._validate_target_has_team()
         if self.valid:
             self._validate_team_filled()
+        if self.valid:
+            self._validate_team_challenge_type()
         if self.valid:
             self._validate_invited_before()
         if self.valid:
@@ -63,6 +66,12 @@ class SendInvitation:
                    'participant') and self.request.user.participant.team.participants.count() >= Team.TEAM_MAX_SIZE:
             self.valid = False
             self.errors.append(_('Your team is full!'))
+
+    def _validate_team_challenge_type(self):
+        if hasattr(self.request.user,
+                   'participant') and self.request.user.participant.team.challenge.type == ChallengeTypes.FINAL:
+            self.valid = False
+            self.errors.append((_('You can\'t send invitations in final challenge')))
 
     def _validate_invited_before(self):
         if Invitation.objects.filter(source=self.request.user, target=self.user,
