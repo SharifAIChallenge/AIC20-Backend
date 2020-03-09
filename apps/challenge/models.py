@@ -256,7 +256,6 @@ class Game(models.Model):
 
     def update_scores_and_client_logs(self, client0_log, client0_log_name, client1_log, client1_log_name, client2_log,
                                       client2_log_name, client3_log, client3_log_name):
-        from apps.challenge.services.utils import update_game_team_scoreboard_score
 
         score = json.loads(self.log.read()).get('end')
         score = sorted(score, key=lambda x: x['playerId'])
@@ -312,7 +311,10 @@ class Game(models.Model):
         update_game_team_scoreboard_score(game=self, scoreboard=friendly_scoreboard)
         for game_team in game_teams:
             row = friendly_scoreboard.rows.get(team=game_team.team)
-            row.wins, row.draws, row.loss = Stats(team=game_team.team, friendly_only=True)()
+            final = False
+            if game_team.team.challenge.type == ChallengeTypes.FINAL:
+                final = True
+            row.wins, row.draws, row.loss = Stats(team=game_team.team, friendly_only=True, final_challenge=final)()
             row.save()
 
     def __str__(self):
