@@ -23,8 +23,9 @@ class MultiFriendlyGameTypes:
 
 class FriendlyGameCreator:
 
-    def __init__(self, lobby):
+    def __init__(self, lobby, final=False):
         self.lobby = lobby
+        self.final = final
         self.friendly_game = ''
         self.friendly_game_teams = []
         self.friendly_game_sides = []
@@ -48,10 +49,17 @@ class FriendlyGameCreator:
         for team in self.lobby.teams1.all():
             self.friendly_game_teams.append(
                 GameTeam.objects.create(team=team, game_side=self.friendly_game_sides[0]))
+            if self.final:
+                self.friendly_game_teams.append(
+                    GameTeam.objects.create(team=team, game_side=self.friendly_game_sides[0]))
         for team in self.lobby.teams2.all():
             self.friendly_game_teams.append(
                 GameTeam.objects.create(team=team, game_side=self.friendly_game_sides[1])
             )
+            if self.final:
+                self.friendly_game_teams.append(
+                    GameTeam.objects.create(team=team, game_side=self.friendly_game_sides[1])
+                )
 
 
 class LobbyHandler:
@@ -81,7 +89,8 @@ class LobbyHandler:
         if self.valid:
             self._handle_lobby()
         if self.valid and self.lobby.completed:
-            self.friendly_game = FriendlyGameCreator(lobby=self.lobby)()
+            self.friendly_game = FriendlyGameCreator(lobby=self.lobby,
+                                                     final=self.team.challenge.type == ChallengeTypes.FINAL)()
 
         return self.errors, self.friendly_game
 
@@ -107,7 +116,7 @@ class LobbyHandler:
             self.valid = False
             self.errors.append("provideTeamName")
             return
-        if self.team_name == self.request.user.participant.team.name:
+        if self.team_name == self.team.name:
             self.valid = False
             self.errors.append("cantInviteYourself")
             return
@@ -115,16 +124,16 @@ class LobbyHandler:
         if not self.invited_team.allow_multi_friendly:
             self.valid = False
             self.errors.append("doesntAcceptInvitation")
-        if not self.request.user.participant.team.allow_multi_friendly:
+        if not self.team.allow_multi_friendly:
             self.valid = False
             self.errors.append("pleaseEnableInvitation")
 
     def _validate_teams(self):
-        if not self.request.user.participant.team.is_valid:
+        if not self.team.is_valid:
             self.valid = False
             self.errors.append("teamInvalid")
             return
-        if not Submission.objects.filter(team=self.request.user.participant.team).filter(is_final=True).exists():
+        if not Submission.objects.filter(team=self.team).filter(is_final=True).exists():
             self.valid = False
             self.errors.append("teamHasNoFinalSubmission")
         if self.invited_team and not self.invited_team.is_valid:
@@ -135,35 +144,44 @@ class LobbyHandler:
             self.valid = False
             self.errors.append("invitedTeamHasNoFinalSubmission")
 
+        if self.invited_team and self.invited_team.challenge != self.team.challenge:
+            self.valid = False
+            self.errors.append("notSameChallenge")
+
     def _handle_lobby(self):
-        if self.team.challenge.type == ChallengeTypes.FINAL:
-            self._final_challenge_lobby()
-        elif self.type == FriendlyGameTypes.SINGLE:
-            self._single_lobby()
+
+        if self.type == FriendlyGameTypes.SINGLE:
+            if self.team.challenge.type == ChallengeTypes.FINAL:
+                self._single_lobby_final()
+            else:
+                self._single_lobby()
         elif self.multi_type == MultiFriendlyGameTypes.FRIEND:
             self._with_friend_multi_lobby()
         else:
-            self._with_enemy_multi_lobby()
+            if self.team.challenge.type == ChallengeTypes.FINAL:
+                self._with_enemy_multi_lobby_final()
+            else:
+                self._with_enemy_multi_lobby()
 
-    def _final_challenge_lobby(self):
+    def _single_lobby_final(self):
         with transaction.atomic():
             lobby = Lobby.objects.filter(completed=False).filter(multi_play=False).filter(
                 challenge=self.team.challenge).last()
             self.lobby = lobby if lobby else Lobby.objects.create(challenge=self.team.challenge)
             if not self._validate_lobby_join():
                 return
-            if self.lobby.teams1.count() < 2:
+            if self.lobby.teams1.count() < 1:
                 self.lobby.teams1.add(self.team, self.team)
-            elif self.lobby.teams2.count() < 2:
+            elif self.lobby.teams2.count() < 1:
                 self.lobby.teams2.add(self.team, self.team)
-            if self.lobby.teams1.count() + self.lobby.teams2.count() >= 4:
+            if self.lobby.teams1.count() + self.lobby.teams2.count() >= 2:
                 self.lobby.completed = True
                 self.lobby.save()
 
     def _single_lobby(self):
         with transaction.atomic():
             lobby = Lobby.objects.filter(completed=False).filter(multi_play=False).last()
-            self.lobby = lobby if lobby else Lobby.objects.create()
+            self.lobby = lobby if lobby else Lobby.objects.create(challenge=self.team.challenge)
             if not self._validate_lobby_join():
                 return
             if self.lobby.teams1.count() < 2:
@@ -176,8 +194,10 @@ class LobbyHandler:
 
     def _with_friend_multi_lobby(self):
         with transaction.atomic():
-            lobby = Lobby.objects.filter(completed=False).filter(multi_play=True).filter(with_friend=True).last()
-            self.lobby = lobby if lobby else Lobby.objects.create(multi_play=True, with_friend=True)
+            lobby = Lobby.objects.filter(completed=False).filter(challenge=self.team.challenge).filter(
+                multi_play=True).filter(with_friend=True).last()
+            self.lobby = lobby if lobby else Lobby.objects.create(multi_play=True, with_friend=True,
+                                                                  challenge=self.team.challenge)
             if not self._validate_lobby_join():
                 return
             if self.lobby.teams1.count() < 2:
@@ -190,14 +210,31 @@ class LobbyHandler:
 
     def _with_enemy_multi_lobby(self):
         with transaction.atomic():
-            lobby = Lobby.objects.filter(completed=False).filter(multi_play=True).filter(with_friend=False).last()
-            self.lobby = lobby if lobby else Lobby.objects.create(multi_play=True, with_friend=False)
+            lobby = Lobby.objects.filter(completed=False).filter(challenge=self.team.challenge).filter(
+                multi_play=True).filter(with_friend=False).last()
+            self.lobby = lobby if lobby else Lobby.objects.create(multi_play=True, with_friend=False,
+                                                                  challenge=self.team.challenge)
             if not self._validate_lobby_join():
                 return
             if self.lobby.teams1.count() < 2 and self.lobby.teams2.count() < 2:
-                self.lobby.teams1.add(self.request.user.participant.team)
+                self.lobby.teams1.add(self.team)
                 self.lobby.teams2.add(self.invited_team)
             if self.lobby.teams1.count() + self.lobby.teams2.count() >= 4:
+                self.lobby.completed = True
+                self.lobby.save()
+
+    def _with_enemy_multi_lobby_final(self):
+        with transaction.atomic():
+            lobby = Lobby.objects.filter(completed=False).filter(challenge=self.team.challenge).filter(
+                multi_play=True).filter(with_friend=False).last()
+            self.lobby = lobby if lobby else Lobby.objects.create(multi_play=True, with_friend=False,
+                                                                  challenge=self.team.challenge)
+            if not self._validate_lobby_join():
+                return
+            if self.lobby.teams1.count() < 1 and self.lobby.teams2.count() < 1:
+                self.lobby.teams1.add(self.team)
+                self.lobby.teams2.add(self.invited_team)
+            if self.lobby.teams1.count() + self.lobby.teams2.count() >= 2:
                 self.lobby.completed = True
                 self.lobby.save()
 
