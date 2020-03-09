@@ -32,7 +32,9 @@ class Stats:
         if self.final_challenge:
             time = Challenge.objects.get(type=ChallengeTypes.FINAL).start_time
             game_teams = game_teams.filter(game_side__game__time__gt=time)
-        self.wins = game_teams.count()
+            self.wins = game_teams.count() // 2
+        else:
+            self.wins = game_teams.count()
 
     def _loss_and_draws(self):
         from apps.challenge.models import GameTeam, Game
