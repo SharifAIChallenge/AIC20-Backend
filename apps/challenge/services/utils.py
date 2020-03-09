@@ -1,7 +1,7 @@
 from apps.challenge.models import GameTeam, GameSide
 
 
-def update_game_team_scoreboard_score(game, scoreboard, final=False):
+def update_game_team_scoreboard_score(game, scoreboard):
     client0 = game.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[0]
     client1 = game.game_sides.all().order_by('id')[1].game_teams.all().order_by('id')[0]
     client2 = game.game_sides.all().order_by('id')[0].game_teams.all().order_by('id')[1]
@@ -17,12 +17,8 @@ def update_game_team_scoreboard_score(game, scoreboard, final=False):
         R2 = client1.score + client3.score
         P1 = (1.0 / (1.0 + 10 ** ((S2 - S1) / 400)))
         P2 = (1.0 / (1.0 + 10 ** ((S1 - S2) / 400)))
-        if not final:
-            game_side1 = GameTeam.objects.filter(team=client0.team).get(game_side__game=game).game_side
-            game_side2 = GameTeam.objects.filter(team=client1.team).get(game_side__game=game).game_side
-        else:
-            game_side1 = GameTeam.objects.filter(team=client0.team).filter(game_side__game=game).last().game_side
-            game_side2 = GameTeam.objects.filter(team=client1.team).filter(game_side__game=game).last().game_side
+        game_side1 = GameTeam.objects.filter(team=client0.team).filter(game_side__game=game).last().game_side
+        game_side2 = GameTeam.objects.filter(team=client1.team).filter(game_side__game=game).last().game_side
         if game_side1.has_won:
             actual_score1, actual_score2 = 1, 0
         elif not game_side1.has_won and not game_side2.has_won:
