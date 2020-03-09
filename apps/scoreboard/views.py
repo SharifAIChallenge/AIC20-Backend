@@ -5,19 +5,16 @@ from rest_framework.response import Response
 
 from .models import ChallengeScoreBoard, GroupScoreBoard, FriendlyScoreBoard, ScoreBoardTypes, ScoreBoard
 from ..challenge.models import Challenge, ChallengeTypes, Group, GameTeam, TournamentTypes
-from .serializers import RowSerializer, GroupScoreBoardSerializer
+from .serializers import RowSerializer, GroupScoreBoardSerializer, ChallengeScoreBoardSerializer
 
 
 class ChallengeScoreBoardAPIView(GenericAPIView):
-    serializer_class = RowSerializer
+    serializer_class = ChallengeScoreBoardSerializer
     permission_classes = [IsAuthenticated]
 
     def get(self, request, challenge_id):
-        challenge = get_object_or_404(Challenge, id=challenge_id)
-        teams_with_game_ids = GameTeam.objects.distinct('team_id').values_list('team_id')
-        data = self.get_serializer(
-            ChallengeScoreBoard.get_scoreboard_sorted_rows(challenge=challenge).filter(team_id__in=teams_with_game_ids),
-            many=True).data
+        challenge_scoreboards = ChallengeScoreBoard.objects.all()
+        data = self.get_serializer(challenge_scoreboards, many=True).data
         return Response(data={'scoreboard': data}, status=status.HTTP_200_OK)
 
 
