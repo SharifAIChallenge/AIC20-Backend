@@ -15,7 +15,7 @@ class ChallengeScoreBoardAPIView(GenericAPIView):
     def get(self, request):
         challenge_scoreboards = ChallengeScoreBoard.objects.all()
         data = self.get_serializer(challenge_scoreboards, many=True).data
-        return Response(data={'scoreboard': data}, status=status.HTTP_200_OK)
+        return Response(data={'scoreboards': data}, status=status.HTTP_200_OK)
 
 
 class FriendlyScoreBoardAPIView(GenericAPIView):
