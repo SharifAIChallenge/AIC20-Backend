@@ -307,9 +307,11 @@ class Game(models.Model):
         from apps.challenge.services.utils import update_game_team_scoreboard_score
 
         friendly_scoreboard = ScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
+        final = False
         if game_teams[0].team.challenge.type == ChallengeTypes.FINAL:
             friendly_scoreboard = game_teams[0].team.challenge.scoreboard
-        update_game_team_scoreboard_score(game=self, scoreboard=friendly_scoreboard)
+            final = True
+        update_game_team_scoreboard_score(game=self, scoreboard=friendly_scoreboard, final=final)
         for game_team in game_teams:
             row = friendly_scoreboard.rows.get(team=game_team.team)
             row.wins, row.draws, row.loss = Stats(team=game_team.team, friendly_only=True)()
