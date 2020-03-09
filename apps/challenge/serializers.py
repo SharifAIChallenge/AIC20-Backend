@@ -198,6 +198,8 @@ class LobbySerializer(ModelSerializer):
         if instance.challenge.type == challenge_models.ChallengeTypes.FINAL:
             team1 = instance.teams1.all().first()
             team2 = instance.teams2.all().first()
-            data['teams1'] = [LimitedTeamSerializer(team1).data, LimitedTeamSerializer(team1).data]
-            data['teams2'] = [LimitedTeamSerializer(team2).data, LimitedTeamSerializer(team2).data]
+            if team1:
+                data['teams1'] = [LimitedTeamSerializer(team1).data, LimitedTeamSerializer(team1).data]
+            if team2:
+                data['teams2'] = [LimitedTeamSerializer(team2).data, LimitedTeamSerializer(team2).data]
         return data
