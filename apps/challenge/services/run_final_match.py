@@ -14,7 +14,7 @@ class RunFinalMatch:
         self._create_games()
         self._create_game_sides()
         for game, game_map in zip(self.games, self.maps):
-            run_single_game.delay(game.id, game_map.id)
+            run_single_game(game_id=game.id, game_map_id=game_map.id)
         return [str(game.id) for game in self.games]
 
     def _create_games(self):

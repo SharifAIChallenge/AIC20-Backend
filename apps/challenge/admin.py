@@ -70,14 +70,17 @@ class GameAdmin(NestedModelAdmin):
     inlines = [GameSideInline]
 
     def get_game_info(self, instance: challenge_models.Game):
-        info = {}
+        info = []
         for i, game_side in enumerate(instance.game_sides.all()):
-            info[f'Game_side {i + 1}'] = {'teams': '', 'score': 0}
+            info.append({'teams': '', 'score': 0})
             for game_team in game_side.game_teams.all():
-                info[f'Game_side {i + 1}']['teams'] += game_team.team.name + " "
-                info[f'Game_side {i + 1}']['score'] += game_team.score if game_team.score else 0
-        info = f'Game Side 1: {info["Game_side 1"]["teams"]}   score: {info["Game_side 1"]["score"]}' + '\n' + \
-               f'Game Side 2: {info["Game_side 2"]["teams"]}   score: {info["Game_side 2"]["score"]}'
+                info[i]['teams'] += game_team.team.name + " "
+                info[i]['score'] += game_team.score if game_team.score else 0
+        if len(info) >= 2:
+            info = f'Game Side 1: {info[0]["teams"]}   score: {info[0]["score"]}' + '\n' + \
+                   f'Game Side 2: {info[1]["teams"]}   score: {info[1]["score"]}'
+        else:
+            info = ''
         return info
 
     def get_tournament_name(self, instance: challenge_models.Game):
