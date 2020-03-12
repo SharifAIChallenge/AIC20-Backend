@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     'djcelery_email',
-
+    'nested_inline',
     'apps.accounts',
     'apps.blog',
     'apps.resources.apps.ResourcesConfig',
@@ -162,7 +162,7 @@ REST_FRAMEWORK = {
 
 from .martor import *
 
-os.environ['HTTPS'] = "on"
+# os.environ['HTTPS'] = "on"
 
 TEAM_SUBMISSION_TIME_DELTA = 1
 

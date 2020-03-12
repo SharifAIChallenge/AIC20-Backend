@@ -1,12 +1,23 @@
 from django.contrib import admin
 
+from nested_inline.admin import NestedStackedInline, NestedModelAdmin
+
 from . import models as challenge_models
 
 
 # Register your models here.
 
-class GameTeamInline(admin.StackedInline):
+class GameTeamInline(NestedStackedInline):
     model = challenge_models.GameTeam
+
+
+class GameSideInline(NestedStackedInline):
+    model = challenge_models.GameSide
+    inlines = [GameTeamInline]
+
+
+class GameInline(admin.StackedInline):
+    model = challenge_models.Game
 
 
 @admin.register(challenge_models.Challenge)
@@ -38,9 +49,11 @@ class TeamGroupAdmin(admin.ModelAdmin):
 
 
 @admin.register(challenge_models.Match)
-class MathAdmin(admin.ModelAdmin):
-    list_display = ['id', 'type']
-    list_editable = ['type']
+class MatchAdmin(admin.ModelAdmin):
+    list_display = ['id', '__str__', 'type', 'finished', 'time']
+    list_filter = ['finished', 'type', 'time']
+
+    inlines = [GameInline]
 
 
 @admin.register(challenge_models.MatchTeam)
@@ -49,11 +62,12 @@ class MatchTeamAdmin(admin.ModelAdmin):
 
 
 @admin.register(challenge_models.Game)
-class GameAdmin(admin.ModelAdmin):
+class GameAdmin(NestedModelAdmin):
     list_display = ['__str__', 'status', 'time', 'get_tournament_name']
     list_display_links = ['__str__']
     list_filter = ['status', 'time']
     search_fields = ['infra_token']
+    inlines = [GameSideInline]
 
     def get_tournament_name(self, instance: challenge_models.Game):
         return 'friendly' if not instance.match else instance.match.group.stage.tournament.name

@@ -77,7 +77,7 @@ def upload_file(file):
     """
     print("ommad upload kone", file.size)
     response = requests.put(settings.INFRA_IP + "/api/storage/new_file/", files={'file': file},
-                             headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
+                            headers={'Authorization': f'Token {settings.INFRA_AUTH_TOKEN}'})
     print(response.status_code, response.json(), "==== Upload File ====")
 
     return response.json()['token']
@@ -137,9 +137,10 @@ def compile_submissions(submissions):
     return response.json()
 
 
-def run_games(single_games: List[Game]):
+def run_games(single_games: List[Game], game_map: Map = None):
     """
         Tell the infrastructure to run a list of single_matches (single_match includes tokens,maps,...)
+    :param game_map:
     :param single_games:
     :return: Returns the list of tokens and success status and errors assigned to the matches
     """

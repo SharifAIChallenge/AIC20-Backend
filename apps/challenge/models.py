@@ -104,6 +104,7 @@ class Challenge(models.Model):
     code_submit_delay = models.IntegerField(default=5)
     can_submit = models.BooleanField(default=True)
     can_change_submission = models.BooleanField(default=True)
+    can_friendly_game = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -207,7 +208,8 @@ class GroupTeam(models.Model):
 
 
 class Match(models.Model):
-    group = models.ForeignKey('challenge.Group', related_name='matches', on_delete=models.CASCADE)
+    group = models.ForeignKey('challenge.Group', related_name='matches', on_delete=models.CASCADE, null=True,
+                              blank=True)
     map = models.ForeignKey('challenge.Map', related_name='matches', on_delete=None)
     type = models.CharField(max_length=64, choices=MatchTypes.TYPES)
     time = models.DateTimeField(auto_now_add=True, null=True)
@@ -231,11 +233,20 @@ class Match(models.Model):
             self.finished = True
             self.save()
 
+    def __str__(self):
+        return f'id: {self.id} group_id: {self.group_id} '
+
 
 class MatchTeam(models.Model):
     team = models.ForeignKey('participation.Team', related_name='game_team', on_delete=models.CASCADE)
     match = models.ForeignKey('challenge.Match', related_name='match_teams', on_delete=models.CASCADE)
     score = models.FloatField(default=0.0)
+
+
+class RunFinalMatch(models.Model):
+    first_team = models.ForeignKey('participation.Team', related_name='run_matches1', on_delete=models.CASCADE)
+    second_team = models.ForeignKey('participation.Team', related_name='run_matches2', on_delete=models.CASCADE)
+    maps = models.ManyToManyField('challenge.Map', related_name='run_matches')
 
 
 class Game(models.Model):

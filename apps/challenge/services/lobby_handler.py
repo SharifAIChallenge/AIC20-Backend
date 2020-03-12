@@ -80,6 +80,8 @@ class LobbyHandler:
     def __call__(self):
         self._validate_friendly_delay()
         if self.valid:
+            self._validate_friendly_not_closed()
+        if self.valid:
             self._set_type()
         if self.valid and self.type == FriendlyGameTypes.MULTI:
             self._set_multi_type()
@@ -103,6 +105,12 @@ class LobbyHandler:
                 minutes=challenge.friendly_game_delay):
             self.valid = False
             self.errors.append(f"pleaseWait")
+
+    def _validate_friendly_not_closed(self):
+        challenge = self.team.challenge
+        if not challenge.can_friendly_game:
+            self.valid = False
+            self.errors.append("friendlyClosed")
 
     def _set_type(self):
         self.type = self.data.get('type', FriendlyGameTypes.SINGLE)
