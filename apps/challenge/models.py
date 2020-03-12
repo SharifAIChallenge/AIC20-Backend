@@ -324,6 +324,8 @@ class Game(models.Model):
         friendly_scoreboard = ScoreBoard.objects.get(type=ScoreBoardTypes.FRIENDLY)
         if game_teams[0].team.challenge.type == ChallengeTypes.FINAL:
             friendly_scoreboard = game_teams[0].team.challenge.scoreboard
+        if friendly_scoreboard.freeze:
+            return
         update_game_team_scoreboard_score(game=self, scoreboard=friendly_scoreboard)
         for game_team in game_teams:
             row = friendly_scoreboard.rows.get(team=game_team.team)
