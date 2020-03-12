@@ -63,7 +63,7 @@ class MatchTeamAdmin(admin.ModelAdmin):
 
 @admin.register(challenge_models.Game)
 class GameAdmin(NestedModelAdmin):
-    list_display = ['__str__', 'status', 'time', 'get_game_info']
+    list_display = ['__str__', 'status', 'time', 'get_game_info', 'log']
     list_display_links = ['__str__']
     list_filter = ['status', 'time']
     search_fields = ['infra_token']
