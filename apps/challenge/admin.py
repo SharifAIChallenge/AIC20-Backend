@@ -142,3 +142,9 @@ class RunGroupAdmin(admin.ModelAdmin):
     list_display_links = ['id', 'group']
 
     readonly_fields = ['finished']
+
+
+@admin.register(challenge_models.RunFinalMatch)
+class RunFinalMatchAdmin(admin.ModelAdmin):
+    list_display = ['id', 'first_team', 'second_team']
+    list_display_links = ['id']
