@@ -137,10 +137,10 @@ def compile_submissions(submissions):
     return response.json()
 
 
-def run_games(single_games: List[Game], game_map: Map = None):
+def run_games(single_games: List[Game], desired_map: Map = None):
     """
         Tell the infrastructure to run a list of single_matches (single_match includes tokens,maps,...)
-    :param game_map:
+    :param desired_map:
     :param single_games:
     :return: Returns the list of tokens and success status and errors assigned to the matches
     """
@@ -150,6 +150,7 @@ def run_games(single_games: List[Game], game_map: Map = None):
     for single_game in single_games:
         random_map = Map.objects.filter(verified=True).order_by('?').last()
         game_map = single_game.match.map if single_game.match else random_map
+        game_map = desired_map if desired_map else game_map
         games.append({
             "game": 'AI2020',
             "operation": "run",

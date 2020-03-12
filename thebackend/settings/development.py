@@ -162,7 +162,7 @@ REST_FRAMEWORK = {
 
 from .martor import *
 
-# os.environ['HTTPS'] = "on"
+os.environ['HTTPS'] = "on"
 
 TEAM_SUBMISSION_TIME_DELTA = 1
 

@@ -248,6 +248,11 @@ class RunFinalMatch(models.Model):
     second_team = models.ForeignKey('participation.Team', related_name='run_matches2', on_delete=models.CASCADE)
     maps = models.ManyToManyField('challenge.Map', related_name='run_matches')
 
+    def save(self, *args, **kwargs):
+        from apps.challenge.services.run_final_match import RunFinalMatch
+        RunFinalMatch(first_team=self.first_team, second_team=self.second_team, maps=self.maps)()
+        super().save(*args, **kwargs)
+
 
 class Game(models.Model):
     match = models.ForeignKey('challenge.Match', related_name='games', on_delete=models.CASCADE, blank=True, null=True)

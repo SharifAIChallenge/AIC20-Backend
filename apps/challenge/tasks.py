@@ -22,11 +22,12 @@ def handle_submission(submission_id):
 
 
 @app.task(name='run_single_game')
-def run_single_game(game_id):
-    from .models import Game, SingleGameStatusTypes
+def run_single_game(game_id, game_map_id=None):
+    from .models import Game, SingleGameStatusTypes, Map
     from .functions import run_games
     single_game = Game.objects.get(id=game_id)
-    response = run_games(single_games=[single_game])[0]
+    game_map = Map.objects.get(id=game_map_id) if game_map_id else None
+    response = run_games(single_games=[single_game], desired_map=game_map)[0]
     if response['success']:
         single_game.infra_token = response['run_id']
         single_game.status = SingleGameStatusTypes.RUNNING
