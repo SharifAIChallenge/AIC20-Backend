@@ -63,11 +63,20 @@ class MatchTeamAdmin(admin.ModelAdmin):
 
 @admin.register(challenge_models.Game)
 class GameAdmin(NestedModelAdmin):
-    list_display = ['__str__', 'status', 'time', 'get_tournament_name', 'get_teams_names']
+    list_display = ['__str__', 'status', 'time', 'get_game_info']
     list_display_links = ['__str__']
     list_filter = ['status', 'time']
     search_fields = ['infra_token']
     inlines = [GameSideInline]
+
+    def get_game_info(self, instance: challenge_models.Game):
+        info = {}
+        for i, game_side in enumerate(instance.game_sides.all()):
+            info[f'Game_side {i + 1}'] = {'teams': '', 'score': 0}
+            for game_team in game_side.game_teams.all():
+                info[f'Game_side {i + 1}']['teams'] += game_team.team.name + " "
+                info[f'Game_side {i + 1}']['score'] += game_team.score if game_team.score else 0
+        return str(info)
 
     def get_tournament_name(self, instance: challenge_models.Game):
         return 'friendly' if not instance.match else instance.match.group.stage.tournament.name
@@ -81,6 +90,7 @@ class GameAdmin(NestedModelAdmin):
 
     get_tournament_name.short_description = 'Tournament Name'
     get_teams_names.short_description = 'Teams Names'
+    get_game_info.short_description = 'Game info'
 
 
 @admin.register(challenge_models.GameSide)
