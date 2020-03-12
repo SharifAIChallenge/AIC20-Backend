@@ -76,7 +76,9 @@ class GameAdmin(NestedModelAdmin):
             for game_team in game_side.game_teams.all():
                 info[f'Game_side {i + 1}']['teams'] += game_team.team.name + " "
                 info[f'Game_side {i + 1}']['score'] += game_team.score if game_team.score else 0
-        return str(info)
+        info = f'Game Side 1: {info["Game_side 1"]["teams"]}   score: {info["Game_side 1"]["score"]}' + '\n' + \
+               f'Game Side 2: {info["Game_side 2"]["teams"]}   score: {info["Game_side 2"]["score"]}'
+        return info
 
     def get_tournament_name(self, instance: challenge_models.Game):
         return 'friendly' if not instance.match else instance.match.group.stage.tournament.name
