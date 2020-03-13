@@ -134,7 +134,8 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 @admin.register(challenge_models.Map)
 class MapAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name', 'infra_token', 'verified']
+    list_display_links = ['id', 'name', 'infra_token']
 
 
 @admin.register(challenge_models.Lobby)

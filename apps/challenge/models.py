@@ -452,6 +452,9 @@ class Map(models.Model):
         self.pre_save()
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
+
 
 class Lobby(models.Model):
     challenge = models.ForeignKey('challenge.Challenge', related_name='lobbies', null=True, blank=True,
