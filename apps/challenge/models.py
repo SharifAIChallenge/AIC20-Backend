@@ -265,7 +265,7 @@ class Game(models.Model):
     infra_game_message = models.CharField(max_length=1023, null=True, blank=True)
     infra_token = models.CharField(max_length=256, null=True, blank=True, unique=True)
     status = models.CharField(max_length=50, choices=SingleGameStatusTypes.TYPES, default=SingleGameStatusTypes.WAITING)
-    time = models.DateTimeField(auto_now_add=True, null=True)
+    time = models.DateTimeField(null=True, blank=True)
 
     def get_log_file_directory(self, filename):
         return os.path.join('logs', 'single_game', self.infra_token if self.infra_token else str(self.id), filename)
