@@ -112,6 +112,7 @@ class GameTeamAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'game_side', 'score']
     list_display_links = ['__str__']
     sortable_by = ['score']
+    search_fields = ['team__name']
 
 
 @admin.register(challenge_models.Submission)
