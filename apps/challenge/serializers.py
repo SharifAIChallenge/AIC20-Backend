@@ -5,7 +5,7 @@ from django.utils.timezone import utc
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from apps.challenge.models import SubmissionStatusTypes
+from apps.challenge.models import SubmissionStatusTypes, ChallengeTypes
 from apps.participation.serializers import LimitedTeamSerializer
 from . import models as challenge_models
 from ..participation import serializers as participation_serializers
@@ -40,6 +40,8 @@ class GameSerializer(ModelSerializer):
 
     @staticmethod
     def _get_tournament(instance: challenge_models.Game):
+        if instance.game_sides.last().game_teams.last().team.challenge.type == ChallengeTypes.FINAL:
+            return 'final'
         return 'friendly' if instance.match == None else instance.match.group.stage.tournament.name
 
     class Meta:

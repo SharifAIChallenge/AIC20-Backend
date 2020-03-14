@@ -86,7 +86,7 @@ class GamesListAPIView(GenericAPIView):
         time_limit = team.challenge.end_time
         game_ids = challenge_models.GameTeam.objects.filter(team=team).values_list(
             'game_side__game_id', flat=True)
-        query = self.get_queryset().filter(id__in=game_ids).filter(time__lt=time_limit).order_by('-time')
+        query = self.get_queryset().filter(id__in=game_ids).filter(time__gte=time_limit).order_by('-time')
         data = self.get_serializer(query[offset * count: offset * count + count], many=True).data
         return Response(data={'count': query.count(), 'games': data}, status=status.HTTP_200_OK)
 
