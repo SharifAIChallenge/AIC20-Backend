@@ -65,6 +65,7 @@ class MatchTeamAdmin(admin.ModelAdmin):
 class GameAdmin(NestedModelAdmin):
     list_display = ['__str__', 'status', 'time', 'get_game_info', 'log']
     list_display_links = ['__str__']
+    list_editable = ['time']
     list_filter = ['status', 'time']
     search_fields = ['infra_token']
     inlines = [GameSideInline]
