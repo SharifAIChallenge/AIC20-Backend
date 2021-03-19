@@ -36,7 +36,7 @@ more-itertools==8.0.2
 parso==0.5.1
 pexpect==4.7.0
 pickleshare==0.7.5
-Pillow==6.2.1
+Pillow==8.1.1
 prompt-toolkit==3.0.0
 psycopg2==2.8.4
 ptyprocess==0.6.0
